@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ProcHub.Api/ProcHub.Api.csproj" />
+    <Project Path="src/ProcHub.Application/ProcHub.Application.csproj" />
+    <Project Path="src/ProcHub.Contracts/ProcHub.Contracts.csproj" />
+    <Project Path="src/ProcHub.Domain/ProcHub.Domain.csproj" />
+    <Project Path="src/ProcHub.Infrastructure/ProcHub.Infrastructure.csproj" />
+    <Project Path="src/ProcHub.Wpf/ProcHub.Wpf.csproj" />
+  </Folder>
+</Solution>
