@@ -1,5 +1,6 @@
 
 
+using Microsoft.VisualBasic;
 using ProcHub.Domain.Exceptions;
 
 namespace ProcHub.Domain.Suppliers;
@@ -7,8 +8,8 @@ namespace ProcHub.Domain.Suppliers;
 public class Supplier
 {
     public int Id { get; private set; }
-    public DateOnly CreationDate { get; private set; }
-
+    public DateOnly CreationDate { get; private set; } = 
+        DateOnly.FromDateTime(DateTime.Today);
     public string Number { get; private set; } = null!;
     public string Name { get; private set; } = null!;
 
@@ -21,6 +22,11 @@ public class Supplier
     public int? ShippingTimeDays { get; private set; }
     public int? ProductionTimeDays { get; private set; }
 
+    public int DefaultPaymentTermId { get; private set; }
+    public PaymentTerm DefaultPaymentTerm { get; private set; } = null!;
+    public int? SecondaryPaymentTermId { get; private set; }
+    public PaymentTerm? SecondaryPaymentTerm { get; private set; }
+
     public int? MainLeadTimedays { get; private set; }
     public int? SecondaryLeadTimeDays { get; private set; }
     public int? SampleLeadTimeDays { get; private set; }
@@ -31,10 +37,12 @@ public class Supplier
 
     public Supplier(
         string number,
-        string name)
+        string name,
+        PaymentTerm defaultPaymentTerm)
     {
         SetNumber(number);
         SetName(name);
+        SetDefaultPaymentTerm(defaultPaymentTerm);
     }
 
     public void SetNumber(string number)
@@ -55,6 +63,24 @@ public class Supplier
         }
 
         Name = name.Trim();
+    }
+
+    public void SetDefaultPaymentTerm(PaymentTerm paymentTerm)
+    {
+        if (paymentTerm is null)
+        {
+            throw new DomainException("Payment term is required.");
+        }
+
+        DefaultPaymentTerm = paymentTerm;
+    }
+
+    public void SetSecondaryPaymentTerm(PaymentTerm paymentTerm)
+    {
+        ArgumentNullException.ThrowIfNull(paymentTerm);
+
+        SecondaryPaymentTerm = paymentTerm;
+
     }
 
     public void SetMainShippingTerm(ShippingTerm shippingTerm)
