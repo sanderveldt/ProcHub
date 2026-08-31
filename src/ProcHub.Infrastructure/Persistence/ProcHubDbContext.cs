@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using ProcHub.Infrastructure.Identity;
 using ProcHub.Domain.Suppliers;
+using ProcHub.Application.Abstractions;
 
 namespace ProcHub.Infrastructure.Persistence;
 
@@ -11,7 +12,8 @@ public class ProcHubContext(
     : IdentityDbContext<
         ApplicationUser,
         IdentityRole<int>,
-        int>(options)
+        int>(options),
+    IProcHubDbContext
 {
     public DbSet<Supplier> Suppliers => Set<Supplier>();
     public DbSet<PaymentTerm> PaymentTerms => Set<PaymentTerm>();
@@ -22,7 +24,6 @@ public class ProcHubContext(
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyConfigurationsFromAssembly(
-            typeof(ProcHubContext).Assembly);
+            typeof(ProcHubContext).Assembly);      
     }
-
 }
