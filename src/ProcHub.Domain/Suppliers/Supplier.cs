@@ -1,6 +1,3 @@
-
-
-using Microsoft.VisualBasic;
 using ProcHub.Domain.Exceptions;
 
 namespace ProcHub.Domain.Suppliers;

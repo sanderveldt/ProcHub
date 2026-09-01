@@ -1,0 +1,71 @@
+using FluentValidation;
+
+namespace ProcHub.Application.Features.Suppliers.Create;
+
+public sealed class CreateSupplierCommandValidator
+    : AbstractValidator<CreateSupplierCommand>
+{
+    public CreateSupplierCommandValidator()
+    {
+        RuleFor(x => x.Code)
+            .NotEmpty()
+            .MaximumLength(10)
+            .WithMessage("Supplier code is required.");
+
+        RuleFor(x => x.Name)
+            .NotEmpty()
+            .MaximumLength(25)
+            .WithMessage("Supplier name is required.");
+        
+        RuleFor(x => x.FullName)
+            .MaximumLength(75)
+            .WithMessage("Supplier full name cannot exceed 75 characters.");
+
+        RuleFor(x => x.DefaultPaymentTermId)
+            .NotEmpty()
+            .GreaterThan(0)
+            .WithMessage("Default payment term is required.");
+        
+        RuleFor(x => x.MainShippingTermId)
+            .GreaterThan(0)
+            .When(x => x.MainShippingTermId.HasValue);
+
+        RuleFor(x => x.SecondaryShippingTermId)
+            .GreaterThan(0)
+            .When(x => x.SecondaryShippingTermId.HasValue);
+
+        RuleFor(x => x.SampleShippingTermId)
+            .GreaterThan(0)
+            .When(x => x.SampleShippingTermId.HasValue);
+        
+        RuleFor(x => x.ShippingTimeDays)
+            .GreaterThanOrEqualTo(0)
+            .When(x => x.ShippingTimeDays.HasValue)
+            .WithMessage("Shipping days can't be negative.");
+
+        RuleFor(x => x.ProductionTimeDays)
+            .GreaterThanOrEqualTo(0)
+            .When(x => x.ProductionTimeDays.HasValue)
+            .WithMessage("Production days can't be negative.");
+        
+        RuleFor(x => x.SecondaryPaymentTermId)
+            .GreaterThan(0)
+            .When(x => x.SecondaryPaymentTermId.HasValue);
+        
+        RuleFor(x => x.MainLeadTimeDays)
+            .GreaterThanOrEqualTo(0)
+            .When(x => x.MainLeadTimeDays.HasValue)
+            .WithMessage("Main lead time can't be negative.");
+        
+        RuleFor(x => x.SecondaryLeadTimeDays)
+            .GreaterThanOrEqualTo(0)
+            .When(x => x.SecondaryLeadTimeDays.HasValue)
+            .WithMessage("Secondary lead time can't be negative.");
+
+        RuleFor(x => x.SampleLeadTimeDays)
+            .GreaterThanOrEqualTo(0)
+            .When(x => x.SampleLeadTimeDays.HasValue)
+            .WithMessage("Sample lead time can't be negative.");
+
+    }
+}
