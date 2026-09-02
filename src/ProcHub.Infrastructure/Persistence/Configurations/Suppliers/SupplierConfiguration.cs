@@ -27,10 +27,10 @@ public sealed class SupplierConfiguration
         builder.HasIndex(s => s.Name);
         builder.Property(s => s.Name)
             .IsRequired()
-            .HasMaxLength(20);
+            .HasMaxLength(25);
 
         builder.Property(s => s.FullName)
-            .HasMaxLength(50);
+            .HasMaxLength(75);
 
 
         builder.HasOne(x => x.MainShippingTerm)

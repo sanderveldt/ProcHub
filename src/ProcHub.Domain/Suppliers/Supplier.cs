@@ -25,7 +25,7 @@ public class Supplier
     public int? SecondaryPaymentTermId { get; private set; }
     public PaymentTerm? SecondaryPaymentTerm { get; private set; }
 
-    public int? MainLeadTimedays { get; private set; }
+    public int? MainLeadTimeDays { get; private set; }
     public int? SecondaryLeadTimeDays { get; private set; }
     public int? SampleLeadTimeDays { get; private set; }
 
@@ -38,16 +38,21 @@ public class Supplier
         string name,
         PaymentTerm defaultPaymentTerm)
     {
-        SetNumber(code);
+        SetCode(code);
         SetName(name);
         SetDefaultPaymentTerm(defaultPaymentTerm);
     }
 
-    public void SetNumber(string code)
+    public void SetCode(string code)
     {
         if (string.IsNullOrWhiteSpace(code))
         {
-            throw new DomainException("Supplier number is required.");
+            throw new DomainException("Supplier code is required.");
+        }
+
+        if (code.Length > 10)
+        {
+            throw new DomainException("Supplier code cannot exceed 10 characters.");
         }
 
         Code = code.Trim();
@@ -57,10 +62,26 @@ public class Supplier
     {
         if(string.IsNullOrWhiteSpace(name))
         {
-            throw new DomainException("Supplier name is required. ");
+            throw new DomainException("Supplier name is required.");
+        }
+
+        if (name.Length > 25)
+        {
+            throw new DomainException("Supplier name cannot exceed 25 characters.");
         }
 
         Name = name.Trim();
+    }
+
+    public void SetFullName(string? fullName)
+    {
+        if (string.IsNullOrWhiteSpace(fullName))
+        {
+            FullName = null;
+            return;
+        }
+
+        FullName = fullName.Trim();
     }
 
     public void SetDefaultPaymentTerm(PaymentTerm paymentTerm)
@@ -73,13 +94,12 @@ public class Supplier
         DefaultPaymentTerm = paymentTerm;
     }
 
-    public void SetSecondaryPaymentTerm(PaymentTerm paymentTerm)
+    public void SetSecondaryPaymentTerm(PaymentTerm? paymentTerm)
     {
-        ArgumentNullException.ThrowIfNull(paymentTerm);
         SecondaryPaymentTerm = paymentTerm;
     }
 
-    public void SetMainShippingTerm(ShippingTerm shippingTerm)
+    public void SetMainShippingTerm(ShippingTerm? shippingTerm)
     {
         MainShippingTerm = shippingTerm;
     }
@@ -94,4 +114,53 @@ public class Supplier
         SampleShippingTerm = shippingTerm;
     }
 
+    public void SetShippingTimeDays(int? shippingTimeDays)
+    {
+        if (shippingTimeDays < 0)
+        {
+            throw new DomainException("Shipping time days can't be negative.");
+        }
+
+        ShippingTimeDays = shippingTimeDays;
+    }
+
+    public void SetProductionTimeDays(int? productionTimeDays)
+    {
+        if (productionTimeDays < 0)
+        {
+            throw new DomainException("Production time days can't be negative.");
+        }
+
+        ProductionTimeDays = productionTimeDays;
+    }
+
+    public void SetMainLeadTimeDays(int? mainLeadTimeDays)
+    {
+        if (mainLeadTimeDays < 0)
+        {
+            throw new DomainException("Main lead time days can't be negative.");
+        }
+
+        MainLeadTimeDays = mainLeadTimeDays;
+    }
+
+    public void SetSecondaryLeadTimeDays(int? secondaryLeadTimeDays)
+    {
+        if (secondaryLeadTimeDays < 0)
+        {
+            throw new DomainException("Secondary lead time days can't be negative.");
+        }
+
+        SecondaryLeadTimeDays = secondaryLeadTimeDays;
+    }
+
+    public void SetSampleLeadTimeDays(int? sampleLeadTimeDays)
+    {
+        if (sampleLeadTimeDays < 0)
+        {
+            throw new DomainException("Sample lead time days can't be negative.");
+        }
+
+        SampleLeadTimeDays = sampleLeadTimeDays;
+    }
 }
