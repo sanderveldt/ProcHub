@@ -9,13 +9,15 @@ public sealed class CreateSupplierCommandValidator
     {
         RuleFor(x => x.Code)
             .NotEmpty()
+            .WithMessage("Supplier code is required.")
             .MaximumLength(10)
-            .WithMessage("Supplier code is required.");
+            .WithMessage("Supplier code cannot exceed 10 characters.");
 
         RuleFor(x => x.Name)
             .NotEmpty()
+            .WithMessage("Supplier name is required.")
             .MaximumLength(25)
-            .WithMessage("Supplier name is required.");
+            .WithMessage("Supplier name cannot exceed 25 characters.");
         
         RuleFor(x => x.FullName)
             .MaximumLength(75)
