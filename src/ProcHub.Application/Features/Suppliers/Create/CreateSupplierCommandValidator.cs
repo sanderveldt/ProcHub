@@ -1,4 +1,5 @@
 using FluentValidation;
+using ProcHub.Domain.Suppliers;
 
 namespace ProcHub.Application.Features.Suppliers.Create;
 
@@ -10,18 +11,18 @@ public sealed class CreateSupplierCommandValidator
         RuleFor(x => x.Code)
             .NotEmpty()
             .WithMessage("Supplier code is required.")
-            .MaximumLength(10)
-            .WithMessage("Supplier code cannot exceed 10 characters.");
+            .MaximumLength(SupplierConstants.CodeMaxLength)
+            .WithMessage("Supplier code cannot exceed {0} characters.", SupplierConstants.CodeMaxLength);
 
         RuleFor(x => x.Name)
             .NotEmpty()
             .WithMessage("Supplier name is required.")
-            .MaximumLength(25)
-            .WithMessage("Supplier name cannot exceed 25 characters.");
+            .MaximumLength(SupplierConstants.NameMaxLength)
+            .WithMessage("Supplier name cannot exceed {0} characters.", SupplierConstants.NameMaxLength);
         
         RuleFor(x => x.FullName)
-            .MaximumLength(75)
-            .WithMessage("Supplier full name cannot exceed 75 characters.");
+            .MaximumLength(SupplierConstants.FullNameMaxLength)
+            .WithMessage("Supplier full name cannot exceed {0} characters.", SupplierConstants.FullNameMaxLength);
 
         RuleFor(x => x.DefaultPaymentTermId)
             .NotEmpty()

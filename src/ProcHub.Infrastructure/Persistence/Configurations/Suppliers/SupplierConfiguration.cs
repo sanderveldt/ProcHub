@@ -22,15 +22,15 @@ public sealed class SupplierConfiguration
             .IsUnique();
         builder.Property(s => s.Code)
             .IsRequired()
-            .HasMaxLength(10);
+            .HasMaxLength(SupplierConstants.CodeMaxLength);
         
         builder.HasIndex(s => s.Name);
         builder.Property(s => s.Name)
             .IsRequired()
-            .HasMaxLength(25);
+            .HasMaxLength(SupplierConstants.NameMaxLength);
 
         builder.Property(s => s.FullName)
-            .HasMaxLength(75);
+            .HasMaxLength(SupplierConstants.FullNameMaxLength);
 
 
         builder.HasOne(x => x.MainShippingTerm)

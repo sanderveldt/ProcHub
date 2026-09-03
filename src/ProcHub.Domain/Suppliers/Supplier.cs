@@ -50,7 +50,7 @@ public class Supplier
             throw new DomainException("Supplier code is required.");
         }
 
-        if (code.Length > 10)
+        if (code.Length > SupplierConstants.CodeMaxLength)
         {
             throw new DomainException("Supplier code cannot exceed 10 characters.");
         }
@@ -65,7 +65,7 @@ public class Supplier
             throw new DomainException("Supplier name is required.");
         }
 
-        if (name.Length > 25)
+        if (name.Length > SupplierConstants.NameMaxLength)
         {
             throw new DomainException("Supplier name cannot exceed 25 characters.");
         }
@@ -79,6 +79,11 @@ public class Supplier
         {
             FullName = null;
             return;
+        }
+
+        if (fullName.Length > SupplierConstants.FullNameMaxLength)
+        {
+            throw new DomainException("Supplier full name cannot exceed 75 characters.");
         }
 
         FullName = fullName.Trim();
