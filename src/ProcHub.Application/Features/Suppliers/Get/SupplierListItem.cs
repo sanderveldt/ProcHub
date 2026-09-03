@@ -1,6 +1,4 @@
-using ProcHub.Domain.Suppliers;
-
-namespace ProcHub.Application.Features.Suppliers.Create;
+namespace ProcHub.Application.Features.Suppliers.Get;
 
 public sealed record SupplierListItem(
     string Code,

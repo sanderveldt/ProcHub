@@ -8,7 +8,7 @@ public class PaymentTerm
     public decimal DepositPercentage { get; private set; }
     public PaymentTimings PaymentTiming { get; private set; }
     public PaymentDateReference DueDateReference { get; private set; }
-    public int BalanceDueDays { get; private set; } = 0;
+    public int BalanceDueDays { get; private set; }
 
     private PaymentTerm()
     {
