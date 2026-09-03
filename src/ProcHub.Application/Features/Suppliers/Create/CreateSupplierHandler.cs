@@ -10,7 +10,7 @@ public sealed class CreateSupplierHandler(
     IProcHubDbContext dbContext,
     IValidator<CreateSupplierCommand> validator)
 {
-    public async Task<int> HandleAsync(
+    public async Task<string> HandleAsync(
         CreateSupplierCommand command,
         CancellationToken cancellationToken = default)
     {
@@ -91,7 +91,7 @@ public sealed class CreateSupplierHandler(
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return supplier.Id;
+        return supplier.Code;
     }
 }
     

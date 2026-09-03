@@ -12,17 +12,17 @@ public sealed class CreateSupplierCommandValidator
             .NotEmpty()
             .WithMessage("Supplier code is required.")
             .MaximumLength(SupplierConstants.CodeMaxLength)
-            .WithMessage("Supplier code cannot exceed {0} characters.", SupplierConstants.CodeMaxLength);
+            .WithMessage($"Supplier code cannot exceed {SupplierConstants.CodeMaxLength} characters.");
 
         RuleFor(x => x.Name)
             .NotEmpty()
             .WithMessage("Supplier name is required.")
             .MaximumLength(SupplierConstants.NameMaxLength)
-            .WithMessage("Supplier name cannot exceed {0} characters.", SupplierConstants.NameMaxLength);
+            .WithMessage($"Supplier name cannot exceed {SupplierConstants.NameMaxLength} characters.");
         
         RuleFor(x => x.FullName)
             .MaximumLength(SupplierConstants.FullNameMaxLength)
-            .WithMessage("Supplier full name cannot exceed {0} characters.", SupplierConstants.FullNameMaxLength);
+            .WithMessage($"Supplier full name cannot exceed {SupplierConstants.FullNameMaxLength} characters.");
 
         RuleFor(x => x.DefaultPaymentTermId)
             .NotEmpty()
