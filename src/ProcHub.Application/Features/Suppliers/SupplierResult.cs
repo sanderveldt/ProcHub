@@ -1,17 +1,30 @@
+using ProcHub.Domain.Suppliers;
+
 namespace ProcHub.Application.Features.Suppliers;
 
 public sealed record SupplierResult(
-    int Id,
     string Code,
     string Name,
-    string? FullName,
     int DefaultPaymentTermId,
+    string DefaultPaymentTermDescription,
+
+    string? FullName,
+
     int? MainShippingTermId,
+    string? MainShippingTermName,
     int? SecondaryShippingTermId,
+    string? SecondaryShippingTermName,
     int? SampleShippingTermId,
+    string? SampleShippingTermName,
+
+    int? SecondaryPaymentTermId,
+    string? SecondaryPaymentTermDescription,
+
     int? ShippingTimeDays,
     int? ProductionTimeDays,
-    int? SecondaryPaymentTermId,
     int? MainLeadTimeDays,
     int? SecondaryLeadTimeDays,
-    int? SampleLeadTimeDays);
+    int? SampleLeadTimeDays,
+
+    SupplierStatus Status,
+    DateOnly CreationDate);

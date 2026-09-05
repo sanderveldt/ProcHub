@@ -16,20 +16,40 @@ public sealed class GetSupplierHandler(
             .Where(s => s.Code == query.Code)
 
             .Select(s => new SupplierResult(
-                s.Id,
                 s.Code,
                 s.Name,
-                s.FullName,
                 s.DefaultPaymentTermId,
+                s.DefaultPaymentTerm.Description,
+
+                s.FullName,
+
                 s.MainShippingTermId,
+                s.MainShippingTerm == null
+                    ? null
+                    : s.MainShippingTerm.Name,
+
                 s.SecondaryShippingTermId,
+                s.SecondaryShippingTerm != null
+                    ? s.SecondaryShippingTerm.Name
+                    : null,
                 s.SampleShippingTermId,
+                s.SampleShippingTerm != null
+                    ? s.SampleShippingTerm.Name
+                    : null,
+
+                s.SecondaryPaymentTermId,
+                s.SecondaryPaymentTerm != null
+                    ? s.SecondaryPaymentTerm.Description
+                    : null,
+
                 s.ShippingTimeDays,
                 s.ProductionTimeDays,
-                s.SecondaryPaymentTermId,
                 s.MainLeadTimeDays,
                 s.SecondaryLeadTimeDays,
-                s.SampleLeadTimeDays))
+                s.SampleLeadTimeDays,
+                
+                s.Status,
+                s.CreationDate))
 
             .FirstOrDefaultAsync(cancellationToken)
             ?? throw new NotFoundException(
