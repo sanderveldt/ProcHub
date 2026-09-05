@@ -29,7 +29,5 @@ public sealed class CreatePaymentTermHandler(
         await dbContext.SaveChangesAsync(cancellationToken);
 
         return paymentTerm.Description;
-
-
     }    
 }

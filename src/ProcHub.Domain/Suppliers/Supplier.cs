@@ -29,6 +29,8 @@ public class Supplier
     public int? SecondaryLeadTimeDays { get; private set; }
     public int? SampleLeadTimeDays { get; private set; }
 
+    public SupplierStatus Status { get; private set; } = SupplierStatus.Active;
+
     private Supplier()
     {
     }
@@ -167,5 +169,15 @@ public class Supplier
         }
 
         SampleLeadTimeDays = sampleLeadTimeDays;
+    }
+
+    public void Activate()
+    {
+        Status = SupplierStatus.Active;
+    }
+
+    public void Deactivate()
+    {
+        Status = SupplierStatus.Inactive;
     }
 }
