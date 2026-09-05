@@ -4,8 +4,7 @@ using ProcHub.Application.Abstractions;
 
 namespace ProcHub.Application.Features.Suppliers.Get;
 
-public sealed class GetSupplierHandler(
-    IProcHubDbContext dbContext)
+public sealed class GetSupplierHandler(IProcHubDbContext dbContext)
 {
     public async Task<SupplierResult> HandleAsync(
         GetSupplierQuery query,
