@@ -2,8 +2,10 @@ using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using ProcHub.Application.Features.PaymentTerms.Create;
 using ProcHub.Application.Features.PaymentTerms.Get;
+using ProcHub.Application.Features.PaymentTerms.Update;
 using ProcHub.Application.Features.Suppliers.Create;
 using ProcHub.Application.Features.Suppliers.Get;
+using ProcHub.Application.Features.Suppliers.Update;
 
 namespace ProcHub.Application;
 
@@ -15,9 +17,11 @@ public static class DependencyInjection
         services.AddScoped<CreatePaymentTermHandler>();
         services.AddScoped<GetPaymentTermHandler>();
         services.AddScoped<ListPaymentTermsHandler>();
+        services.AddScoped<UpdatePaymentTermHandler>();
         services.AddScoped<CreateSupplierHandler>();
         services.AddScoped<GetSupplierHandler>();
         services.AddScoped<ListSuppliersHandler>();
+        services.AddScoped<UpdateSupplierHandler>();
 
         services.AddValidatorsFromAssembly(
             typeof(DependencyInjection).Assembly);
