@@ -13,12 +13,15 @@ public sealed class ShippingTermConfiguration
 
         builder.HasKey(s => s.Id);
 
+
+        builder.HasIndex(s => s.Name)
+            .IsUnique();
         builder.Property(s => s.Name)
             .IsRequired()
             .HasMaxLength(7);
         
         builder.Property(s => s.Description)
             .IsRequired()
-            .HasMaxLength(20);
+            .HasMaxLength(30);
     }
 }

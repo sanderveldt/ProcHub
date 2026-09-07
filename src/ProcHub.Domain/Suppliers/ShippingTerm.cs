@@ -7,7 +7,7 @@ public class ShippingTerm
     public int Id { get; private set; }
 
     public string Name { get; private set; } = null!;
-    public string? Description { get; private set; }
+    public string Description { get; private set; } = null!;
 
     private ShippingTerm()
     {
@@ -15,7 +15,7 @@ public class ShippingTerm
 
     public ShippingTerm(
         string name,
-        string? description)
+        string description)
     {
         SetName(name);
         SetDescription(description);
@@ -31,7 +31,7 @@ public class ShippingTerm
         Name = name.Trim();
     }
     
-    public void SetDescription(string? description)
+    public void SetDescription(string description)
     {
         Description = description;
     }
