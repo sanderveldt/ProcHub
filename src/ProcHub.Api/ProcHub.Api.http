@@ -1,6 +1,3 @@
 @ProcHub.Api_HostAddress = http://localhost:5098
 
-GET {{ProcHub.Api_HostAddress}}/weatherforecast/
-Accept: application/json
 
-###
