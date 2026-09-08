@@ -10,13 +10,24 @@ public sealed class CreateSupplierHandler(
     IProcHubDbContext dbContext,
     IValidator<CreateSupplierCommand> validator)
 {
-    public async Task<string> HandleAsync(
+    public async Task<SupplierResult> HandleAsync(
         CreateSupplierCommand command,
         CancellationToken cancellationToken = default)
     {
         await validator.ValidateAndThrowAsync(
             command, 
             cancellationToken: cancellationToken);
+        
+        var codeExists = await dbContext.Suppliers
+            .AnyAsync(
+                s => s.Code == command.Code,
+                cancellationToken);
+            
+        if (codeExists)
+        {
+            throw new DuplicateResourceException(
+                $"A supplier with code {command.Code} already exists.");
+        }
 
         var defaultPaymentTerm = await dbContext.PaymentTerms
             .FindAsync(
@@ -91,7 +102,27 @@ public sealed class CreateSupplierHandler(
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return supplier.Code;
+        return new SupplierResult(
+            supplier.Code,
+            supplier.Name,
+            supplier.DefaultPaymentTermId,
+            supplier.DefaultPaymentTerm.Description,
+            supplier.FullName,
+            supplier.MainShippingTermId,
+            supplier.MainShippingTerm?.Name,
+            supplier.SecondaryShippingTermId,
+            supplier.SecondaryShippingTerm?.Name,
+            supplier.SampleShippingTermId,
+            supplier.SampleShippingTerm?.Name,
+            supplier.SecondaryPaymentTermId,
+            supplier.SecondaryPaymentTerm?.Description,
+            supplier.ShippingTimeDays,
+            supplier.ProductionTimeDays,
+            supplier.MainLeadTimeDays,
+            supplier.SecondaryLeadTimeDays,
+            supplier.SampleLeadTimeDays,
+            supplier.Status,
+            supplier.CreationDate);
     }
 }
     
