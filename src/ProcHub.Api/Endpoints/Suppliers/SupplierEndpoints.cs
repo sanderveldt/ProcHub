@@ -10,6 +10,7 @@ public static class SupplierEndpoints
             .WithTags("Suppliers");
         
         group.MapCreateSupplierEndpoint();
+        group.MapUpdateSupplierEndpoint();
 
         return endpoints;
     }
