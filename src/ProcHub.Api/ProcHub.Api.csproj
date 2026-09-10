@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ProcHub.Application\ProcHub.Application.csproj" />
+    <ProjectReference Include="..\ProcHub.Contracts\ProcHub.Contracts.csproj" />
     <ProjectReference Include="..\ProcHub.Infrastructure\ProcHub.Infrastructure.csproj" />
   </ItemGroup>
 

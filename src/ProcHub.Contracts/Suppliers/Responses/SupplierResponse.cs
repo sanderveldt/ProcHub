@@ -1,4 +1,4 @@
-namespace ProcHub.Api.Endpoints.Suppliers.Responses;
+namespace ProcHub.Contracts.Suppliers.Responses;
 
 public sealed record SupplierResponse(
     string Code,

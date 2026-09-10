@@ -1,5 +1,5 @@
-using ProcHub.Api.Endpoints.Suppliers.Responses;
-using ProcHub.Api.Endpoints.Suppliers.Requests;
+using ProcHub.Contracts.Suppliers.Responses;
+using ProcHub.Contracts.Suppliers.Requests;
 using ProcHub.Application.Features.Suppliers.Create;
 
 using Microsoft.AspNetCore.Http.HttpResults;

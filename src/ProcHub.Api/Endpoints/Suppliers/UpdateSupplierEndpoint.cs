@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
-using ProcHub.Api.Endpoints.Suppliers.Requests;
-using ProcHub.Api.Endpoints.Suppliers.Responses;
+using ProcHub.Contracts.Suppliers.Requests;
+using ProcHub.Contracts.Suppliers.Responses;
 using ProcHub.Application.Features.Suppliers.Update;
 
 namespace ProcHub.Api.Endpoints.Suppliers;
@@ -40,9 +40,9 @@ public static class UpdateSupplierEndpoint
         };
 
         var result = await handler.HandleAsync(
-                code,
-                command,
-                cancellationToken);
+            code,
+            command,
+            cancellationToken);
         
         var response = new SupplierResponse(
             result.Code,

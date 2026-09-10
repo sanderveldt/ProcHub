@@ -16,7 +16,7 @@ public sealed class GlobalExceptionHandler(
         Exception exception,
         CancellationToken cancellationToken)
     {
-        var (statusCode, title) = exception switch
+        (int statusCode, string title) = exception switch
         {
             ValidationException => 
                 (StatusCodes.Status400BadRequest, 

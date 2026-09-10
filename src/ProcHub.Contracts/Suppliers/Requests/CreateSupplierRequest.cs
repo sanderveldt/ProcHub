@@ -1,4 +1,4 @@
-namespace ProcHub.Api.Endpoints.Suppliers.Requests;
+namespace ProcHub.Contracts.Suppliers.Requests;
 
 public sealed record CreateSupplierRequest(
     string Code,

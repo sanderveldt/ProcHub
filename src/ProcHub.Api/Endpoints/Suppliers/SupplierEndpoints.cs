@@ -9,6 +9,8 @@ public static class SupplierEndpoints
             .MapGroup("/api/suppliers")
             .WithTags("Suppliers");
         
+        group.MapGetSupplierEndpoint();
+        group.MapListSuppliersEndpoint();
         group.MapCreateSupplierEndpoint();
         group.MapUpdateSupplierEndpoint();
 
