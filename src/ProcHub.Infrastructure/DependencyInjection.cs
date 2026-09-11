@@ -50,7 +50,17 @@ public static class DependencyInjection
         var context = scope.ServiceProvider
             .GetRequiredService<ProcHubContext>();
         
-        
         await context.Database.MigrateAsync(cancellationToken);
+    }
+
+    public static async Task InitializeIdentityAsync(
+        this IServiceProvider serviceProvider)
+    {
+        await using var scope = serviceProvider.CreateAsyncScope();
+
+        var seeder = scope.ServiceProvider
+            .GetRequiredService<IdentitySeeder>();
+        
+        await seeder.SeedAsync();
     }
 }

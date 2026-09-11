@@ -1,15 +1,14 @@
 using ProcHub.Infrastructure;
 using ProcHub.Application;
 using ProcHub.Api.Endpoints.Suppliers;
-using ProcHub.Api.Exceptions;
+using ProcHub.Api;
+using ProcHub.Api.Endpoints.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
-
-builder.Services.AddProblemDetails();
-builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddApi();
 
 var app = builder.Build();
 
@@ -20,6 +19,12 @@ if (app.Environment.IsDevelopment())
     await app.Services.InitializeDatabaseAsync();   
 }
 
+await app.Services.InitializeIdentityAsync();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapAuthenticationEndpoints();
 app.MapSupplierEndpoints();
 
 app.Run();
