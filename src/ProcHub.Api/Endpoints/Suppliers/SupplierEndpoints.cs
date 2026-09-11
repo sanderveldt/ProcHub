@@ -7,7 +7,8 @@ public static class SupplierEndpoints
     {
         var group = endpoints
             .MapGroup("/api/suppliers")
-            .WithTags("Suppliers");
+            .WithTags("Suppliers")
+            .RequireAuthorization();
         
         group.MapGetSupplierEndpoint();
         group.MapListSuppliersEndpoint();

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 using ProcHub.Contracts.Authentication.Requests;
 using ProcHub.Infrastructure.Identity;
 
-namespace ProcHob.Api.Endpoints.Authentication;
+namespace ProcHub.Api.Endpoints.Authentication;
 
 public static class RefreshTokenEndpoint
 {

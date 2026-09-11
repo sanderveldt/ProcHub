@@ -1,5 +1,3 @@
-using ProcHob.Api.Endpoints.Authentication;
-
 namespace ProcHub.Api.Endpoints.Authentication;
 
 public static class AuthenticationEndpoints
