@@ -1,4 +1,4 @@
-namespace ProcHub.Contracts.Authentication;
+namespace ProcHub.Contracts.Authentication.Requests;
 
 public sealed record LoginRequest(
     string Email,

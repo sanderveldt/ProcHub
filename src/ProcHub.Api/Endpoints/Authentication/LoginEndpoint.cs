@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using ProcHub.Infrastructure.Identity;
-using ProcHub.Contracts.Authentication;
+using ProcHub.Contracts.Authentication.Requests;
 
 namespace ProcHub.Api.Endpoints.Authentication;
 
