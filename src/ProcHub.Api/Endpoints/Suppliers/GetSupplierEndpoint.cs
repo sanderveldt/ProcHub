@@ -34,13 +34,19 @@ public static class GetSupplierEndpoint
 
             result.FullName,
 
+            result.MainShippingTermId,
             result.MainShippingTermName,
+
+            result.SecondaryShippingTermId,
             result.SecondaryShippingTermName,
+
+            result.SampleShippingTermId,
             result.SampleShippingTermName,
 
+            result.DefaultPaymentTermId,
             result.SecondaryPaymentTermDescription,
 
-            result.MainLeadTimeDays,
+            result.ShippingTimeDays,
             result.ProductionTimeDays,
             result.MainLeadTimeDays,
             result.SecondaryLeadTimeDays,

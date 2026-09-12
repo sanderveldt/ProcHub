@@ -32,11 +32,19 @@ public static class ListUsersEndpoint
         {
             var roles = await userManager.GetRolesAsync(user);
 
+            if (roles.Count != 1)
+            {
+                throw new InvalidOperationException(
+                    $"User '{user.Id}' must have exactly one role, but has {roles.Count}.");
+            }
+
+            var role = roles[0];
+
             response.Add(new UserResponse(
                 user.Id,
                 user.Email ?? string.Empty,
                 user.DisplayName,
-                roles[0]));
+                role));
         }
         
         return TypedResults.Ok(response);

@@ -29,7 +29,7 @@ public sealed class UpdateSupplierCommandValidator
 
         RuleFor(x => x.SecondaryShippingTermId)
             .GreaterThan(0)
-            .When(x => x.SecondaryPaymentTermId.HasValue);
+            .When(x => x.SecondaryShippingTermId.HasValue);
 
         RuleFor(x => x.SampleShippingTermId)
             .GreaterThan(0)

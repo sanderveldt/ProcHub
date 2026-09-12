@@ -1,6 +1,7 @@
 using ProcHub.Infrastructure;
 using ProcHub.Application;
 using ProcHub.Api.Endpoints.Suppliers;
+using ProcHub.Api.Endpoints.Users;
 using ProcHub.Api;
 using ProcHub.Api.Endpoints.Authentication;
 
@@ -25,6 +26,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapAuthenticationEndpoints();
+app.MapUserEndpoints();
 app.MapSupplierEndpoints();
 
 app.Run();

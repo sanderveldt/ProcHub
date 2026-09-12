@@ -66,7 +66,7 @@ public static class UpdateUserEndpoint
 
         var currentRoles = await userManager.GetRolesAsync(user);
 
-        if (currentRoles.Contains(
+        if (!currentRoles.Contains(
             request.Role,
             StringComparer.OrdinalIgnoreCase))
         {

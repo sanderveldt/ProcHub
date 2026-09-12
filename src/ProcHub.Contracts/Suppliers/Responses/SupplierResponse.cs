@@ -7,10 +7,16 @@ public sealed record SupplierResponse(
 
     string? FullName,
 
+    int? MainShippingTermId,
     string? MainShippingTermName,
+
+    int? SecondaryShippingTermId,
     string? SecondaryShippingTermName,
+
+    int? SampleShippingTermId,
     string? SampleShippingTermName,
 
+    int? SecondaryPaymentTermId,
     string? SecondaryPaymentTermDescription,
 
     int? ShippingTimeDays,
