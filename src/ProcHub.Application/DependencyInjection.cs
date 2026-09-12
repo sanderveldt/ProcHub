@@ -1,6 +1,7 @@
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using ProcHub.Application.Features.PaymentTerms.Create;
+using ProcHub.Application.Features.PaymentTerms.Delete;
 using ProcHub.Application.Features.PaymentTerms.Get;
 using ProcHub.Application.Features.PaymentTerms.Update;
 using ProcHub.Application.Features.ShippingTerms.Create;
@@ -20,6 +21,7 @@ public static class DependencyInjection
         services.AddScoped<GetPaymentTermHandler>();
         services.AddScoped<ListPaymentTermsHandler>();
         services.AddScoped<UpdatePaymentTermHandler>();
+        services.AddScoped<DeletePaymentTermHandler>();
 
         services.AddScoped<CreateShippingTermHandler>();
         services.AddScoped<ListShippingTermsHandler>();
