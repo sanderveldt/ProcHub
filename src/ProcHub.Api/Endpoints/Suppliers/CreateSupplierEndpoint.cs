@@ -53,10 +53,16 @@ public static class CreateSupplierEndpoint
 
             result.FullName,
 
+            result.MainShippingTermId,
             result.MainShippingTermName,
+
+            result.SecondaryShippingTermId,
             result.SecondaryShippingTermName,
+
+            result.SampleShippingTermId,
             result.SampleShippingTermName,
 
+            result.SecondaryPaymentTermId,
             result.SecondaryPaymentTermDescription,
 
             result.ShippingTimeDays,
