@@ -14,8 +14,9 @@ public static class PaymentTermEndpoints
         group.MapListPaymentTermsEndpoint();
         group.MapCreatePaymentTermEndpoint();
 
-        // SuperUser or Admin roles required
+        // SuperUser or Admin roles
         group.MapUpdatePaymentTermEndpoint();
+        group.MapDeletePaymentTermEndpoint();
 
         return endpoints;
     }

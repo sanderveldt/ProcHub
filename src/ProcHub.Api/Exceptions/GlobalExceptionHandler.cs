@@ -30,6 +30,10 @@ public sealed class GlobalExceptionHandler(
                 (StatusCodes.Status409Conflict, 
                     "Resource already exists."),
             
+            ResourceInUseException =>
+                (StatusCodes.Status409Conflict,
+                    "Resource in use."),
+            
             DomainException =>
                 (StatusCodes.Status400BadRequest, 
                     "Business rule violation."),

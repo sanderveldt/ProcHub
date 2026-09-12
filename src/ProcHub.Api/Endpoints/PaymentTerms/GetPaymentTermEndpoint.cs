@@ -10,7 +10,7 @@ public static class GetPaymentTermEndpoint
     public static RouteGroupBuilder MapGetPaymentTermEndpoint(
         this RouteGroupBuilder group)
     {
-        group.MapGet("/{id:int}", HandleAsync)
+        group.MapGet("/{id}", HandleAsync)
              .WithName("GetPaymentTerm");
         
         return group;
