@@ -5,7 +5,7 @@ namespace ProcHub.Application.Features.PaymentTerms.Get;
 
 public sealed class ListPaymentTermsHandler(IProcHubDbContext dbContext)
 {
-    public async Task<IReadOnlyList<PaymentTermListItem>> HandleAsync(
+    public async Task<List<PaymentTermListItem>> HandleAsync(
         CancellationToken cancellationToken = default)
     {
         return await dbContext.PaymentTerms

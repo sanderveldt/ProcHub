@@ -1,4 +1,5 @@
 using FluentValidation;
+using ProcHub.Domain.Suppliers;
 
 namespace ProcHub.Application.Features.PaymentTerms.Create;
 
@@ -16,11 +17,15 @@ public sealed class CreatePaymentTermCommandValidator
             .WithMessage("Deposit percentage must be between 0 and 1.");
 
         RuleFor(x => x.PaymentTiming)
-            .IsInEnum()
+            .Must(value => Enum.IsDefined(
+                typeof(PaymentTerm.PaymentTimings),
+                value))
             .WithMessage("Invalid payment timing value.");
 
         RuleFor(x => x.DueDateReference)
-            .IsInEnum()
+            .Must(value => Enum.IsDefined(
+                typeof(PaymentTerm.PaymentDateReference),
+                value))
             .WithMessage("Invalid due date reference value.");
 
         RuleFor(x => x.BalanceDueDays)
