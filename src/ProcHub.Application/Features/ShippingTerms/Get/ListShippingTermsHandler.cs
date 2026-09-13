@@ -5,13 +5,13 @@ namespace ProcHub.Application.Features.ShippingTerms.Get;
 
 public sealed class ListShippingTermsHandler(IProcHubDbContext dbContext)
 {
-    public async Task<IReadOnlyList<ShippingTermListItem>> HandleAsync(
+    public async Task<List<ShippingTermResult>> HandleAsync(
         CancellationToken cancellationToken = default)
     {
         return await dbContext.ShippingTerms
             .AsNoTracking()
             .OrderBy(st => st.Name)
-            .Select(st => new ShippingTermListItem(
+            .Select(st => new ShippingTermResult(
                 st.Id,
                 st.Name,
                 st.Description))

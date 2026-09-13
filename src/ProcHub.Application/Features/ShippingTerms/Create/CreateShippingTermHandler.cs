@@ -11,7 +11,7 @@ public sealed class CreateShippingTermHandler(
     IProcHubDbContext dbContext,
     IValidator<CreateShippingTermCommand> validator)
 {
-    public async Task<string> HandleAsync(
+    public async Task<ShippingTermResult> HandleAsync(
         CreateShippingTermCommand command,
         CancellationToken cancellationToken = default)
     {
@@ -38,6 +38,9 @@ public sealed class CreateShippingTermHandler(
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return shippingTerm.Name;
+        return new ShippingTermResult(
+            shippingTerm.Id,
+            shippingTerm.Name,
+            shippingTerm.Description);
     }
 }
