@@ -8,4 +8,15 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+
+  <ProjectReference Include="..\ProcHub.Contracts\ProcHub.Contracts.csproj" />
+  
+  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+
+  <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.11" />
+  <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.11" />
+</ItemGroup>
+
+
 </Project>

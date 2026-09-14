@@ -4,6 +4,9 @@
              xmlns:local="clr-namespace:ProcHub.Wpf"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/PresentationFramework.Fluent;component/Themes/Fluent.xaml" />
+                <ResourceDictionary Source="Resources/ViewTemplates.xaml" />
     </Application.Resources>
 </Application>
