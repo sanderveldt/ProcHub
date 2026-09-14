@@ -3,7 +3,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using ProcHub.Application.Abstractions;
 using ProcHub.Application.Exceptions;
-using ProcHub.Domain.Suppliers;
+using ProcHub.Domain.ShippingTerms;
 
 namespace ProcHub.Application.Features.ShippingTerms.Create;
 

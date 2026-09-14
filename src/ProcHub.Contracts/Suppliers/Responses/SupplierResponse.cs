@@ -3,6 +3,8 @@ namespace ProcHub.Contracts.Suppliers.Responses;
 public sealed record SupplierResponse(
     string Code,
     string Name,
+
+    int DefaultPaymentTermId,
     string DefaultPaymentTermDescription,
 
     string? FullName,

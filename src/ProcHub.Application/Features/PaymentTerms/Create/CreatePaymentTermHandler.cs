@@ -1,6 +1,6 @@
 using FluentValidation;
 using ProcHub.Application.Abstractions;
-using ProcHub.Domain.Suppliers;
+using ProcHub.Domain.PaymentTerms;
 
 namespace ProcHub.Application.Features.PaymentTerms.Create;
 
@@ -19,8 +19,8 @@ public sealed class CreatePaymentTermHandler(
         var paymentTerm = new PaymentTerm(
             command.Description,
             command.DepositPercentage,
-            (PaymentTerm.PaymentTimings)command.PaymentTiming,
-            (PaymentTerm.PaymentDateReference)command.DueDateReference,
+            (PaymentTimings)command.PaymentTiming,
+            (PaymentDateReference)command.DueDateReference,
             command.BalanceDueDays);
         
         dbContext.PaymentTerms.Add(paymentTerm);

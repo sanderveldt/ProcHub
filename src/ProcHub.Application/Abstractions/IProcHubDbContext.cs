@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProcHub.Domain.Suppliers;
+using ProcHub.Domain.PaymentTerms;
+using ProcHub.Domain.ShippingTerms;
 
 namespace ProcHub.Application.Abstractions;
 

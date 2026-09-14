@@ -1,5 +1,5 @@
 using FluentValidation;
-using ProcHub.Domain.Suppliers;
+using ProcHub.Domain.PaymentTerms;
 
 namespace ProcHub.Application.Features.PaymentTerms.Create;
 
@@ -10,7 +10,9 @@ public sealed class CreatePaymentTermCommandValidator
     {
         RuleFor(x => x.Description)
             .NotEmpty()
-            .WithMessage("Payment term description is required.");
+            .WithMessage("Payment term description is required.")
+            .MaximumLength(PaymentTermConstants.DescriptionMaxLength)
+            .WithMessage($"PaymentTerm description cannot exceed {PaymentTermConstants.DescriptionMaxLength} characters.");
 
         RuleFor(x => x.DepositPercentage)
             .InclusiveBetween(0m, 1m)
@@ -18,13 +20,13 @@ public sealed class CreatePaymentTermCommandValidator
 
         RuleFor(x => x.PaymentTiming)
             .Must(value => Enum.IsDefined(
-                typeof(PaymentTerm.PaymentTimings),
+                typeof(PaymentTimings),
                 value))
             .WithMessage("Invalid payment timing value.");
 
         RuleFor(x => x.DueDateReference)
             .Must(value => Enum.IsDefined(
-                typeof(PaymentTerm.PaymentDateReference),
+                typeof(PaymentDateReference),
                 value))
             .WithMessage("Invalid due date reference value.");
 

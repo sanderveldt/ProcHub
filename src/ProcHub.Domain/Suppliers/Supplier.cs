@@ -1,4 +1,6 @@
 using ProcHub.Domain.Exceptions;
+using ProcHub.Domain.PaymentTerms;
+using ProcHub.Domain.ShippingTerms;
 
 namespace ProcHub.Domain.Suppliers;
 
@@ -54,7 +56,8 @@ public class Supplier
 
         if (code.Length > SupplierConstants.CodeMaxLength)
         {
-            throw new DomainException("Supplier code cannot exceed 10 characters.");
+            throw new DomainException(
+                $"Supplier code cannot exceed {SupplierConstants.CodeMaxLength} characters.");
         }
 
         Code = code.Trim();
@@ -69,7 +72,8 @@ public class Supplier
 
         if (name.Length > SupplierConstants.NameMaxLength)
         {
-            throw new DomainException("Supplier name cannot exceed 25 characters.");
+            throw new DomainException(
+                $"Supplier name cannot exceed {SupplierConstants.NameMaxLength} characters.");
         }
 
         Name = name.Trim();
@@ -85,7 +89,8 @@ public class Supplier
 
         if (fullName.Length > SupplierConstants.FullNameMaxLength)
         {
-            throw new DomainException("Supplier full name cannot exceed 75 characters.");
+            throw new DomainException(
+                $"Supplier full name cannot exceed {SupplierConstants.FullNameMaxLength} characters.");
         }
 
         FullName = fullName.Trim();

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using ProcHub.Domain.Suppliers;
+using ProcHub.Domain.ShippingTerms;
 
 namespace ProcHub.Infrastructure.Persistence.Configurations.Suppliers;
 
@@ -18,10 +18,10 @@ public sealed class ShippingTermConfiguration
             .IsUnique();
         builder.Property(s => s.Name)
             .IsRequired()
-            .HasMaxLength(7);
+            .HasMaxLength(ShippingTermConstants.NameMaxLength);
         
         builder.Property(s => s.Description)
             .IsRequired()
-            .HasMaxLength(30);
+            .HasMaxLength(ShippingTermConstants.DescriptionMaxLength);
     }
 }

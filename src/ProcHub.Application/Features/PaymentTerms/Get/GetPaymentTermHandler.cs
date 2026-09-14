@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ProcHub.Application.Abstractions;
 using ProcHub.Application.Exceptions;
-using ProcHub.Application.Features.PaymentTerms;
 
 namespace ProcHub.Application.Features.PaymentTerms.Get;
 

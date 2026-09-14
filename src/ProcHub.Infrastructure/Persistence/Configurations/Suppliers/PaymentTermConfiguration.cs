@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using ProcHub.Domain.Suppliers;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using ProcHub.Domain.PaymentTerms;
 
 namespace ProcHub.Infrastructure.Persistence.Configurations.Suppliers;
 
@@ -16,7 +15,7 @@ public sealed class PaymentTermConfiguration
 
         builder.Property(p => p.Description)
             .IsRequired()
-            .HasMaxLength(40);
+            .HasMaxLength(PaymentTermConstants.DescriptionMaxLength);
 
         builder.Property(p => p.DepositPercentage)
             .IsRequired()

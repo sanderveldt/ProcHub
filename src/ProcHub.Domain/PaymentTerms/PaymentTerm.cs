@@ -1,4 +1,6 @@
-namespace ProcHub.Domain.Suppliers;
+using ProcHub.Domain.Exceptions;
+
+namespace ProcHub.Domain.PaymentTerms;
 
 public class PaymentTerm
 {
@@ -30,9 +32,15 @@ public class PaymentTerm
 
     public void SetDescription(string description)
     {
-        if(string.IsNullOrWhiteSpace(description))
+        if (string.IsNullOrWhiteSpace(description))
         {
-            throw new ArgumentException("Payment term description is required.");
+            throw new DomainException("Payment term description is required.");
+        }
+
+        if (description.Length > PaymentTermConstants.DescriptionMaxLength)
+        {
+            throw new DomainException(
+                $"PaymentTerm description cannot exceed {PaymentTermConstants.DescriptionMaxLength} characters.");
         }
 
         Description = description.Trim();
@@ -42,8 +50,7 @@ public class PaymentTerm
     {
         if(depositPercentage is < 0m or > 1m)
         {
-            throw new ArgumentOutOfRangeException(
-                nameof(depositPercentage),
+            throw new DomainException(
                 "Deposit percentage must be between 0 and 1.");
         }
 
@@ -52,11 +59,23 @@ public class PaymentTerm
 
     public void SetPaymentTiming(PaymentTimings paymentTiming)
     {
+        if (!Enum.IsDefined(paymentTiming))
+        {
+            throw new DomainException(
+                $"{paymentTiming} is not a valid PaymentTiming.");
+        }
+
         PaymentTiming = paymentTiming;
     }
 
     public void SetDateReference(PaymentDateReference dateReference)
     {
+        if (!Enum.IsDefined(dateReference))
+        {
+            throw new DomainException(
+                $"{dateReference} is not a valid Payment date reference.");
+        }
+
         DueDateReference = dateReference;
     }
 
@@ -64,7 +83,7 @@ public class PaymentTerm
     {
         if (int.IsNegative(balanceDueDays))
         {
-            throw new ArgumentException("Due days can't be negative.");
+            throw new DomainException("Due days can't be negative.");
         }
 
         BalanceDueDays = balanceDueDays;
@@ -82,26 +101,8 @@ public class PaymentTerm
             PaymentTimings.After =>
                 referenceDate.AddDays(BalanceDueDays),
             
-            _ => throw new InvalidOperationException(
+            _ => throw new DomainException(
                     "Invalid payment timing.")
         };
     }
-
-    public enum PaymentTimings
-    {
-        On = 0,
-        Before = 1,
-        After = 2,
-    }
-
-    public enum PaymentDateReference
-    {
-        OrderDate = 0,
-        InvoiceDate = 1,
-        ShippingDate = 2,
-        ArrivalDate = 3,
-        BillOfLadingDate = 4,
-        ProductionDoneDate = 5
-    }
-
 }

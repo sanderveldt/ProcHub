@@ -30,6 +30,8 @@ public static class GetSupplierEndpoint
         var response = new SupplierResponse(
             result.Code,
             result.Name,
+
+            result.DefaultPaymentTermId,
             result.DefaultPaymentTermDescription,
 
             result.FullName,
@@ -43,7 +45,7 @@ public static class GetSupplierEndpoint
             result.SampleShippingTermId,
             result.SampleShippingTermName,
 
-            result.DefaultPaymentTermId,
+            result.SecondaryPaymentTermId,
             result.SecondaryPaymentTermDescription,
 
             result.ShippingTimeDays,

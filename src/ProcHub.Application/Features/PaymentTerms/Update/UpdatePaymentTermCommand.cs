@@ -1,5 +1,3 @@
-using ProcHub.Domain.Suppliers;
-
 namespace ProcHub.Application.Features.PaymentTerms.Update;
 
 public sealed record UpdatePaymentTermCommand(

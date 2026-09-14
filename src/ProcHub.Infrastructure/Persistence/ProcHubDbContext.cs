@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using ProcHub.Infrastructure.Identity;
 using ProcHub.Domain.Suppliers;
+using ProcHub.Domain.PaymentTerms;
+using ProcHub.Domain.ShippingTerms;
 using ProcHub.Application.Abstractions;
 
 namespace ProcHub.Infrastructure.Persistence;

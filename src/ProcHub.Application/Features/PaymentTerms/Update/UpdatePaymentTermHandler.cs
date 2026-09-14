@@ -2,7 +2,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using ProcHub.Application.Abstractions;
 using ProcHub.Application.Exceptions;
-using ProcHub.Domain.Suppliers;
+using ProcHub.Domain.PaymentTerms;
 
 namespace ProcHub.Application.Features.PaymentTerms.Update;
 
@@ -28,8 +28,8 @@ public sealed class UpdatePaymentTermHandler(
             
         paymentTerm.SetDescription(command.Description);
         paymentTerm.SetDepositPercentage(command.DepositPercentage);
-        paymentTerm.SetPaymentTiming((PaymentTerm.PaymentTimings)command.PaymentTiming);
-        paymentTerm.SetDateReference((PaymentTerm.PaymentDateReference)command.DueDateReference);
+        paymentTerm.SetPaymentTiming((PaymentTimings)command.PaymentTiming);
+        paymentTerm.SetDateReference((PaymentDateReference)command.DueDateReference);
         paymentTerm.SetBalanceDueDays(command.BalanceDueDays);
 
         await dbContext.SaveChangesAsync(cancellationToken);

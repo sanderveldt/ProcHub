@@ -1,4 +1,5 @@
 using FluentValidation;
+using ProcHub.Domain.ShippingTerms;
 
 namespace ProcHub.Application.Features.ShippingTerms.Create;
 
@@ -9,10 +10,14 @@ public sealed class CreateShippingTermValidator
     {
         RuleFor(st => st.Name)
             .NotEmpty()
-            .MaximumLength(7);
+            .WithMessage("ShippingTerm name is required.")
+            .MaximumLength(ShippingTermConstants.NameMaxLength)
+            .WithMessage($"Shipping term name cannot exceed {ShippingTermConstants.NameMaxLength} characters.");
         
         RuleFor(st => st.Description)
             .NotEmpty()
-            .MaximumLength(30);
+            .WithMessage("ShippingTerm description is required.")
+            .MaximumLength(ShippingTermConstants.DescriptionMaxLength)
+            .WithMessage($"ShippingTerm description cannot exceed {ShippingTermConstants.DescriptionMaxLength} characters.");
     }
 }
