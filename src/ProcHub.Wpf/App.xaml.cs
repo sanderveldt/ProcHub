@@ -7,6 +7,7 @@ using ProcHub.Wpf.Features.Settings.ViewModels;
 using ProcHub.Wpf.Features.ShippingTerms.ViewModels;
 using ProcHub.Wpf.Features.Suppliers.ViewModels;
 using ProcHub.Wpf.Features.Users.ViewModels;
+using ProcHub.Wpf.Infrastructure.Authentication;
 using ProcHub.Wpf.Infrastructure.Navigation;
 using ProcHub.Wpf.Shell.ViewModels;
 using ProcHub.Wpf.Shell.Views;
@@ -56,6 +57,7 @@ public partial class App : Application
 
     private static void ConfigureServices(IServiceCollection services)
     {
+        services.AddSingleton<AuthSession>();
         services.AddSingleton<INavigationService, NavigationService>();
 
         // Shell
@@ -63,7 +65,7 @@ public partial class App : Application
         services.AddSingleton<MainWindow>();
         services.AddSingleton<HomeViewModel>();
         services.AddSingleton<SettingsViewModel>();
-    
+
         services.AddSingleton<OpenOrdersDashboardViewModel>();
 
         services.AddSingleton<SuppliersViewModel>();

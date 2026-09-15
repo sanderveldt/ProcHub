@@ -6,7 +6,7 @@
     xmlns:homeViews="clr-namespace:ProcHub.Wpf.Features.Home.Views"
     xmlns:settingsVm="clr-namespace:ProcHub.Wpf.Features.Settings.ViewModels"
     xmlns:usersVm="clr-namespace:ProcHub.Wpf.Features.Users.ViewModels"
-    xmlns:purchaseOrdersVm="clr-namespace:ProcHub.Wpf.Features.PurchaseOrders.Open.Dashboard"
+    xmlns:purchaseOrdersVm="clr-namespace:ProcHub.Wpf.Features.PurchaseOrders.Open.Dashboard.ViewModels"
     xmlns:suppliersVm="clr-namespace:ProcHub.Wpf.Features.Suppliers.ViewModels"
     xmlns:paymentTermsVm="clr-namespace:ProcHub.Wpf.Features.PaymentTerms.ViewModels"
     xmlns:shippingTermsVm="clr-namespace:ProcHub.Wpf.Features.ShippingTerms.ViewModels">
