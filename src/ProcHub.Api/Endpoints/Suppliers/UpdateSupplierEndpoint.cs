@@ -49,6 +49,8 @@ public static class UpdateSupplierEndpoint
         var response = new SupplierResponse(
             result.Code,
             result.Name,
+            
+            result.DefaultPaymentTermId,
             result.DefaultPaymentTermDescription,
 
             result.FullName,

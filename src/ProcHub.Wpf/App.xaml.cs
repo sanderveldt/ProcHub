@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ProcHub.Contracts.Authentication.Responses;
 using ProcHub.Wpf.Features.Home.ViewModels;
 using ProcHub.Wpf.Features.PaymentTerms.ViewModels;
 using ProcHub.Wpf.Features.Settings.ViewModels;
@@ -35,6 +36,18 @@ public partial class App : Application
         _host.StartAsync()
              .GetAwaiter()
              .GetResult();
+
+        
+        // Temporary Development login, remove later
+        var authSession =
+            _host.Services.GetRequiredService<AuthSession>();
+        
+        authSession.SetCurrentUser(
+            new CurrentUserResponse(
+                Id: 1,
+                Email: "dev@prochub.test",
+                DisplayName: "Admin",
+                Role: AppRoles.Admin));
 
         var navigation = _host.Services.GetRequiredService<INavigationService>();
         navigation.NavigateTo<HomeViewModel>();
