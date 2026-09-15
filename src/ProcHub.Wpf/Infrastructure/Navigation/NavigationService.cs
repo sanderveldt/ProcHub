@@ -1,8 +1,11 @@
 using Microsoft.Extensions.DependencyInjection;
+using ProcHub.Wpf.Infrastructure.Authentication;
 
 namespace ProcHub.Wpf.Infrastructure.Navigation;
 
-public sealed class NavigationService(IServiceProvider serviceProvider)
+public sealed class NavigationService(
+    IServiceProvider serviceProvider,
+    AuthSession authSession)
     : ObservableObject, INavigationService
 {
     private PageViewModel? _currentViewModel;
@@ -16,6 +19,21 @@ public sealed class NavigationService(IServiceProvider serviceProvider)
     public void NavigateTo<TViewModel>()
         where TViewModel : PageViewModel
     {
-        CurrentViewModel = serviceProvider.GetRequiredService<TViewModel>();
+        if (!authSession.IsAuthenticated)
+        {
+            throw new UnauthorizedAccessException(
+                "Unauthorized user.");
+        }
+
+        var viewModel =
+            serviceProvider.GetRequiredService<TViewModel>();
+
+        if (!viewModel.IsAllowedFor(authSession.Role))
+        {
+            throw new UnauthorizedAccessException(
+                $"Role '{authSession.Role}' is not allowed to access '{viewModel.Title}'.");
+        }
+
+        CurrentViewModel = viewModel;
     }
 }
