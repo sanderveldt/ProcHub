@@ -109,6 +109,8 @@ public partial class App : Application
         services.AddSingleton<AuthApiClient>();
         services.AddTransient<BearerTokenHandler>();
 
+        services.AddSingleton<ShippingTermsApiClient>();
+
         services.AddHttpClient(
             ApiClientNames.Authentication,
             client =>

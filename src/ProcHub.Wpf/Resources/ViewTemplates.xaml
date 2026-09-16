@@ -9,7 +9,8 @@
     xmlns:purchaseOrdersVm="clr-namespace:ProcHub.Wpf.Features.PurchaseOrders.Open.Dashboard.ViewModels"
     xmlns:suppliersVm="clr-namespace:ProcHub.Wpf.Features.Suppliers.ViewModels"
     xmlns:paymentTermsVm="clr-namespace:ProcHub.Wpf.Features.PaymentTerms.ViewModels"
-    xmlns:shippingTermsVm="clr-namespace:ProcHub.Wpf.Features.ShippingTerms.ViewModels">
+    xmlns:shippingTermsVm="clr-namespace:ProcHub.Wpf.Features.ShippingTerms.ViewModels"
+    xmlns:shippingTermsViews="clr-namespace:ProcHub.Wpf.Features.ShippingTerms.Views">
 
     <DataTemplate DataType="{x:Type homeVm:HomeViewModel}">
         <homeViews:HomeView />
@@ -28,7 +29,7 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type shippingTermsVm:ShippingTermsViewModel}">
-        <shellViews:PlaceholderView />
+        <shippingTermsViews:ShippingTermsView />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type usersVm:UsersViewModel}">

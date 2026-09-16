@@ -94,7 +94,7 @@ public sealed class MainWindowViewModel : ObservableObject
 
             new(
                 "Purchase Orders",
-                "\xE81E",
+                "\xE70A",
                 children:
                 [
                     new(

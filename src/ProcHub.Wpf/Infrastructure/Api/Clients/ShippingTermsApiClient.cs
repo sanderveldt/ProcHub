@@ -5,7 +5,7 @@ using ProcHub.Contracts.ShippingTerms.Requests;
 using System.Runtime.InteropServices;
 
 namespace ProcHub.Wpf.Infrastructure.Api.Clients;
-internal class ShippingTermsApiClient(
+public class ShippingTermsApiClient(
     IHttpClientFactory httpClientFactory)
 {        
     public async Task<List<ShippingTermResponse>> GetAllAsync(
