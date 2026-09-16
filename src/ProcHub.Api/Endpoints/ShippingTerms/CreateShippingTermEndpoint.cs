@@ -18,7 +18,7 @@ public static class CreateShippingTermEndpoint
     }
 
     private static async Task<Created<ShippingTermResponse>> HandleAsync(
-        ShippingTermRequest request,
+        CreateShippingTermRequest request,
         CreateShippingTermHandler handler,
         CancellationToken cancellationToken)
     {
