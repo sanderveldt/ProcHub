@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Windows;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ProcHub.Contracts.Authentication.Responses;
@@ -8,6 +11,8 @@ using ProcHub.Wpf.Features.Settings.ViewModels;
 using ProcHub.Wpf.Features.ShippingTerms.ViewModels;
 using ProcHub.Wpf.Features.Suppliers.ViewModels;
 using ProcHub.Wpf.Features.Users.ViewModels;
+using ProcHub.Wpf.Infrastructure.Api;
+using ProcHub.Wpf.Infrastructure.Api.Clients;
 using ProcHub.Wpf.Infrastructure.Authentication;
 using ProcHub.Wpf.Infrastructure.Navigation;
 using ProcHub.Wpf.Shell.ViewModels;
@@ -23,8 +28,15 @@ public partial class App : Application
 
     public App()
     {
-        var builder = Host.CreateApplicationBuilder();
-        ConfigureServices(builder.Services);
+        var builder = Host.CreateApplicationBuilder(
+            new HostApplicationBuilderSettings
+            {
+                ContentRootPath = AppContext.BaseDirectory
+            });
+        
+        ConfigureServices(
+            builder.Services,
+            builder.Configuration);
 
         _host = builder.Build();
     }
@@ -49,11 +61,16 @@ public partial class App : Application
                 DisplayName: "Admin",
                 Role: AppRoles.Admin));
 
-        var navigation = _host.Services.GetRequiredService<INavigationService>();
+        var navigation = _host
+            .Services.GetRequiredService<INavigationService>();
+
         navigation.NavigateTo<HomeViewModel>();
 
-        var mainWindow = _host.Services.GetRequiredService<MainWindow>();
+        var mainWindow = _host
+            .Services.GetRequiredService<MainWindow>();
+
         MainWindow = mainWindow;
+
         mainWindow.Show();
     }
 
@@ -68,9 +85,51 @@ public partial class App : Application
         base.OnExit(e);
     }
 
-    private static void ConfigureServices(IServiceCollection services)
+    private static void ConfigureServices(
+        IServiceCollection services,
+        IConfiguration configuration)
     {
+        var apiBaseUrl = configuration
+            ["Api:BaseUrl"]
+            ?? throw new InvalidOperationException(
+                "Api:BaseUrl is not configured.");
+        
+        if (!Uri.TryCreate(
+            apiBaseUrl,
+            UriKind.Absolute,
+            out var apiBaseUri))
+        {
+            throw new InvalidOperationException(
+                $"Api:BaseUrl '{apiBaseUrl}'is invalid.");
+        }
+
         services.AddSingleton<AuthSession>();
+        services.AddSingleton<TokenStore>();
+
+        services.AddSingleton<AuthApiClient>();
+        services.AddTransient<BearerTokenHandler>();
+
+        services.AddHttpClient(
+            ApiClientNames.Authentication,
+            client =>
+            {
+                ConfigureApiClient(
+                    client,
+                    apiBaseUri);
+                
+            });
+
+        services.AddHttpClient(
+            ApiClientNames.Authorized,
+            client =>
+            {
+                ConfigureApiClient(
+                    client,
+                    apiBaseUri);
+            })
+            .AddHttpMessageHandler<BearerTokenHandler>();
+            
+
         services.AddSingleton<INavigationService, NavigationService>();
 
         // Shell
@@ -85,6 +144,24 @@ public partial class App : Application
         services.AddSingleton<PaymentTermsViewModel>();
         services.AddSingleton<ShippingTermsViewModel>();
         services.AddSingleton<UsersViewModel>();
+
+
+    }
+
+    private static void ConfigureApiClient(
+        HttpClient client,
+        Uri apiBaseUri)
+    {
+        client.BaseAddress = apiBaseUri;
+
+        client.Timeout = TimeSpan.FromSeconds(30);
+
+        client.DefaultRequestHeaders
+            .Accept.Clear();
+
+        client.DefaultRequestHeaders
+            .Accept.Add(
+                new MediaTypeWithQualityHeaderValue(
+                    "application/json"));
     }
 }
-

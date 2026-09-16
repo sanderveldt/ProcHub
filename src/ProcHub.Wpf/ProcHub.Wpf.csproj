@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\ShippingTerms\NewFolder\**" />
+    <EmbeddedResource Remove="Features\ShippingTerms\NewFolder\**" />
+    <None Remove="Features\ShippingTerms\NewFolder\**" />
+    <Page Remove="Features\ShippingTerms\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
 
   <ProjectReference Include="..\ProcHub.Contracts\ProcHub.Contracts.csproj" />
   
