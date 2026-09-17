@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Windows;
 using ProcHub.Contracts.ShippingTerms.Requests;
 using ProcHub.Contracts.ShippingTerms.Responses;
 using ProcHub.Wpf.Infrastructure;
@@ -28,9 +29,34 @@ public sealed class ShippingTermsViewModel : PageViewModel
         NewCommand = new RelayCommand(StartNew);
 
         SaveCommand = new AsyncRelayCommand(SaveAsync, CanSave);
+
+        DeleteCommand = new AsyncRelayCommand(DeleteAsync, CanDelete);
     }
 
+    private ShippingTermResponse? _selectedShippingTerm;
+
     public ObservableCollection<ShippingTermResponse> ShippingTerms { get; } = new();
+
+    public ShippingTermResponse? SelectedShippingTerm
+    {
+        get => _selectedShippingTerm;
+        set
+        {
+            if (SetProperty(ref _selectedShippingTerm, value))
+            {
+                DeleteCommand.RaiseCanExecuteChanged();
+
+                if (value is not null)
+                {
+                    Id = value.Id;
+                    Name = value.Name;
+                    Description_ = value.Description;
+
+                    IsCreating = false;
+                }
+            }
+        }
+    }
 
     public int? Id
     {
@@ -80,6 +106,8 @@ public sealed class ShippingTermsViewModel : PageViewModel
     public RelayCommand NewCommand { get; }
     public AsyncRelayCommand SaveCommand { get; }
 
+    public AsyncRelayCommand DeleteCommand { get; }
+
     public async Task LoadAllAsync(
         CancellationToken cancellationToken = default)
     {
@@ -98,13 +126,13 @@ public sealed class ShippingTermsViewModel : PageViewModel
 
     private void StartNew()
     {
+        SelectedShippingTerm = null;
+
         Id = null;
         Name = string.Empty;
         Description_ = string.Empty;
 
         IsCreating = true;
-
-        SaveCommand.RaiseCanExecuteChanged();
     }
 
     private bool CanSave()
@@ -112,6 +140,11 @@ public sealed class ShippingTermsViewModel : PageViewModel
         return IsCreating &&
             !string.IsNullOrWhiteSpace(Name) &&
             !string.IsNullOrWhiteSpace(Description_);
+    }
+
+    private bool CanDelete()
+    {
+        return SelectedShippingTerm is not null;
     }
 
     private async Task SaveAsync()
@@ -170,5 +203,38 @@ public sealed class ShippingTermsViewModel : PageViewModel
         Id = created.Id;
         Name = created.Name;
         Description_ = created.Description;
+    }
+
+    public async Task DeleteAsync()
+    {
+        var selected = SelectedShippingTerm;
+
+        if (selected is null)
+        {
+            return;
+        }
+
+        var result = MessageBox.Show(
+            $"Are you sure you want to delete shipping term '{selected.Name}'?",
+            "Delete:",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+
+        if (result != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        await _apiClient.DeleteAsync(selected.Id);
+
+        ShippingTerms.Remove(selected);
+
+        SelectedShippingTerm = null;
+
+        Id = null;
+        Name = string.Empty;
+        Description_ = string.Empty;
+
+
     }
 }

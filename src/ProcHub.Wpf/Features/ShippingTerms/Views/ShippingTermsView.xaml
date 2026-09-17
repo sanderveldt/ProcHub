@@ -23,7 +23,7 @@
                     <StackPanel
                         Width="400"
                         Margin="18"
-                        HorizontalAlignment="Center">
+                        HorizontalAlignment="Left">
 
                         <TextBlock
                             Text="ID"
@@ -78,13 +78,18 @@
                                 Margin="0,0,8,0"
                                 HorizontalAlignment="Center"/>
 
-
                             <Button
                                 Content="Save"
                                 Command="{Binding SaveCommand}"
                                 Width="100"
-                                Margin="0,0,0,0"
+                                Margin="0,0,8,0"
                                 HorizontalAlignment="Center"/>
+
+                            <Button
+                                Content="Delete"
+                                Command="{Binding DeleteCommand}"
+                                Width="100"
+                                Margin="0,0,8,0"/>
 
 
 
@@ -108,11 +113,14 @@
 
                         <DataGrid
                             ItemsSource="{Binding ShippingTerms}"
+                            SelectedItem="{Binding SelectedShippingTerm,
+                                                   Mode=TwoWay}"
                             AutoGenerateColumns="False"
                             IsReadOnly="True"
                             CanUserAddRows="False"
-                            SelectionMode="Single">
-
+                            SelectionMode="Single"
+                            SelectionUnit="FullRow">
+                            
                             <DataGrid.Columns>
 
                                 <DataGridTextColumn
