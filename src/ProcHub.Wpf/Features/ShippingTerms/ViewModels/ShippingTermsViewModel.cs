@@ -1,4 +1,6 @@
+using System.Collections.ObjectModel;
 using ProcHub.Contracts.ShippingTerms.Requests;
+using ProcHub.Contracts.ShippingTerms.Responses;
 using ProcHub.Wpf.Infrastructure;
 using ProcHub.Wpf.Infrastructure.Api.Clients;
 using ProcHub.Wpf.Infrastructure.Navigation;
@@ -28,6 +30,8 @@ public sealed class ShippingTermsViewModel : PageViewModel
         SaveCommand = new AsyncRelayCommand(SaveAsync, CanSave);
     }
 
+    public ObservableCollection<ShippingTermResponse> ShippingTerms { get; } = new();
+
     public int? Id
     {
         get => _id;
@@ -51,19 +55,44 @@ public sealed class ShippingTermsViewModel : PageViewModel
     public string Description_
     {
         get => _description;
-        set => SetProperty(ref _description, value);
+        set
+        { 
+            if (SetProperty(ref _description, value))
+            {
+                SaveCommand.RaiseCanExecuteChanged();
+            }
+        
+        }
     }
 
     public bool IsCreating
     {
         get => _isCreating;
-        private set =>
-            SetProperty(ref _isCreating, value);
-
+        private set
+        {
+            if (SetProperty(ref _isCreating, value))
+            {
+                SaveCommand.RaiseCanExecuteChanged();
+            }
+        }
     }
 
     public RelayCommand NewCommand { get; }
     public AsyncRelayCommand SaveCommand { get; }
+
+    public async Task LoadAllAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var shippingTerms = await _apiClient
+            .GetAllAsync(cancellationToken);
+
+        ShippingTerms.Clear();
+
+        foreach (var shippingTerm in shippingTerms)
+        {
+            ShippingTerms.Add(shippingTerm);
+        }
+    }
 
     
 
@@ -99,6 +128,8 @@ public sealed class ShippingTermsViewModel : PageViewModel
 
         var created = await _apiClient.CreateAsync(request);
 
+        ShippingTerms.Add(created);
+
         Id = created.Id;
         Name = created.Name;
         Description_ = created.Description;
@@ -108,12 +139,14 @@ public sealed class ShippingTermsViewModel : PageViewModel
         SaveCommand.RaiseCanExecuteChanged();
     }
 
-    private async Task LoadAsync(
+
+
+    public async Task LoadAsync(
         int id,
         CancellationToken cancellationToken = default)
     {
         var shippingTerm = await _apiClient
-            .GetbyIdASync(
+            .GetbyIdAsync(
                 id, cancellationToken);
 
         Id = shippingTerm.Id;
@@ -121,13 +154,13 @@ public sealed class ShippingTermsViewModel : PageViewModel
         Description_ = shippingTerm.Description;
     }
 
-    private async Task CreateAsync(
+    public async Task CreateAsync(
         CancellationToken cancellationToken = default)
     {
         var request =
             new CreateShippingTermRequest(
                 Name,
-                Description);
+                Description_);
 
         var created = await _apiClient
             .CreateAsync(

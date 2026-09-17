@@ -28,7 +28,7 @@ public class ShippingTermsApiClient(
             ?? [];
     }
 
-    public async Task<ShippingTermResponse> GetbyIdASync(
+    public async Task<ShippingTermResponse> GetbyIdAsync(
         int id,
         CancellationToken cancellationToken = default)
     {

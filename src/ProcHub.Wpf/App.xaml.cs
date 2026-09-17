@@ -17,9 +17,11 @@ using ProcHub.Wpf.Infrastructure.Authentication;
 using ProcHub.Wpf.Infrastructure.Navigation;
 using ProcHub.Wpf.Shell.ViewModels;
 using ProcHub.Wpf.Shell.Views;
+using ProcHub.Wpf.Infrastructure.Services;
 
 using OpenOrdersDashboardViewModel = 
     ProcHub.Wpf.Features.PurchaseOrders.Open.Dashboard.ViewModels.DashboardViewModel;
+using System.Net.Sockets;
 
 namespace ProcHub.Wpf;
 public partial class App : Application
@@ -41,37 +43,50 @@ public partial class App : Application
         _host = builder.Build();
     }
 
-    protected override void OnStartup(StartupEventArgs e)
+    protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
 
-        _host.StartAsync()
-             .GetAwaiter()
-             .GetResult();
+        try{
 
         
-        // Temporary Development login, remove later
-        var authSession =
-            _host.Services.GetRequiredService<AuthSession>();
+            await _host.StartAsync();
+
         
-        authSession.SetCurrentUser(
-            new CurrentUserResponse(
-                Id: 1,
-                Email: "dev@prochub.test",
-                DisplayName: "Admin",
-                Role: AppRoles.Admin));
+            // Temporary Development authlogin, remove later
+            var authentication = _host
+                .Services.GetRequiredService<AuthenticationService>();
+        
+            const string devEmail = "admin@ProcHub.local";
+            const string devPassword = "StrongPassword123!";
 
-        var navigation = _host
-            .Services.GetRequiredService<INavigationService>();
+            await authentication.LoginAsync(
+                    devEmail,
+                    devPassword);
+            
 
-        navigation.NavigateTo<HomeViewModel>();
+            var navigation = _host
+                .Services.GetRequiredService<INavigationService>();
 
-        var mainWindow = _host
-            .Services.GetRequiredService<MainWindow>();
+            navigation.NavigateTo<HomeViewModel>();
 
-        MainWindow = mainWindow;
+            var mainWindow = _host
+                .Services.GetRequiredService<MainWindow>();
 
-        mainWindow.Show();
+            MainWindow = mainWindow;
+
+            mainWindow.Show();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(
+                ex.ToString(),
+                "start up failed",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+            
+            Shutdown();
+        }
     }
 
     protected override void OnExit(ExitEventArgs e)
@@ -132,6 +147,7 @@ public partial class App : Application
             .AddHttpMessageHandler<BearerTokenHandler>();
             
 
+        services.AddSingleton<AuthenticationService>();
         services.AddSingleton<INavigationService, NavigationService>();
 
         // Shell
