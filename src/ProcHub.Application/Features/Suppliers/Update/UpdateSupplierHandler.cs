@@ -14,6 +14,10 @@ public sealed class UpdateSupplierHandler(
         UpdateSupplierCommand command,
         CancellationToken cancellationToken = default)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(code);
+
+        code = code.Trim();
+
         await validator.ValidateAndThrowAsync(
             command,
             cancellationToken: cancellationToken);

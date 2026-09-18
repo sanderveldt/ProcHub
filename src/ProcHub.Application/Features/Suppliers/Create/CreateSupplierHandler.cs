@@ -14,19 +14,23 @@ public sealed class CreateSupplierHandler(
         CreateSupplierCommand command,
         CancellationToken cancellationToken = default)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(command.Code);
+
+        var code = command.Code.Trim();
+
         await validator.ValidateAndThrowAsync(
             command, 
             cancellationToken: cancellationToken);
         
         var codeExists = await dbContext.Suppliers
             .AnyAsync(
-                s => s.Code == command.Code,
+                s => s.Code == code,
                 cancellationToken);
             
         if (codeExists)
         {
             throw new DuplicateResourceException(
-                $"A supplier with code {command.Code} already exists.");
+                $"A supplier with code {code} already exists.");
         }
 
         var defaultPaymentTerm = await dbContext.PaymentTerms
@@ -37,7 +41,7 @@ public sealed class CreateSupplierHandler(
                 $"PaymentTerm Id {command.DefaultPaymentTermId} not found");
             
         var supplier = new Supplier(
-            command.Code,
+            code,
             command.Name,
             defaultPaymentTerm);
         
@@ -96,7 +100,6 @@ public sealed class CreateSupplierHandler(
         supplier.SetMainLeadTimeDays(command.MainLeadTimeDays);
         supplier.SetSecondaryLeadTimeDays(command.SecondaryLeadTimeDays);
         supplier.SetSampleLeadTimeDays(command.SampleLeadTimeDays);
-
 
         dbContext.Suppliers.Add(supplier);
 

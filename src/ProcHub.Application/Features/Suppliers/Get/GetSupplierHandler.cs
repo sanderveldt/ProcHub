@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProcHub.Application.Exceptions;
 using ProcHub.Application.Abstractions;
+using System.Data;
 
 namespace ProcHub.Application.Features.Suppliers.Get;
 
@@ -10,9 +11,13 @@ public sealed class GetSupplierHandler(IProcHubDbContext dbContext)
         GetSupplierQuery query,
         CancellationToken cancellationToken = default)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(query.Code);
+
+        var code = query.Code.Trim();
+
         var supplier = await dbContext.Suppliers
             .AsNoTracking()
-            .Where(s => s.Code == query.Code)
+            .Where(s => s.Code == code)
 
             .Select(s => new SupplierResult(
                 s.Code,
@@ -52,7 +57,7 @@ public sealed class GetSupplierHandler(IProcHubDbContext dbContext)
 
             .FirstOrDefaultAsync(cancellationToken)
             ?? throw new NotFoundException(
-                $"Supplier with code {query.Code} not found");
+                $"Supplier with code {code} not found");
             
         return supplier;
     }

@@ -14,7 +14,8 @@ public static class ChangeSupplierStatusEndpoint
     {
         group.MapPatch("/{code}/status", HandleAsync)
              .WithName("ChangeSupplierStatus")
-             .RequireAuthorization(AppPolicies.SuperUserOrAdmin);
+             .RequireAuthorization(
+                AppPolicies.SuperUserOrAdmin);
         
         return group;
     }

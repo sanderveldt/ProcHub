@@ -54,13 +54,15 @@ public class Supplier
             throw new DomainException("Supplier code is required.");
         }
 
+        code = code.Trim();
+
         if (code.Length > SupplierConstants.CodeMaxLength)
         {
             throw new DomainException(
                 $"Supplier code cannot exceed {SupplierConstants.CodeMaxLength} characters.");
         }
 
-        Code = code.Trim();
+        Code = code;
     }
 
     public void SetName(string name)

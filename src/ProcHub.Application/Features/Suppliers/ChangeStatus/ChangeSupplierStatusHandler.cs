@@ -17,6 +17,8 @@ public sealed class ChangeSupplierStatusHandler(
         ChangeSupplierStatusCommand command,
         CancellationToken cancellationToken = default)
     {
+        code = code.Trim();
+
         await validator.ValidateAndThrowAsync(
             command,
             cancellationToken: cancellationToken);
