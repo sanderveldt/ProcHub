@@ -23,8 +23,7 @@ public sealed class ApiException : Exception
         HttpStatusCode statusCode,
         ApiProblemDetails? problemDetails,
         string? reasonPhrase = null)
-        : base(
-            ErrorMessage(
+        : base(ErrorMessage(
                 statusCode,
                 problemDetails,
                 reasonPhrase))

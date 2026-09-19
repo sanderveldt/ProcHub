@@ -17,7 +17,9 @@ public sealed class PaymentTermsApiClient(
             "api/payment-terms",
                 cancellationToken);
         
-        response.EnsureSuccessStatusCode();
+        await response
+            .EnsureApiSuccesAsync(
+                cancellationToken);
 
         var paymentTerms = await response
             .Content.ReadFromJsonAsync<
@@ -38,7 +40,9 @@ public sealed class PaymentTermsApiClient(
             $"api/payment-terms/{id}",
             cancellationToken);
         
-        response.EnsureSuccessStatusCode();
+        await response
+            .EnsureApiSuccesAsync(
+                cancellationToken);
 
         var paymentTerm = await response
             .Content.ReadFromJsonAsync<
@@ -62,7 +66,9 @@ public sealed class PaymentTermsApiClient(
                 request,
                 cancellationToken);
         
-        response.EnsureSuccessStatusCode();
+        await response
+            .EnsureApiSuccesAsync(
+                cancellationToken);
 
         var paymentTerm = await response
             .Content.ReadFromJsonAsync<
@@ -87,7 +93,9 @@ public sealed class PaymentTermsApiClient(
                 request,
                 cancellationToken);
         
-        response.EnsureSuccessStatusCode();
+        await response
+            .EnsureApiSuccesAsync(
+                cancellationToken);
 
         var paymentTerm = await response
             .Content.ReadFromJsonAsync<
@@ -110,7 +118,9 @@ public sealed class PaymentTermsApiClient(
                 $"api/payment-terms/{id}",
                 cancellationToken);
         
-        response.EnsureSuccessStatusCode();
+        await response
+            .EnsureApiSuccesAsync(
+                cancellationToken);
     }
 
     private HttpClient CreateClient()

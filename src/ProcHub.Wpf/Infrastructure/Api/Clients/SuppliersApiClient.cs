@@ -18,7 +18,9 @@ public sealed class SuppliersApiClient(
                 "api/suppliers",
                 cancellationToken);
         
-        response.EnsureSuccessStatusCode();
+        await response
+            .EnsureApiSuccesAsync(
+                cancellationToken);
 
         var supplier = await response
             .Content.ReadFromJsonAsync<
@@ -42,7 +44,9 @@ public sealed class SuppliersApiClient(
                 $"api/suppliers/{trimmedCode}",
                 cancellationToken);
         
-        response.EnsureSuccessStatusCode();
+        await response
+            .EnsureApiSuccesAsync(
+                cancellationToken);
 
         var supplier = await response
             .Content.ReadFromJsonAsync<
@@ -66,7 +70,9 @@ public sealed class SuppliersApiClient(
                 request,
                 cancellationToken);
 
-        response.EnsureSuccessStatusCode();
+        await response
+            .EnsureApiSuccesAsync(
+                cancellationToken);
 
         var supplier = await response
             .Content.ReadFromJsonAsync<
@@ -93,7 +99,9 @@ public sealed class SuppliersApiClient(
                 request,
                 cancellationToken);
         
-        response.EnsureSuccessStatusCode();
+        await response
+            .EnsureApiSuccesAsync(
+                cancellationToken);
 
         var supplier = await response
             .Content.ReadFromJsonAsync<
@@ -120,7 +128,9 @@ public sealed class SuppliersApiClient(
                 request,
                 cancellationToken);
         
-        response.EnsureSuccessStatusCode();
+        await response
+            .EnsureApiSuccesAsync(
+                cancellationToken);
         
         var supplier = await response
             .Content.ReadFromJsonAsync<

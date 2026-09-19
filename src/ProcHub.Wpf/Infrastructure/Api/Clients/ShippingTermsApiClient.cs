@@ -2,7 +2,6 @@
 using System.Net.Http.Json;
 using ProcHub.Contracts.ShippingTerms.Responses;
 using ProcHub.Contracts.ShippingTerms.Requests;
-using System.Runtime.InteropServices;
 
 namespace ProcHub.Wpf.Infrastructure.Api.Clients;
 public class ShippingTermsApiClient(
@@ -17,7 +16,9 @@ public class ShippingTermsApiClient(
             "api/shipping-terms",
                 cancellationToken);
 
-        response.EnsureSuccessStatusCode();
+        await response
+            .EnsureApiSuccesAsync(
+                cancellationToken);
 
         var shippingTerms = await response
             .Content.ReadFromJsonAsync<
@@ -38,7 +39,9 @@ public class ShippingTermsApiClient(
             $"api/shipping-terms/{id}",
             cancellationToken);
 
-        response.EnsureSuccessStatusCode();
+        await response
+            .EnsureApiSuccesAsync(
+                cancellationToken);
 
         var shippingTerm = await response
             .Content.ReadFromJsonAsync<
@@ -62,7 +65,9 @@ public class ShippingTermsApiClient(
                 request,
                 cancellationToken);
 
-        response.EnsureSuccessStatusCode();
+        await response
+            .EnsureApiSuccesAsync(
+                cancellationToken);
 
         var shippingTerm = await response
             .Content.ReadFromJsonAsync<
@@ -85,12 +90,11 @@ public class ShippingTermsApiClient(
                 $"api/shipping-terms/{id}",
                 cancellationToken);
 
-        response.EnsureSuccessStatusCode();
+        await response
+            .EnsureApiSuccesAsync(
+                cancellationToken);
     }
         
-
-
-
     private HttpClient CreateClient()
     {
         return httpClientFactory

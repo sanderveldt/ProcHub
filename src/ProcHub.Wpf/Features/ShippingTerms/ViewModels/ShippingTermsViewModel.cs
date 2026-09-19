@@ -1,10 +1,10 @@
 using System.Collections.ObjectModel;
-using System.Dynamic;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ProcHub.Contracts.ShippingTerms.Requests;
 using ProcHub.Contracts.ShippingTerms.Responses;
+using ProcHub.Wpf.Infrastructure.Api;
 using ProcHub.Wpf.Infrastructure.Api.Clients;
 using ProcHub.Wpf.Infrastructure.Navigation;
 

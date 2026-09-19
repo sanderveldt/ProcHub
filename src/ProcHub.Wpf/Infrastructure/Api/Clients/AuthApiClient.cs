@@ -2,6 +2,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using ProcHub.Contracts.Authentication.Requests;
 using ProcHub.Contracts.Authentication.Responses;
+using ProcHub.Wpf.Infrastructure.Api;
 
 namespace ProcHub.Wpf.Infrastructure.Api.Clients;
 
@@ -27,7 +28,9 @@ public sealed class AuthApiClient(
                 request,
                 cancellationToken);
         
-        response.EnsureSuccessStatusCode();
+        await response
+            .EnsureApiSuccesAsync(
+                cancellationToken);
 
         var tokenResponse = await response
             .Content.ReadFromJsonAsync<TokenResponse>(
@@ -55,7 +58,9 @@ public sealed class AuthApiClient(
                 request,
                 cancellationToken);
         
-        response.EnsureSuccessStatusCode();
+        await response
+            .EnsureApiSuccesAsync(
+                cancellationToken);
 
         var tokenResponse = await response
             .Content.ReadFromJsonAsync<TokenResponse>(
@@ -78,7 +83,9 @@ public sealed class AuthApiClient(
                 "api/auth/me",
                 cancellationToken);
         
-        response.EnsureSuccessStatusCode();
+        await response
+            .EnsureApiSuccesAsync(
+                cancellationToken);
 
         var currentUser = await response
             .Content.ReadFromJsonAsync<CurrentUserResponse>(
