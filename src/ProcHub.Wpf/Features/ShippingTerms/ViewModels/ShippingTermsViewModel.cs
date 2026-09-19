@@ -1,119 +1,72 @@
 using System.Collections.ObjectModel;
+using System.Dynamic;
 using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using ProcHub.Contracts.ShippingTerms.Requests;
 using ProcHub.Contracts.ShippingTerms.Responses;
-using ProcHub.Wpf.Infrastructure;
 using ProcHub.Wpf.Infrastructure.Api.Clients;
 using ProcHub.Wpf.Infrastructure.Navigation;
 
 
 namespace ProcHub.Wpf.Features.ShippingTerms.ViewModels;
 
-public sealed class ShippingTermsViewModel : PageViewModel
+public sealed partial class ShippingTermsViewModel : PageViewModel
     
 {
     private readonly ShippingTermsApiClient _apiClient;
-    private int? _id;
-    private string _name = string.Empty;
-    private string _description = string.Empty;
-    private bool _isCreating;
-
+    
     public ShippingTermsViewModel(
-        ShippingTermsApiClient ApiClient)
+        ShippingTermsApiClient apiClient)
         : base(
             "Shipping Terms",
             "Maintain shipping terms.")
     {
-        _apiClient = ApiClient;
-
-        NewCommand = new RelayCommand(StartNew);
-
-        SaveCommand = new AsyncRelayCommand(SaveAsync, CanSave);
-
-        DeleteCommand = new AsyncRelayCommand(DeleteAsync, CanDelete);
+        _apiClient = apiClient;
     }
 
-    private ShippingTermResponse? _selectedShippingTerm;
+    public ObservableCollection<ShippingTermResponse> ShippingTerms 
+        { get; } = new();
 
-    public ObservableCollection<ShippingTermResponse> ShippingTerms { get; } = new();
+    [ObservableProperty]
+    public partial int? Id { get; private set; }
 
-    public ShippingTermResponse? SelectedShippingTerm
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
+    public partial string Name { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
+    public partial string Description { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
+    public partial bool IsCreating { get; private set; }
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(DeleteCommand))]
+    public partial ShippingTermResponse? SelectedShippingTerm { get; set; }
+
+    partial void OnSelectedShippingTermChanged(
+        ShippingTermResponse? value)
     {
-        get => _selectedShippingTerm;
-        set
+        if (value is null)
         {
-            if (SetProperty(ref _selectedShippingTerm, value))
-            {
-                DeleteCommand.RaiseCanExecuteChanged();
-
-                if (value is not null)
-                {
-                    Id = value.Id;
-                    Name = value.Name;
-                    Description_ = value.Description;
-
-                    IsCreating = false;
-                }
-            }
+            return;
         }
+
+        Id = value.Id;
+        Name = value.Name;
+        Description = value.Description;
+        IsCreating = false;
     }
-
-    public int? Id
-    {
-        get => _id;
-        private set => SetProperty(ref _id, value);
-    }
-
-    public string Name
-    {
-        get => _name;
-        set
-        {
-            if (SetProperty(ref _name, value))
-            {
-                SaveCommand.RaiseCanExecuteChanged();
-            }
-        }
-    }
-
-
-    // Will remove _ once I remove description from PageViewModel
-    public string Description_
-    {
-        get => _description;
-        set
-        { 
-            if (SetProperty(ref _description, value))
-            {
-                SaveCommand.RaiseCanExecuteChanged();
-            }
-        
-        }
-    }
-
-    public bool IsCreating
-    {
-        get => _isCreating;
-        private set
-        {
-            if (SetProperty(ref _isCreating, value))
-            {
-                SaveCommand.RaiseCanExecuteChanged();
-            }
-        }
-    }
-
-    public RelayCommand NewCommand { get; }
-    public AsyncRelayCommand SaveCommand { get; }
-
-    public AsyncRelayCommand DeleteCommand { get; }
 
     public async Task LoadAllAsync(
         CancellationToken cancellationToken = default)
     {
         var shippingTerms = await _apiClient
             .GetAllAsync(cancellationToken);
-
+        
         ShippingTerms.Clear();
 
         foreach (var shippingTerm in shippingTerms)
@@ -122,15 +75,14 @@ public sealed class ShippingTermsViewModel : PageViewModel
         }
     }
 
-    
-
-    private void StartNew()
+    [RelayCommand]
+    private void OnNew()
     {
         SelectedShippingTerm = null;
 
         Id = null;
         Name = string.Empty;
-        Description_ = string.Empty;
+        Description = string.Empty;
 
         IsCreating = true;
     }
@@ -139,83 +91,56 @@ public sealed class ShippingTermsViewModel : PageViewModel
     {
         return IsCreating &&
             !string.IsNullOrWhiteSpace(Name) &&
-            !string.IsNullOrWhiteSpace(Description_);
+            !string.IsNullOrWhiteSpace(Description);
     }
 
-    private bool CanDelete()
-    {
-        return SelectedShippingTerm is not null;
-    }
-
-    private async Task SaveAsync()
+    [RelayCommand(CanExecute = nameof(CanSave))]
+    private async Task SaveAsync(
+        CancellationToken cancellationToken)
     {
         if (!IsCreating)
         {
             return;
         }
 
-        var request =
-            new CreateShippingTermRequest(
+        var request = new
+            CreateShippingTermRequest(
                 Name,
-                Description_);
-
-        var created = await _apiClient.CreateAsync(request);
-
-        ShippingTerms.Add(created);
-
-        Id = created.Id;
-        Name = created.Name;
-        Description_ = created.Description;
-
-        IsCreating = false;
-
-        SaveCommand.RaiseCanExecuteChanged();
-    }
-
-
-
-    public async Task LoadAsync(
-        int id,
-        CancellationToken cancellationToken = default)
-    {
-        var shippingTerm = await _apiClient
-            .GetbyIdAsync(
-                id, cancellationToken);
-
-        Id = shippingTerm.Id;
-        Name = shippingTerm.Name;
-        Description_ = shippingTerm.Description;
-    }
-
-    public async Task CreateAsync(
-        CancellationToken cancellationToken = default)
-    {
-        var request =
-            new CreateShippingTermRequest(
-                Name,
-                Description_);
+                Description);
 
         var created = await _apiClient
             .CreateAsync(
                 request,
                 cancellationToken);
 
+        ShippingTerms.Add(created);
+
         Id = created.Id;
         Name = created.Name;
-        Description_ = created.Description;
+        Description = created.Description;
+
+        IsCreating = false;
     }
 
-    public async Task DeleteAsync()
+    private bool CanDelete()
     {
-        var selected = SelectedShippingTerm;
+        return SelectedShippingTerm 
+            is not null;
+    }
 
-        if (selected is null)
+    [RelayCommand(CanExecute = nameof(CanDelete))]
+    private async Task DeleteAsync(
+        CancellationToken cancellationToken)
+    {
+        var selectedTerm = SelectedShippingTerm;
+
+        if (selectedTerm is null)
         {
             return;
         }
 
         var result = MessageBox.Show(
-            $"Are you sure you want to delete shipping term '{selected.Name}'?",
+            $"Are you sure you want to delete shipping term '{selectedTerm.Name}'?",
             "Delete:",
             MessageBoxButton.YesNo,
             MessageBoxImage.Warning);
@@ -225,16 +150,30 @@ public sealed class ShippingTermsViewModel : PageViewModel
             return;
         }
 
-        await _apiClient.DeleteAsync(selected.Id);
+        await _apiClient.DeleteAsync(
+            selectedTerm.Id,
+            cancellationToken);
 
-        ShippingTerms.Remove(selected);
+        ShippingTerms.Remove(selectedTerm);
 
         SelectedShippingTerm = null;
 
         Id = null;
         Name = string.Empty;
-        Description_ = string.Empty;
+        Description = string.Empty;
+    }
 
-
+    public async Task LoadAsync(
+        int id,
+        CancellationToken cancellationToken = default)
+    {
+        var shippingTerm = await _apiClient
+            .GetbyIdAsync(
+                id,
+                cancellationToken);
+        
+        Id = shippingTerm.Id;
+        Name = shippingTerm.Name;
+        Description = shippingTerm.Description;
     }
 }

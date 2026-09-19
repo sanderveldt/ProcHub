@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using CommunityToolkit.Mvvm.ComponentModel;
 using ProcHub.Wpf.Infrastructure.Authentication;
 
 namespace ProcHub.Wpf.Infrastructure.Navigation;

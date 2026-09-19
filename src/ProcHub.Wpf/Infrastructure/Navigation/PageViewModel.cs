@@ -1,3 +1,4 @@
+using CommunityToolkit.Mvvm.ComponentModel;
 using ProcHub.Wpf.Infrastructure;
 
 namespace ProcHub.Wpf.Infrastructure.Navigation;
@@ -5,14 +6,14 @@ namespace ProcHub.Wpf.Infrastructure.Navigation;
 public abstract class PageViewModel : ObservableObject
 {
     public string Title { get; }
-    public string Description { get; }
+    public string PageDescription { get; }
     protected PageViewModel(
         string title,
-        string description,
+        string pageDescription,
         params string[] allowedRoles)
     {
         Title = title;
-        Description = description;
+        PageDescription = pageDescription;
         AllowedRoles = allowedRoles;
     }
 

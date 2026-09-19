@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using ProcHub.Wpf.Infrastructure;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using ProcHub.Wpf.Infrastructure.Navigation;
 using ProcHub.Wpf.Shell.Models;
 using ProcHub.Wpf.Features.Settings.ViewModels;
@@ -209,5 +210,3 @@ public sealed class MainWindowViewModel : ObservableObject
         }
     }
 }
-
-    

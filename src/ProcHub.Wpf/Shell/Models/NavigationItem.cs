@@ -1,7 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using ProcHub.Wpf.Infrastructure;
-using ProcHub.Wpf.Infrastructure.Authentication;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ProcHub.Wpf.Shell.Models;
 
