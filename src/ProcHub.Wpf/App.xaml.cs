@@ -122,7 +122,9 @@ public partial class App : Application
         services.AddSingleton<TokenStore>();
 
         services.AddSingleton<AuthApiClient>();
+
         services.AddTransient<BearerTokenHandler>();
+        services.AddTransient<ApiErrorHandler>();
 
         services.AddSingleton<ShippingTermsApiClient>();
 
@@ -133,8 +135,9 @@ public partial class App : Application
                 ConfigureApiClient(
                     client,
                     apiBaseUri);
-                
-            });
+
+            })
+            .AddHttpMessageHandler<ApiErrorHandler>();
 
         services.AddHttpClient(
             ApiClientNames.Authorized,
@@ -144,7 +147,8 @@ public partial class App : Application
                     client,
                     apiBaseUri);
             })
-            .AddHttpMessageHandler<BearerTokenHandler>();
+            .AddHttpMessageHandler<BearerTokenHandler>()
+            .AddHttpMessageHandler<ApiErrorHandler>();
             
 
         services.AddSingleton<AuthenticationService>();

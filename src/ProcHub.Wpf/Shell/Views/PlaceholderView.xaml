@@ -20,7 +20,7 @@
         </StackPanel>
 
         <Border Grid.Row="2"
-                Padding="20"
+                Padding="8"
                 Background="{DynamicResource ControlFillColorDefaultBrush}"
                 BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
                 BorderThickness="1"

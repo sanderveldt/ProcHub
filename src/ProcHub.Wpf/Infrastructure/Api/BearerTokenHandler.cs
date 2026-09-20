@@ -71,7 +71,7 @@ public sealed class BearerTokenHandler(
                 
                 tokenStore.SetTokens(tokenResponse);
             }
-            catch (HttpRequestException exception)
+            catch (ApiException exception)
                 when (exception.StatusCode ==
                         HttpStatusCode.Unauthorized)
             {

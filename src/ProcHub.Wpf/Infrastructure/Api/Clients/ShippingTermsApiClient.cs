@@ -16,10 +16,6 @@ public class ShippingTermsApiClient(
             "api/shipping-terms",
                 cancellationToken);
 
-        await response
-            .EnsureApiSuccesAsync(
-                cancellationToken);
-
         var shippingTerms = await response
             .Content.ReadFromJsonAsync<
                 List<ShippingTermResponse>>(
@@ -38,10 +34,6 @@ public class ShippingTermsApiClient(
         using var response = await client.GetAsync(
             $"api/shipping-terms/{id}",
             cancellationToken);
-
-        await response
-            .EnsureApiSuccesAsync(
-                cancellationToken);
 
         var shippingTerm = await response
             .Content.ReadFromJsonAsync<
@@ -65,10 +57,6 @@ public class ShippingTermsApiClient(
                 request,
                 cancellationToken);
 
-        await response
-            .EnsureApiSuccesAsync(
-                cancellationToken);
-
         var shippingTerm = await response
             .Content.ReadFromJsonAsync<
                 ShippingTermResponse>(
@@ -88,10 +76,6 @@ public class ShippingTermsApiClient(
         using var response = await client
             .DeleteAsync(
                 $"api/shipping-terms/{id}",
-                cancellationToken);
-
-        await response
-            .EnsureApiSuccesAsync(
                 cancellationToken);
     }
         

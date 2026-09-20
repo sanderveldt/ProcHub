@@ -28,10 +28,6 @@ public sealed class AuthApiClient(
                 request,
                 cancellationToken);
         
-        await response
-            .EnsureApiSuccesAsync(
-                cancellationToken);
-
         var tokenResponse = await response
             .Content.ReadFromJsonAsync<TokenResponse>(
                 cancellationToken);
@@ -57,10 +53,6 @@ public sealed class AuthApiClient(
                 "api/auth/refresh",
                 request,
                 cancellationToken);
-        
-        await response
-            .EnsureApiSuccesAsync(
-                cancellationToken);
 
         var tokenResponse = await response
             .Content.ReadFromJsonAsync<TokenResponse>(
@@ -81,10 +73,6 @@ public sealed class AuthApiClient(
         using var response = await client
             .GetAsync(
                 "api/auth/me",
-                cancellationToken);
-        
-        await response
-            .EnsureApiSuccesAsync(
                 cancellationToken);
 
         var currentUser = await response

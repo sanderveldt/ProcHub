@@ -29,6 +29,9 @@ public sealed partial class ShippingTermsViewModel : PageViewModel
         { get; } = new();
 
     [ObservableProperty]
+    public partial string? ErrorMessage { get; private set; }
+
+    [ObservableProperty]
     public partial int? Id { get; private set; }
 
     [ObservableProperty]
@@ -64,14 +67,28 @@ public sealed partial class ShippingTermsViewModel : PageViewModel
     public async Task LoadAllAsync(
         CancellationToken cancellationToken = default)
     {
-        var shippingTerms = await _apiClient
-            .GetAllAsync(cancellationToken);
-        
-        ShippingTerms.Clear();
+        ErrorMessage = null;
 
-        foreach (var shippingTerm in shippingTerms)
+        try
         {
-            ShippingTerms.Add(shippingTerm);
+            var shippingTerms = await _apiClient
+                .GetAllAsync(cancellationToken);
+
+            ShippingTerms.Clear();
+
+            foreach (var shippingTerm in shippingTerms)
+            {
+                ShippingTerms.Add(shippingTerm);
+            }
+        }
+        catch (OperationCanceledException)
+            when (cancellationToken.IsCancellationRequested)
+        {
+            // Deliberate cancellation, no message needed
+        }
+        catch (ApiException ex)
+        {
+            ErrorMessage = ex.Message;
         }
     }
 
@@ -103,23 +120,36 @@ public sealed partial class ShippingTermsViewModel : PageViewModel
             return;
         }
 
-        var request = new
-            CreateShippingTermRequest(
-                Name,
-                Description);
+        ErrorMessage = null;
 
-        var created = await _apiClient
-            .CreateAsync(
-                request,
-                cancellationToken);
+        try
+        {
+            var request = new
+                CreateShippingTermRequest(
+                    Name,
+                    Description);
 
-        ShippingTerms.Add(created);
+            var created = await _apiClient
+                .CreateAsync(
+                    request,
+                    cancellationToken);
 
-        Id = created.Id;
-        Name = created.Name;
-        Description = created.Description;
+            ShippingTerms.Add(created);
 
-        IsCreating = false;
+            Id = created.Id;
+            Name = created.Name;
+            Description = created.Description;
+
+            IsCreating = false;
+        }
+        catch (OperationCanceledException)
+            when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        catch (ApiException ex)
+        {
+            ErrorMessage = ex.Message;
+        }
     }
 
     private bool CanDelete()
@@ -150,30 +180,56 @@ public sealed partial class ShippingTermsViewModel : PageViewModel
             return;
         }
 
-        await _apiClient.DeleteAsync(
-            selectedTerm.Id,
-            cancellationToken);
+        ErrorMessage = null;
 
-        ShippingTerms.Remove(selectedTerm);
+        try
+        {
+            await _apiClient.DeleteAsync(
+                selectedTerm.Id,
+                cancellationToken);
 
-        SelectedShippingTerm = null;
+            ShippingTerms.Remove(selectedTerm);
 
-        Id = null;
-        Name = string.Empty;
-        Description = string.Empty;
+            SelectedShippingTerm = null;
+
+            Id = null;
+            Name = string.Empty;
+            Description = string.Empty;
+        }
+        catch (OperationCanceledException)
+            when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        catch (ApiException ex)
+        {
+            ErrorMessage = ex.Message;
+        }
     }
 
     public async Task LoadAsync(
         int id,
         CancellationToken cancellationToken = default)
     {
-        var shippingTerm = await _apiClient
-            .GetbyIdAsync(
-                id,
-                cancellationToken);
-        
-        Id = shippingTerm.Id;
-        Name = shippingTerm.Name;
-        Description = shippingTerm.Description;
+        ErrorMessage = null;
+
+        try
+        {
+            var shippingTerm = await _apiClient
+                .GetbyIdAsync(
+                    id,
+                    cancellationToken);
+
+            Id = shippingTerm.Id;
+            Name = shippingTerm.Name;
+            Description = shippingTerm.Description;
+        }
+        catch (OperationCanceledException)
+            when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        catch (ApiException ex)
+        {
+            ErrorMessage = ex.Message;
+        }
     }
 }

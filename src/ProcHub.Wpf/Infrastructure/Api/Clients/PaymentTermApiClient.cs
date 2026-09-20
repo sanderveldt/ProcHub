@@ -17,10 +17,6 @@ public sealed class PaymentTermsApiClient(
             "api/payment-terms",
                 cancellationToken);
         
-        await response
-            .EnsureApiSuccesAsync(
-                cancellationToken);
-
         var paymentTerms = await response
             .Content.ReadFromJsonAsync<
                 List<PaymentTermListItemResponse>>(
@@ -39,10 +35,6 @@ public sealed class PaymentTermsApiClient(
         using var response = await client.GetAsync(
             $"api/payment-terms/{id}",
             cancellationToken);
-        
-        await response
-            .EnsureApiSuccesAsync(
-                cancellationToken);
 
         var paymentTerm = await response
             .Content.ReadFromJsonAsync<
@@ -64,10 +56,6 @@ public sealed class PaymentTermsApiClient(
             .PostAsJsonAsync(
                 "api/payment-terms",
                 request,
-                cancellationToken);
-        
-        await response
-            .EnsureApiSuccesAsync(
                 cancellationToken);
 
         var paymentTerm = await response
@@ -92,10 +80,6 @@ public sealed class PaymentTermsApiClient(
                 $"api/payment-terms/{id}",
                 request,
                 cancellationToken);
-        
-        await response
-            .EnsureApiSuccesAsync(
-                cancellationToken);
 
         var paymentTerm = await response
             .Content.ReadFromJsonAsync<
@@ -116,10 +100,6 @@ public sealed class PaymentTermsApiClient(
         using var response = await client
             .DeleteAsync(
                 $"api/payment-terms/{id}",
-                cancellationToken);
-        
-        await response
-            .EnsureApiSuccesAsync(
                 cancellationToken);
     }
 

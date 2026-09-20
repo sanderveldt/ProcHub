@@ -4,38 +4,34 @@ namespace ProcHub.Wpf.Infrastructure.Api;
 
 public sealed class ApiException : Exception
 {
-    public HttpStatusCode StatusCode { get; }
+    public HttpStatusCode? StatusCode { get; }
     public string Title { get; }
     public IReadOnlyDictionary<string, string[]> Errors { get; }
 
-    private static string ErrorMessage(
-        HttpStatusCode statusCode,
-        ApiProblemDetails? problemDetails,
-        string? reasonPhrase)
-    {
-        return problemDetails?.Detail
-            ?? problemDetails?.Title
-            ?? reasonPhrase
-            ?? $"API request failed with status {(int)statusCode}.";
-    }
-
     public ApiException(
         HttpStatusCode statusCode,
-        ApiProblemDetails? problemDetails,
-        string? reasonPhrase = null)
-        : base(ErrorMessage(
-                statusCode,
-                problemDetails,
-                reasonPhrase))
+        string message,
+        string? title = null,
+        IReadOnlyDictionary<string, 
+            string[]>? errors = null)
+        : base(message)
     {
         StatusCode = statusCode;
 
-        Title = problemDetails?
-            .Title
-            ?? "Request failed.";
+        Title = title
+            ?? "request failed";
 
-        Errors = problemDetails?
-            .Errors
-            ?? new Dictionary<string, string[]>();
+        Errors = errors ?? new
+            Dictionary<string, string[]>();
+    }
+
+    public ApiException(
+        string message,
+        Exception innerException)
+        : base(message, innerException)
+    {
+        StatusCode = null;
+        Title = "Connection error";
+        Errors = new Dictionary<string, string[]>();
     }
 }

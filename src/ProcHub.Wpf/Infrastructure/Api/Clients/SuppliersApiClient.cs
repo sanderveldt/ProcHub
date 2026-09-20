@@ -18,10 +18,6 @@ public sealed class SuppliersApiClient(
                 "api/suppliers",
                 cancellationToken);
         
-        await response
-            .EnsureApiSuccesAsync(
-                cancellationToken);
-
         var supplier = await response
             .Content.ReadFromJsonAsync<
                 List<SupplierListItemResponse>>(
@@ -43,11 +39,7 @@ public sealed class SuppliersApiClient(
             .GetAsync(
                 $"api/suppliers/{trimmedCode}",
                 cancellationToken);
-        
-        await response
-            .EnsureApiSuccesAsync(
-                cancellationToken);
-
+     
         var supplier = await response
             .Content.ReadFromJsonAsync<
                 SupplierResponse>(
@@ -68,10 +60,6 @@ public sealed class SuppliersApiClient(
             .PostAsJsonAsync(
                 "api/suppliers",
                 request,
-                cancellationToken);
-
-        await response
-            .EnsureApiSuccesAsync(
                 cancellationToken);
 
         var supplier = await response
@@ -98,10 +86,6 @@ public sealed class SuppliersApiClient(
                 $"api/suppliers/{trimmedCode}",
                 request,
                 cancellationToken);
-        
-        await response
-            .EnsureApiSuccesAsync(
-                cancellationToken);
 
         var supplier = await response
             .Content.ReadFromJsonAsync<
@@ -127,11 +111,7 @@ public sealed class SuppliersApiClient(
                 $"api/suppliers/{trimmedCode}/status",
                 request,
                 cancellationToken);
-        
-        await response
-            .EnsureApiSuccesAsync(
-                cancellationToken);
-        
+  
         var supplier = await response
             .Content.ReadFromJsonAsync<
                 ChangeSupplierStatusResponse>(
