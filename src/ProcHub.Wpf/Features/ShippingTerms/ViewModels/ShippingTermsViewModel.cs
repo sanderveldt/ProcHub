@@ -29,9 +29,6 @@ public sealed partial class ShippingTermsViewModel : PageViewModel
         { get; } = new();
 
     [ObservableProperty]
-    public partial string? ErrorMessage { get; private set; }
-
-    [ObservableProperty]
     public partial int? Id { get; private set; }
 
     [ObservableProperty]
@@ -67,7 +64,7 @@ public sealed partial class ShippingTermsViewModel : PageViewModel
     public async Task LoadAllAsync(
         CancellationToken cancellationToken = default)
     {
-        ErrorMessage = null;
+        ClearError();
 
         try
         {
@@ -88,7 +85,7 @@ public sealed partial class ShippingTermsViewModel : PageViewModel
         }
         catch (ApiException ex)
         {
-            ErrorMessage = ex.Message;
+            ShowError(ex.Message);
         }
     }
 
@@ -120,7 +117,7 @@ public sealed partial class ShippingTermsViewModel : PageViewModel
             return;
         }
 
-        ErrorMessage = null;
+        ClearError();
 
         try
         {
@@ -148,7 +145,7 @@ public sealed partial class ShippingTermsViewModel : PageViewModel
         }
         catch (ApiException ex)
         {
-            ErrorMessage = ex.Message;
+            ShowError(ex.Message);
         }
     }
 
@@ -180,7 +177,7 @@ public sealed partial class ShippingTermsViewModel : PageViewModel
             return;
         }
 
-        ErrorMessage = null;
+        ClearError();
 
         try
         {
@@ -202,7 +199,7 @@ public sealed partial class ShippingTermsViewModel : PageViewModel
         }
         catch (ApiException ex)
         {
-            ErrorMessage = ex.Message;
+            ShowError(ex.Message);
         }
     }
 
@@ -210,7 +207,7 @@ public sealed partial class ShippingTermsViewModel : PageViewModel
         int id,
         CancellationToken cancellationToken = default)
     {
-        ErrorMessage = null;
+        ClearError();
 
         try
         {
@@ -229,7 +226,7 @@ public sealed partial class ShippingTermsViewModel : PageViewModel
         }
         catch (ApiException ex)
         {
-            ErrorMessage = ex.Message;
+            ShowError(ex.Message);
         }
     }
 }
