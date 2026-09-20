@@ -7,120 +7,151 @@
 
         <StackPanel>
 
-            <TextBlock Text="{Binding Title}"
-                       FontSize="28"
-                       FontWeight="SemiBold" 
-                       Margin="0,0,0,12"/>
+            <StackPanel 
+                Margin="0,0,0,8"
+                Orientation="Horizontal"
+                HorizontalAlignment="Left" >
 
-            <UniformGrid Columns="2">
-                <Border Margin="0,0,8,8"
-                        Padding="12"
-                        Background="{DynamicResource ControlFillColorDefaultBrush}"
-                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
-                        BorderThickness="1"
-                        CornerRadius="8">
+                <Button
+                    Content="New"
+                    Command="{Binding NewCommand}"
+                    Width="75"
+                    Margin="2,0,0,0"
+                    HorizontalAlignment="Center" />
+
+                <Button
+                    Content="Save"
+                    Command="{Binding SaveCommand}"
+                    Width="75"
+                    Margin="4,0,0,0"
+                    HorizontalAlignment="Center" />
+
+                <Button
+                    Content="Delete"
+                    Command="{Binding DeleteCommand}"
+                    Width="75"
+                    Margin="4,0,0,0"
+                    HorizontalAlignment="Center" />
+
+                <TextBlock
+                    Text="{Binding ErrorMessage}"
+                    TextWrapping="Wrap"
+                    Foreground="Red"/>
+
+            </StackPanel>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" MinWidth="250" />
+                    <ColumnDefinition Width="4" />
+                    <ColumnDefinition Width="*" MinWidth="250" />
+                </Grid.ColumnDefinitions>
+
+                <Border
+                    Grid.Column="0"
+                    Margin="0,0,2,8"
+                    Padding="8"
+                    Background="{DynamicResource ControlFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8">
 
                     <StackPanel
-                        Width="400"
-                        Margin="18"
-                        HorizontalAlignment="Left">
+                    Margin="8"
+                    HorizontalAlignment="Left">
 
                         <TextBlock
-                            Text="ID"
-                            Margin="0,0,0,4" />
+                        Text="ID"
+                        Margin="0,0,0,4" />
 
                         <TextBox
-                            Text="{Binding Id, Mode=OneWay}"
-                            IsReadOnly="True"
-                            Margin="0,0,0,20"
-                            HorizontalAlignment="Left"
-                            Width="40" />
+                        Text="{Binding Id, Mode=OneWay}"
+                        IsReadOnly="True"
+                        Margin="0,0,0,20"
+                        HorizontalAlignment="Left"
+                        Width="40" />
 
                         <TextBlock
-                            Text="Name"
-                            Margin="0,0,0,4"/>
+                        Text="Name"
+                        Margin="0,0,0,4"/>
 
                         <TextBox
-                            Text="{Binding 
-                                Name,
+                        Text="{Binding Name,
                                 Mode=TwoWay,
                                 UpdateSourceTrigger=PropertyChanged}"
-                            HorizontalAlignment="Left"
-                            Height="40"
-                            Width="150"
-                            AcceptsReturn="True"
-                            TextWrapping="Wrap"
-                            Margin="0,0,0,20" />
+                        HorizontalAlignment="Left"
+                        Height="40"
+                        Width="150"
+                        AcceptsReturn="True"
+                        TextWrapping="Wrap"
+                        Margin="0,0,0,20" />
 
                         <TextBlock
                             Text="Description"
                             Margin="0,0,0,4" />
 
                         <TextBox 
-                            Text="{Binding
-                                Description,
+                            Text="{Binding Description,
                                 Mode=TwoWay,
                                 UpdateSourceTrigger=PropertyChanged}"
                             HorizontalAlignment="Left"
                             Height="40"
                             Width="300"/>
 
-                        <StackPanel
-                            Orientation="Horizontal"
-                            Width="400"
-                            Margin="0,10,0,0"
-                            HorizontalAlignment="Center">
-
-                            <Button
-                                Content="New"
-                                Command="{Binding NewCommand}"
-                                Width="100"
-                                Margin="0,0,8,0"
-                                HorizontalAlignment="Center"/>
-
-                            <Button
-                                Content="Save"
-                                Command="{Binding SaveCommand}"
-                                Width="100"
-                                Margin="0,0,8,0"
-                                HorizontalAlignment="Center"/>
-
-                            <Button
-                                Content="Delete"
-                                Command="{Binding DeleteCommand}"
-                                Width="100"
-                                Margin="0,0,8,0"/>
-
-
-
-
-                        </StackPanel>
-
                     </StackPanel>
-
-
-
 
                 </Border>
 
-                <Border Margin="0,0,12,12"
-                        Padding="18"
-                        Background="{DynamicResource ControlFillColorDefaultBrush}"
-                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
-                        BorderThickness="1"
-                        CornerRadius="8">
+                <GridSplitter
+                    Grid.Column="1"
+                    Width="8"
+                    Margin="0,0,0,8"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    ResizeDirection="Columns" 
+                    ResizeBehavior="PreviousAndNext"
+                    Background="Transparent"
+                    Cursor="SizeWE" 
+                    FocusVisualStyle="{x:Null}">
+
+                    <GridSplitter.Template>
+                        <ControlTemplate TargetType="GridSplitter">
+                            <Border Background="Transparent" />
+                        </ControlTemplate>
+                    </GridSplitter.Template>
+
+                </GridSplitter>
+
+
+                <Border
+                    Grid.Column="2" 
+                    Margin="2,0,4,8"
+                    Padding="8"
+                    Background="{DynamicResource ControlFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8">
+
                     <StackPanel>
+
+                        <TextBlock 
+                            Text="{Binding Title}"
+                            FontSize="18"
+                            FontWeight="SemiBold"
+                            Margin="2,0,0,8"
+                                   
+                                   />
 
                         <DataGrid
                             ItemsSource="{Binding ShippingTerms}"
                             SelectedItem="{Binding SelectedShippingTerm,
-                                                   Mode=TwoWay}"
+                                            Mode=TwoWay}"
                             AutoGenerateColumns="False"
                             IsReadOnly="True"
                             CanUserAddRows="False"
                             SelectionMode="Single"
                             SelectionUnit="FullRow">
-                            
+
                             <DataGrid.Columns>
 
                                 <DataGridTextColumn
@@ -142,14 +173,13 @@
 
                         </DataGrid>
 
-
                     </StackPanel>
 
                 </Border>
 
-            </UniformGrid>
-
+            </Grid>
         </StackPanel>
 
     </ScrollViewer>
+        
 </UserControl>
