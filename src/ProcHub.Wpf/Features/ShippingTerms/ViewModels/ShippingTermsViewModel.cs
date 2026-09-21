@@ -1,12 +1,13 @@
-using System.Collections.ObjectModel;
-using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ProcHub.Contracts.PaymentTerms.Responses;
 using ProcHub.Contracts.ShippingTerms.Requests;
 using ProcHub.Contracts.ShippingTerms.Responses;
 using ProcHub.Wpf.Infrastructure.Api;
 using ProcHub.Wpf.Infrastructure.Api.Clients;
 using ProcHub.Wpf.Infrastructure.Navigation;
+using System.Collections.ObjectModel;
+using System.Windows;
 
 
 namespace ProcHub.Wpf.Features.ShippingTerms.ViewModels;
@@ -103,9 +104,9 @@ public sealed partial class ShippingTermsViewModel : PageViewModel
 
     private bool CanSave()
     {
-        return IsCreating &&
-            !string.IsNullOrWhiteSpace(Name) &&
-            !string.IsNullOrWhiteSpace(Description);
+        return IsCreating 
+            && !string.IsNullOrWhiteSpace(Name)
+            && !string.IsNullOrWhiteSpace(Description);
     }
 
     [RelayCommand(CanExecute = nameof(CanSave))]
