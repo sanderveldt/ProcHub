@@ -17,7 +17,7 @@ public sealed partial class PaymentTermsViewModel : PageViewModel
 
     public PaymentTermsViewModel(
         PaymentTermsApiClient apiClient)
-        : base("Payment terms", "Maintain supplier payment-term master data.")
+        : base("Payment Terms", "Maintain supplier payment-term master data.")
     {
         _apiClient = apiClient;
     }
@@ -28,8 +28,20 @@ public sealed partial class PaymentTermsViewModel : PageViewModel
     public IReadOnlyList<PaymentTiming> AvailablePaymentTimings
         { get; } = Enum.GetValues<PaymentTiming>();
 
-    public IReadOnlyList<PaymentDateReference> AvailableDateReferences
-        { get; } = Enum.GetValues<PaymentDateReference>();
+    public sealed record EnumOption<T>(
+        T Value,
+        string ComboBoxOption);
+
+    public IReadOnlyList<EnumOption<PaymentDateReference>> AvailableDateReferences { get; } =
+    [
+        new(PaymentDateReference.OrderDate, "Order Date"),
+        new(PaymentDateReference.InvoiceDate, "Invoice Date"),
+        new(PaymentDateReference.ShippingDate, "Shipping Date"),
+        new(PaymentDateReference.ArrivalDate, "Delivery Date"),
+        new(PaymentDateReference.BillOfLadingDate, "Bill of Lading Date"),
+        new(PaymentDateReference.ProductionDoneDate, "Production Ready Date")
+    ];
+          
 
     [ObservableProperty]
     public partial int? Id { get; private set; }
@@ -72,25 +84,17 @@ public sealed partial class PaymentTermsViewModel : PageViewModel
     [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     [NotifyCanExecuteChangedFor(nameof(EditCommand))]
     [NotifyCanExecuteChangedFor(nameof(DeleteCommand))]
-    public partial PaymentTermResponse? SelectedPaymentTerm { get; set; }
+    public partial PaymentTermListItemResponse? SelectedPaymentTerm { get; set; }
 
-    partial void OnSelectedPaymentTermChanged(
-        PaymentTermResponse? value)
+    async partial void OnSelectedPaymentTermChanged(
+    PaymentTermListItemResponse? value)
     {
         if (value is null)
         {
             return;
         }
 
-        Id = value.Id;
-        Description = value.Description;
-
-        DepositPercentage = value
-            .DepositPercentage * 100m;
-
-        PaymentTiming = value.PaymentTiming;
-        DueDateReference = value.DueDateReference;
-        BalanceDueDays = value.BalanceDueDays;
+        await LoadAsync(value.Id);
 
         IsCreating = false;
         IsEditing = false;
@@ -209,7 +213,7 @@ public sealed partial class PaymentTermsViewModel : PageViewModel
 
         PaymentTerms.Add(listResponseTransfer);
 
-        SelectedPaymentTerm = createdTerm;
+        SelectedPaymentTerm = listResponseTransfer;
     }
 
     private async Task UpdateAsync(
@@ -249,10 +253,11 @@ public sealed partial class PaymentTermsViewModel : PageViewModel
         if (existingListTerm is not null)
         {
             var index = PaymentTerms.IndexOf(existingListTerm);
+
             PaymentTerms[index] = updatedListTerm;
         }
 
-        SelectedPaymentTerm = updatedTerm;        
+        SelectedPaymentTerm = updatedListTerm;        
     }
 
     private bool CanDelete()
@@ -297,7 +302,7 @@ public sealed partial class PaymentTermsViewModel : PageViewModel
                     selectedTerm.Id,
                     selectedTerm.Description);
 
-            PaymentTerms.Remove(listResponseTransfer);
+            PaymentTerms.Remove(selectedTerm);
 
             SelectedPaymentTerm = null;
 

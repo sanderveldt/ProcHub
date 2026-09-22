@@ -9,18 +9,267 @@
             <StackPanel
                 Margin="0,0,0,6"
                 Orientation="Horizontal"
-                HorizontalAlignment="Left" >
+                HorizontalAlignment="Left">
 
                 <Button
                     Content="New"
-                    />
+                    Command="{Binding NewCommand}"
+                    Width="75"
+                    Margin="2,0,0,0" />
 
+                <Button
+                    Content="Save"
+                    Command="{Binding SaveCommand}"
+                    Width="75"
+                    Margin="4,0,0,0" />
 
+                <Button
+                    Content="Edit"
+                    Command="{Binding EditCommand}"
+                    Width="75"
+                    Margin="4,0,0,0" />
+
+                <Button
+                    Content="Delete"
+                    Command="{Binding DeleteCommand}"
+                    Width="75"
+                    Margin="4,0,0,0" />
 
             </StackPanel>
-            
+
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" MinWidth="250" />
+                    <ColumnDefinition Width="2" />
+                    <ColumnDefinition Width="*" MinWidth="250" />
+                </Grid.ColumnDefinitions>
+
+
+
+                <Border
+                    Grid.Column="0"
+                    Margin="0,0,2,8"
+                    Background="{DynamicResource ControlFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8">
+
+                    <Grid Margin="16">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="220" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+
+                            <RowDefinition Height="Auto" />
+
+                        </Grid.RowDefinitions>
+
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Text="ID"
+                            FontWeight="SemiBold"
+                            Margin="0,0,0,4" />
+
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Text="Balance Due Days"
+                            FontWeight="SemiBold"
+                            Margin="0,0,0,4"
+                            />
+
+
+                        <TextBox
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Text="{Binding Id, Mode=OneWay}"
+                            FontWeight="DemiBold"
+                            IsReadOnly="True"
+                            HorizontalAlignment="Left"
+                            Width="40"
+                            Margin="0,0,8,20"/>
+
+                        <TextBox
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Text="{Binding BalanceDueDays}"
+                            HorizontalAlignment="Left"
+                            Width="80"
+                            Margin="0,0,8,20" 
+                            />
+
+
+
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Text="Description"
+                            FontWeight="SemiBold"
+                            Margin="0,0,8,4" />
+
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Text="Deposit Percentage"
+                            FontWeight="SemiBold"
+                            Margin="0,0,8,4" />
+
+                        <TextBox
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            Text="{Binding Description,
+                                Mode=TwoWay,
+                                UpdateSourceTrigger=PropertyChanged}"
+                            Height="30"
+                            Width="200"
+                            HorizontalAlignment="Left"
+                            AcceptsReturn="True"
+                            TextWrapping="Wrap"
+                            Margin="0,0,8,20" />
+
+
+                        <TextBox
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            Text="{Binding DepositPercentage,
+                                Mode=TwoWay,
+                                UpdateSourceTrigger=PropertyChanged}"
+                            Height="30"
+                            Width="80"
+                            HorizontalAlignment="Left"
+                            Margin="0,0,0,20" />
+
+
+                        <TextBlock
+                            Grid.Row="4"
+                            Grid.Column="0"
+                            Text="Due Date Reference"
+                            FontWeight="SemiBold"
+                            Margin="0,0,8,4" />
+
+                        <TextBlock 
+                            Grid.Row="4"
+                            Grid.Column="1"
+                            Text="Due Date Timing"
+                            FontWeight="SemiBold"
+                            Margin="0,0,8,4" />
+
+                        <ComboBox
+                            Grid.Row="5"
+                            Grid.Column="0"
+                            ItemsSource="{Binding AvailableDateReferences}"
+                            DisplayMemberPath="ComboBoxOption"
+                            SelectedValuePath="Value"
+                            SelectedValue="{Binding DueDateReference}"
+                            HorizontalAlignment="Left"
+                            Width="200" />
+
+                        <ComboBox
+                            Grid.Row="5"
+                            Grid.Column="1"
+                            ItemsSource="{Binding AvailablePaymentTimings}"
+                            SelectedValue="{Binding PaymentTiming}" />
+
+                        <TextBlock
+                            Grid.Row="6"
+                            Text="{Binding ErrorMessage}"
+                            FontSize="14"
+                            FontWeight="SemiBold"
+                            Margin="12,0,0,0"
+                            VerticalAlignment="Center"
+                            TextWrapping="Wrap"
+                            Foreground="OrangeRed" />
+
+                    </Grid>
+
+                </Border>
+
+                <GridSplitter
+                    Grid.Column="1"
+                    Width="8"
+                    Margin="0,0,0,8"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    ResizeDirection="Columns"
+                    ResizeBehavior="PreviousAndNext"
+                    Background="Transparent"
+                    Cursor="SizeWE"
+                    FocusVisualStyle="{x:Null}">
+
+                    <GridSplitter.Template>
+                        <ControlTemplate TargetType="GridSplitter">
+                            <Border Background="Transparent" />
+                        </ControlTemplate>
+                    </GridSplitter.Template>
+
+                </GridSplitter>
+
+                <Border
+                    Grid.Column="2"
+                    Margin="2,0,4,8"
+                    Padding="8"
+                    Background="{DynamicResource ControlFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8">
+
+                    <StackPanel>
+
+                        <TextBlock
+                            Text="{Binding Title}"
+                            FontSize="18"
+                            FontWeight="SemiBold"
+                            Margin="2,0,0,8" />
+
+                        <DataGrid
+                            ItemsSource="{Binding PaymentTerms}"
+                            SelectedItem="{Binding SelectedPaymentTerm,
+                                Mode=TwoWay}"
+                            AutoGenerateColumns="False"
+                            IsReadOnly="True"
+                            CanUserAddRows="False"
+                            SelectionMode="Single"
+                            SelectionUnit="FullRow" >
+                            
+
+                            <DataGrid.Columns>
+
+                                <DataGridTextColumn
+                                    Header="ID"
+                                    Binding="{Binding Id}"
+                                    Width="60" />
+
+                                <DataGridTextColumn
+                                    Header="Description"
+                                    Binding="{Binding Description}"
+                                    Width="2*" />
+
+                            </DataGrid.Columns>
+
+                        </DataGrid>
+
+                    </StackPanel>
+
+                </Border>
+
+            </Grid>
+
         </StackPanel>
-        
+
     </ScrollViewer>
 
 </UserControl>

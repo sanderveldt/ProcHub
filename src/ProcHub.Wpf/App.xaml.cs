@@ -127,6 +127,7 @@ public partial class App : Application
         services.AddTransient<ApiErrorHandler>();
 
         services.AddSingleton<ShippingTermsApiClient>();
+        services.AddSingleton<PaymentTermsApiClient>();
 
         services.AddHttpClient(
             ApiClientNames.Authentication,
