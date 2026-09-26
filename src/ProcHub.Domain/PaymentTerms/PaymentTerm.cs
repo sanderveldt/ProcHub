@@ -48,7 +48,7 @@ public class PaymentTerm
 
     public void SetDepositPercentage(decimal depositPercentage)
     {
-        if(depositPercentage is < 0m or > 1m)
+        if (depositPercentage is < 0m or > 1m)
         {
             throw new DomainException(
                 "Deposit percentage must be between 0 and 1.");
@@ -87,22 +87,5 @@ public class PaymentTerm
         }
 
         BalanceDueDays = balanceDueDays;
-    }
-
-    public DateOnly CalculateDueDate(DateOnly referenceDate)
-    {
-        return PaymentTiming switch
-        {
-            PaymentTimings.On => referenceDate,
-
-            PaymentTimings.Before => 
-                referenceDate.AddDays(-BalanceDueDays),
-
-            PaymentTimings.After =>
-                referenceDate.AddDays(BalanceDueDays),
-            
-            _ => throw new DomainException(
-                    "Invalid payment timing.")
-        };
     }
 }
