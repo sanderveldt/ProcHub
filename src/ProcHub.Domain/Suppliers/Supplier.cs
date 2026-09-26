@@ -31,8 +31,6 @@ public class Supplier
     public int? SecondaryLeadTimeDays { get; private set; }
     public int? SampleLeadTimeDays { get; private set; }
 
-    public string? Contactperson { get; private set; }
-
     public SupplierStatus Status { get; private set; } = SupplierStatus.Active;
 
     private Supplier()

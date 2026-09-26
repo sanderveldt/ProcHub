@@ -17,19 +17,16 @@ public class PurchaseOrder
     public PurchaseOrderStatus OrderStatus { get; private set; }
         = PurchaseOrderStatus.Drafted;
 
-    public string PoNumber { get; private set; } = null!;
+    public string Code { get; private set; } = null!;
 
     public int SupplierId { get; private set; }
     public Supplier Supplier { get; private set; } = null!;
-    public string SupplierCode { get; private set; } = null!;
     public string SupplierName { get; private set; } = null!;
-    
+    public int SupplierCode { get; private set; }
     public int PaymentTermId { get; private set; }
     public PaymentTerm PaymentTerm { get; private set; } = null!;
-    public string PaymentTermDescription { get; private set; } = null!;
-    public decimal DepositPercentage { get; private set; }
-    
     public DateOnly? BalanceDueDate { get; private set; }
+    public decimal DepositPercentage { get; private set; }
     public decimal OrderAmount { get; private set; }
     public decimal DepositAmount { get; private set; }
     public decimal BalanceAmount { get; private set; }
@@ -56,5 +53,56 @@ public class PurchaseOrder
     public bool OrderConfirmationSent { get; private set; } = false;
     public bool InvoiceSent { get; private set; } = false;
     public bool OrderInspection { get; private set; } = false;
-    public bool CertificateOfOrigin { get; private set; } = false; 
+    public bool CertificateOfOrigin { get; private set; } = false;
+
+    private PurchaseOrder()
+    {
+    }
+
+    public PurchaseOrder(
+        string code,
+        PurchaseOrderType orderType,
+        Supplier supplier)
+    {
+        SetCode(code);
+        SetOrderType(orderType);
+        SetSupplier(supplier);
+    }
+
+    public void SetCode(string code)
+    {
+        if (string.IsNullOrWhiteSpace(code))
+        {
+            throw new DomainException(
+                "Purchase Order code is required.");
+        }
+
+        code = code.Trim();
+
+        if (code.Length > PurchaseOrderConstants.CodeMaxLength)
+        {
+            throw new DomainException(
+                $"PurchaseOrderCode cannot exceed {PurchaseOrderConstants.CodeMaxLength} characters.");
+        }
+
+        Code = code;
+    }
+
+    public void SetOrderType(PurchaseOrderType orderType)
+    {
+        if (!Enum.IsDefined(orderType))
+        {
+            throw new DomainException(
+                $"{orderType} is not a valid PurchaseOrderType.");
+        }
+
+        OrderType = orderType;
+    }
+
+    public void SetSupplier(Supplier supplier)
+    {
+        Supplier = supplier;
+    }
+
+
 }
