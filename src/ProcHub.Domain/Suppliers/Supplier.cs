@@ -1,5 +1,6 @@
 using ProcHub.Domain.Exceptions;
 using ProcHub.Domain.PaymentTerms;
+using ProcHub.Domain.PurchaseOrders.Enums;
 using ProcHub.Domain.ShippingTerms;
 
 namespace ProcHub.Domain.Suppliers;
@@ -13,8 +14,8 @@ public class Supplier
     public string Name { get; private set; } = null!;
     public string? FullName { get; private set; }
 
-    public int? MainShippingTermId { get; private set; }
-    public ShippingTerm? MainShippingTerm { get; private set; }
+    public int MainShippingTermId { get; private set; }
+    public ShippingTerm MainShippingTerm { get; private set; } = null!;
     public int? SecondaryShippingTermId { get; private set; }
     public ShippingTerm? SecondaryShippingTerm { get; private set; }
     public int? SampleShippingTermId { get; private set; }
@@ -26,6 +27,8 @@ public class Supplier
     public PaymentTerm DefaultPaymentTerm { get; private set; } = null!;
     public int? SecondaryPaymentTermId { get; private set; }
     public PaymentTerm? SecondaryPaymentTerm { get; private set; }
+    public int? SamplePaymentTermId { get; private set; }
+    public PaymentTerm? SamplePaymentTerm { get; private set; }
 
     public int? MainLeadTimeDays { get; private set; }
     public int? SecondaryLeadTimeDays { get; private set; }
@@ -40,11 +43,13 @@ public class Supplier
     public Supplier(
         string code,
         string name,
-        PaymentTerm defaultPaymentTerm)
+        PaymentTerm defaultPaymentTerm,
+        ShippingTerm mainShippingTerm)
     {
         SetCode(code);
         SetName(name);
         SetDefaultPaymentTerm(defaultPaymentTerm);
+        SetMainShippingTerm(mainShippingTerm);
     }
 
     public void SetCode(string code)
@@ -69,7 +74,8 @@ public class Supplier
     {
         if(string.IsNullOrWhiteSpace(name))
         {
-            throw new DomainException("Supplier name is required.");
+            throw new DomainException(
+                "Supplier name is required.");
         }
 
         if (name.Length > SupplierConstants.NameMaxLength)
@@ -102,7 +108,8 @@ public class Supplier
     {
         if (paymentTerm is null)
         {
-            throw new DomainException("Payment term is required.");
+            throw new DomainException(
+                "Payment term is required.");
         }
 
         DefaultPaymentTerm = paymentTerm;
@@ -113,7 +120,7 @@ public class Supplier
         SecondaryPaymentTerm = paymentTerm;
     }
 
-    public void SetMainShippingTerm(ShippingTerm? shippingTerm)
+    public void SetMainShippingTerm(ShippingTerm shippingTerm)
     {
         MainShippingTerm = shippingTerm;
     }
@@ -132,7 +139,8 @@ public class Supplier
     {
         if (shippingTimeDays < 0)
         {
-            throw new DomainException("Shipping time days can't be negative.");
+            throw new DomainException(
+                "Shipping time days can't be negative.");
         }
 
         ShippingTimeDays = shippingTimeDays;
@@ -142,7 +150,8 @@ public class Supplier
     {
         if (productionTimeDays < 0)
         {
-            throw new DomainException("Production time days can't be negative.");
+            throw new DomainException(
+                "Production time days can't be negative.");
         }
 
         ProductionTimeDays = productionTimeDays;
@@ -152,7 +161,8 @@ public class Supplier
     {
         if (mainLeadTimeDays < 0)
         {
-            throw new DomainException("Main lead time days can't be negative.");
+            throw new DomainException(
+                "Main lead time days can't be negative.");
         }
 
         MainLeadTimeDays = mainLeadTimeDays;
@@ -162,7 +172,8 @@ public class Supplier
     {
         if (secondaryLeadTimeDays < 0)
         {
-            throw new DomainException("Secondary lead time days can't be negative.");
+            throw new DomainException(
+                "Secondary lead time days can't be negative.");
         }
 
         SecondaryLeadTimeDays = secondaryLeadTimeDays;
@@ -172,7 +183,8 @@ public class Supplier
     {
         if (sampleLeadTimeDays < 0)
         {
-            throw new DomainException("Sample lead time days can't be negative.");
+            throw new DomainException(
+                "Sample lead time days can't be negative.");
         }
 
         SampleLeadTimeDays = sampleLeadTimeDays;
@@ -187,4 +199,37 @@ public class Supplier
     {
         Status = SupplierStatus.Inactive;
     }
+
+
+    public SupplierTerms GetTerms(PurchaseOrderType orderType)
+    {
+        return orderType switch
+        {
+            PurchaseOrderType.Regular => 
+                new SupplierTerms(
+                    DefaultPaymentTerm,
+                    MainShippingTerm,
+                    MainLeadTimeDays),
+            
+            PurchaseOrderType.Express =>
+                new SupplierTerms(
+                    SecondaryPaymentTerm ?? DefaultPaymentTerm,
+                    SecondaryShippingTerm ?? MainShippingTerm,
+                    SecondaryLeadTimeDays ?? MainLeadTimeDays),
+                            
+            PurchaseOrderType.Sample =>
+                new SupplierTerms(
+                    SamplePaymentTerm ?? DefaultPaymentTerm,
+                    SampleShippingTerm ?? MainShippingTerm,
+                    SampleLeadTimeDays ?? MainLeadTimeDays),
+            
+            _ => throw new DomainException(
+                    "This ordertype is not valid.")  
+        };
+    }
+
+    public sealed record SupplierTerms(
+        PaymentTerm PaymentTerm,
+        ShippingTerm ShippingTerm,
+        int? LeadTimeDays);
 }
