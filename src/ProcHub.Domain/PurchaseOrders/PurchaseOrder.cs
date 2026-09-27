@@ -27,6 +27,7 @@ public class PurchaseOrder
     public string SupplierCode { get; private set; } = null!;
     public int PaymentTermId { get; private set; }
     public PaymentTerm PaymentTerm { get; private set; } = null!;
+    public string PaymentTermDescription { get; private set; } = null!;
     public PaymentTimings PaymentTiming { get; private set; }
     public PaymentDateReference DueDateReference { get; private set; }
     public int BalanceDueDays { get; private set; }    
@@ -34,7 +35,7 @@ public class PurchaseOrder
     public decimal DepositPercentage { get; private set; }
     public bool RequiresDeposit => DepositPercentage > 0m;
     public DateOnly? DepositPaidDate { get; private set; }
-    public decimal OrderAmount { get; private set; }
+    public decimal OrderAmount { get; private set; } = 0m;
     public decimal DepositAmount { get; private set; }
     public decimal BalanceAmount { get; private set; }
     public PaymentStatus PaymentStatus { get; private set; }
@@ -42,7 +43,7 @@ public class PurchaseOrder
 
     public int ShippingTermId { get; private set; }
     public ShippingTerm ShippingTerm { get; private set; } = null!;
-
+    public string ShippingTermName { get; private set; } = null!;
     public string? ConfirmationReference { get; private set; }
     public string? InvoiceReference { get; private set; }
     public string? OrderNotes { get; private set; }
@@ -133,12 +134,14 @@ public class PurchaseOrder
         var paymentTerm = terms.PaymentTerm;
 
         PaymentTerm = paymentTerm;
+        PaymentTermDescription = paymentTerm.Description;
         DepositPercentage = paymentTerm.DepositPercentage;
         PaymentTiming = paymentTerm.PaymentTiming;
         DueDateReference = paymentTerm.DueDateReference;
         BalanceDueDays = paymentTerm.BalanceDueDays;
 
         ShippingTerm = terms.ShippingTerm;
+        ShippingTermName = terms.ShippingTerm.Name;
         LeadTimeDays = terms.LeadTimeDays;
 
         CalculateBalanceDueDate();
