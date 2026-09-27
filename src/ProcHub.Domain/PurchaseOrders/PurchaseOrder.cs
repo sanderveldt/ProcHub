@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using ProcHub.Domain.Exceptions;
 using ProcHub.Domain.PaymentTerms;
 using ProcHub.Domain.PurchaseOrders.Enums;
@@ -48,7 +49,7 @@ public class PurchaseOrder
     public string? ShipmentSize { get; private set; }
     public string? ShipmentReference { get; private set; }
     
-    public DateOnly? ConfirmationDate { get; private set; }
+    public DateOnly? OrderConfirmationDate { get; private set; }
     public DateOnly? RequestedProductionDate { get; private set; }
     public DateOnly? ProductionDoneDate { get; private set; }
     public DateOnly? InvoiceDate { get; private set; }
@@ -63,8 +64,8 @@ public class PurchaseOrder
 
     public bool OrderConfirmationSent { get; private set; } = false;
     public bool InvoiceSent { get; private set; } = false;
-    public bool OrderInspection { get; private set; } = false;
-    public bool CertificateOfOrigin { get; private set; } = false;
+    public bool OrderInspectionDone { get; private set; } = false;
+    public bool CertificateOfOriginSaved { get; private set; } = false;
 
     private PurchaseOrder()
     {
@@ -123,6 +124,8 @@ public class PurchaseOrder
         Supplier = supplier;
         SupplierCode = supplier.Code;
         SupplierName = supplier.Name;
+        ProductionTimeDays = supplier.ProductionTimeDays;
+        ShippingTimeDays = supplier.ShippingTimeDays;
     }
 
     private void SetTerms(Supplier.SupplierTerms terms)
@@ -225,8 +228,7 @@ public class PurchaseOrder
             PaymentDateReference.ShippingDate =>
                 ShippingDate,
             PaymentDateReference.InvoiceDate =>
-                InvoiceDate,
-            
+                InvoiceDate,    
             PaymentDateReference.DeliveryDate =>
                 DeliveryDate,
             PaymentDateReference.BillOfLadingDate =>
@@ -237,4 +239,128 @@ public class PurchaseOrder
         };
     }
 
+    public void SetOrderConfirmationDate(DateOnly? confirmDate)
+    {
+        OrderConfirmationDate = confirmDate;
+    }
+
+    public void SetRequestedProductionDate(DateOnly? reqProdDate)
+    {
+        RequestedProductionDate = reqProdDate;
+    }
+
+    public void SetProductionDoneDate(DateOnly? prodDoneDate)
+    {
+        ProductionDoneDate = prodDoneDate;
+        CalculateBalanceDueDate();
+    }
+
+     public void SetInvoiceDate(DateOnly? invoiceDate)
+    {
+        InvoiceDate = invoiceDate;
+        CalculateBalanceDueDate();
+    }
+
+    public void SetShippingDate(DateOnly? shippingDate)
+    {
+        ShippingDate = shippingDate;
+        CalculateBalanceDueDate();
+    }
+
+    public void SetBillOfLadingDate(DateOnly? bolDate)
+    {
+        BillOfLadingDate = bolDate;
+        CalculateBalanceDueDate();
+    }
+
+    public void SetArrivalDate(DateOnly? arrivalDate)
+    {
+        ArrivalDate = arrivalDate;
+    }
+
+    public void SetDeliveryDate(DateOnly? deliveryDate)
+    {
+        DeliveryDate = deliveryDate;
+        CalculateBalanceDueDate();
+    }
+
+    public void SetConfirmationReference(string? confirmRef)
+    {
+        if (confirmRef?.Length > PurchaseOrderConstants.ConfirmationRefMaxLength)
+        {
+            throw new DomainException(
+                 "ConfirmationReference cannot exceed " +
+                $"{PurchaseOrderConstants.ConfirmationRefMaxLength} characters.");
+        }
+
+        ConfirmationReference = confirmRef;
+    }
+
+    public void SetInvoiceReference(string? invoiceRef)
+    {
+        if (invoiceRef?.Length > PurchaseOrderConstants.InvoiceRefMaxLength)
+        {
+            throw new DomainException(
+                 "InvoiceReference cannot exceed " +
+                $"{PurchaseOrderConstants.InvoiceRefMaxLength} characters.");
+        }
+
+        InvoiceReference = invoiceRef;
+    }
+
+    public void SetOrderNotes(string? orderNotes)
+    {
+        if (orderNotes?.Length > PurchaseOrderConstants.OrderNotesMaxLength)
+        {
+            throw new DomainException(
+                "Order notes cannot exceed " +
+                $"{PurchaseOrderConstants.OrderNotesMaxLength} characters.");
+        }
+
+        OrderNotes = orderNotes;
+    }
+
+    public void SetShipmentSize(string? shipmentSize)
+    {
+        if (shipmentSize?.Length > PurchaseOrderConstants.ShipmentSize)
+        {
+            throw new DomainException(
+                 "Shipment Size cannot exceed " +
+                $"{PurchaseOrderConstants.ShipmentSize} characters.");
+        }
+
+        ShipmentSize = shipmentSize;
+    }
+
+    public void SetShipmentReference(string? shipRef)
+    {
+        if (shipRef?.Length > PurchaseOrderConstants.ShipmentReference)
+        {
+            throw new DomainException(
+                "Shipment reference cannot exceed " +
+                $"{PurchaseOrderConstants.ShipmentReference} characters.");
+        }
+
+        ShipmentReference = shipRef;
+    }
+
+    public void MarkConfirmationSent()
+    {
+        OrderConfirmationSent = true;
+    }
+
+    public void MarkInvoiceSent()
+    {
+        InvoiceSent = true;
+    }
+
+    public void MarkInspectionDone()
+    {
+        OrderInspectionDone = true;
+    }
+
+    public void MarkCertificateOfOriginSaved()
+    {
+        CertificateOfOriginSaved = true;
+    }
 }
