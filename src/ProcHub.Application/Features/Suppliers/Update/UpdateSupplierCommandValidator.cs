@@ -24,9 +24,10 @@ public sealed class UpdateSupplierCommandValidator
             .WithMessage($"Supplier full name cannot exceed {SupplierConstants.FullNameMaxLength} characters.");
     
         RuleFor(x => x.MainShippingTermId)
+            .NotEmpty()
             .GreaterThan(0)
-            .When(x => x.MainShippingTermId.HasValue);
-
+            .WithMessage("Shipping Term is required.");
+            
         RuleFor(x => x.SecondaryShippingTermId)
             .GreaterThan(0)
             .When(x => x.SecondaryShippingTermId.HasValue);

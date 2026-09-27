@@ -24,11 +24,11 @@ public static class UpdateSupplierEndpoint
     {
         var command = new UpdateSupplierCommand(
             request.Name,
-            request.DefaultPaymentTermId)
+            request.DefaultPaymentTermId,
+            request.MainShippingTermId)
         {
             FullName = request.FullName,
 
-            MainShippingTermId = request.MainShippingTermId,
             SecondaryShippingTermId = request.SecondaryShippingTermId,
             SampleShippingTermId = request.SampleShippingTermId,
 

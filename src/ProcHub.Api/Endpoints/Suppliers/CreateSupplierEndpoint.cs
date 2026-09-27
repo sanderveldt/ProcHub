@@ -25,11 +25,11 @@ public static class CreateSupplierEndpoint
         var command = new CreateSupplierCommand(
             request.Code,
             request.Name,
-            request.DefaultPaymentTermId)
+            request.DefaultPaymentTermId,
+            request.MainShippingTermId)
         {
             FullName = request.FullName,
 
-            MainShippingTermId = request.MainShippingTermId,
             SecondaryShippingTermId = request.SecondaryShippingTermId,
             SampleShippingTermId = request.SampleShippingTermId,
 
