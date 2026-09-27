@@ -30,8 +30,9 @@ public sealed class CreateSupplierCommandValidator
             .WithMessage("Default payment term is required.");
         
         RuleFor(x => x.MainShippingTermId)
+            .NotEmpty()
             .GreaterThan(0)
-            .When(x => x.MainShippingTermId.HasValue);
+            .WithMessage("Main Shipping term is required.");
 
         RuleFor(x => x.SecondaryShippingTermId)
             .GreaterThan(0)

@@ -2,11 +2,10 @@ namespace ProcHub.Application.Features.Suppliers.Update;
 
 public sealed record UpdateSupplierCommand(
     string Name,
-    int DefaultPaymentTermId)
+    int DefaultPaymentTermId,
+    int MainShippingTermId)
 {
     public string? FullName { get; init; }
-
-    public int? MainShippingTermId { get; init; }
     public int? SecondaryShippingTermId { get; init; }
     public int? SampleShippingTermId { get; init; }
 

@@ -35,28 +35,20 @@ public sealed class UpdateSupplierHandler(
                 cancellationToken)
             ?? throw new NotFoundException(
                 $"PaymentTerm {command.DefaultPaymentTermId} not found");
-        
+
+        var mainShippingTerm = await dbContext.ShippingTerms
+            .FindAsync(
+                [command.MainShippingTermId],
+                cancellationToken)
+            ?? throw new NotFoundException(
+                $"ShippingTerm {command.MainShippingTermId} not found.");
+
+
+        supplier.SetMainShippingTerm(mainShippingTerm);
         supplier.SetDefaultPaymentTerm(defaultPaymentTerm);
         
         supplier.SetName(command.Name);
         supplier.SetFullName(command.FullName);
-
-
-        if (command.MainShippingTermId is null)
-        {
-            supplier.SetMainShippingTerm(null);
-        }
-        else
-        {
-            var mainShippingTerm = await dbContext.ShippingTerms
-                .FindAsync(
-                    [command.MainShippingTermId.Value],
-                    cancellationToken)
-                ?? throw new NotFoundException(
-                    $"ShippingTerm {command.MainShippingTermId.Value} not found.");
-            
-            supplier.SetMainShippingTerm(mainShippingTerm);
-        }
 
         if (command.SecondaryShippingTermId is null)
         {
