@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using ProcHub.Domain.Suppliers;
 
-namespace ProcHub.Infrastructure.Persistence.Configurations.Suppliers;
+namespace ProcHub.Infrastructure.Persistence.Configurations;
 
 public sealed class SupplierConfiguration
     : IEntityTypeConfiguration<Supplier>
