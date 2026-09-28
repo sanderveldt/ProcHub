@@ -10,6 +10,7 @@ namespace ProcHub.Domain.PurchaseOrders;
 public class PurchaseOrder
 {
     public int Id { get; private set; }
+    public string Code { get; private set; } = null!;
     public DateOnly OrderDate { get; private set; } = 
         DateOnly.FromDateTime(DateTime.Today);
     
@@ -19,12 +20,10 @@ public class PurchaseOrder
     public PurchaseOrderStatus OrderStatus { get; private set; }
         = PurchaseOrderStatus.Drafted;
     
-    public string Code { get; private set; } = null!;
-
     public int SupplierId { get; private set; }
     public Supplier Supplier { get; private set; } = null!;
-    public string SupplierName { get; private set; } = null!;
     public string SupplierCode { get; private set; } = null!;
+    public string SupplierName { get; private set; } = null!;
     public int PaymentTermId { get; private set; }
     public PaymentTerm PaymentTerm { get; private set; } = null!;
     public string PaymentTermDescription { get; private set; } = null!;
@@ -145,6 +144,11 @@ public class PurchaseOrder
         ShippingTerm = terms.ShippingTerm;
         ShippingTermName = terms.ShippingTerm.Name;
         LeadTimeDays = terms.LeadTimeDays;
+
+        if (OrderType == PurchaseOrderType.Express)
+        {
+            ShipmentSize = "Express";
+        }
 
         CalculateBalanceDueDate();
     }
