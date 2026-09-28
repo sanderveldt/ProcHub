@@ -11,6 +11,8 @@ public static class PurchaseOrderEndpoints
             .RequireAuthorization();
 
         group.MapCreatePurchaseOrderEndpoint();
+        group.MapGetPurchaseOrderEndpoint();
+        group.MapListPurchaseOrdersEndpoint();
 
         return endpoints;
     }

@@ -40,6 +40,7 @@ public static class DependencyInjection
 
         services.AddScoped<CreatePurchaseOrderHandler>();
         services.AddScoped<GetPurchaseOrderHandler>();
+        services.AddScoped<ListPurchaseOrdersHandler>();
 
         services.AddValidatorsFromAssembly(
             typeof(DependencyInjection).Assembly);
