@@ -8,6 +8,8 @@ public sealed record CreatePurchaseOrderResult(
     string SupplierCode,
     string SupplierName,
 
+    PurchaseOrderStatus OrderStatus,
+
     string PaymentTermDescription,
     int BalanceDueDays,
 

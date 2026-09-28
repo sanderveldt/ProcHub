@@ -35,12 +35,14 @@ public class PurchaseOrder
     public decimal DepositPercentage { get; private set; }
     public bool RequiresDeposit => DepositPercentage > 0m;
     public DateOnly? DepositPaidDate { get; private set; }
+    public bool DepositPaid { get; private set; } = false;
     public decimal OrderAmount { get; private set; } = 0m;
     public decimal DepositAmount { get; private set; }
     public decimal BalanceAmount { get; private set; }
     public PaymentStatus PaymentStatus { get; private set; }
         = PaymentStatus.UnPaid;
-
+    public DateOnly? OrderPaidDate { get; private set; }
+    public bool OrderPaid { get; private set; } = false;
     public int ShippingTermId { get; private set; }
     public ShippingTerm ShippingTerm { get; private set; } = null!;
     public string ShippingTermName { get; private set; } = null!;
@@ -192,7 +194,21 @@ public class PurchaseOrder
         }
 
         DepositPaidDate = paymentDate;
+        DepositPaid = true;
         PaymentStatus = PaymentStatus.DepositPaid;
+    }
+
+    public void MarkOrderPaid(DateOnly paymentDate)
+    {
+        if (RequiresDeposit && !DepositPaid)
+        {
+            throw new DomainException(
+                "Deposit hasn't been paid yet.");
+        }
+
+        OrderPaidDate = paymentDate;
+        OrderPaid = true;
+        PaymentStatus = PaymentStatus.Paid;
     }
 
     private void CalculateBalanceDueDate()

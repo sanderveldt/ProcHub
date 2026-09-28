@@ -49,11 +49,15 @@ public sealed class CreatePurchaseOrderHandler(
         
         dbContext.PurchaseOrders.Add(purchaseOrder);
 
+        await dbContext.SaveChangesAsync(cancellationToken);
+
         return new CreatePurchaseOrderResult(
             purchaseOrder.Code,
             purchaseOrder.OrderType,
             purchaseOrder.SupplierCode,
             purchaseOrder.SupplierName,
+
+            purchaseOrder.OrderStatus,
 
             purchaseOrder.PaymentTermDescription,
             purchaseOrder.BalanceDueDays,
