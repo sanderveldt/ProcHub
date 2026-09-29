@@ -52,7 +52,6 @@ public sealed class UpdateSupplierCommandValidator
         
         RuleFor(x => x.MainLeadTimeDays)
             .GreaterThanOrEqualTo(0)
-            .When(x => x.MainLeadTimeDays.HasValue)
             .WithMessage("Main lead time can't be negative.");
         
         RuleFor(x => x.SecondaryLeadTimeDays)

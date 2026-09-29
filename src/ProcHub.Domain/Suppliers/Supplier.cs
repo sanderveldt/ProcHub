@@ -30,7 +30,7 @@ public class Supplier
     public int? SamplePaymentTermId { get; private set; }
     public PaymentTerm? SamplePaymentTerm { get; private set; }
 
-    public int? MainLeadTimeDays { get; private set; }
+    public int MainLeadTimeDays { get; private set; } = 0;
     public int? SecondaryLeadTimeDays { get; private set; }
     public int? SampleLeadTimeDays { get; private set; }
 
@@ -157,7 +157,7 @@ public class Supplier
         ProductionTimeDays = productionTimeDays;
     }
 
-    public void SetMainLeadTimeDays(int? mainLeadTimeDays)
+    public void SetMainLeadTimeDays(int mainLeadTimeDays)
     {
         if (mainLeadTimeDays < 0)
         {
@@ -231,5 +231,5 @@ public class Supplier
     public sealed record SupplierTerms(
         PaymentTerm PaymentTerm,
         ShippingTerm ShippingTerm,
-        int? LeadTimeDays);
+        int LeadTimeDays);
 }

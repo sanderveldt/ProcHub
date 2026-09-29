@@ -13,7 +13,7 @@ public sealed record UpdateSupplierRequest(
 
     public int? ShippingTimeDays { get; init; }
     public int? ProductionTimeDays { get; init; }
-    public int? MainLeadTimeDays { get; init; }
+    public int MainLeadTimeDays { get; init; } = 0;
     public int? SecondaryLeadTimeDays { get; init; }
     public int? SampleLeadTimeDays { get; init; }
 }

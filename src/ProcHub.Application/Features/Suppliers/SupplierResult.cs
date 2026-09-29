@@ -22,7 +22,7 @@ public sealed record SupplierResult(
 
     int? ShippingTimeDays,
     int? ProductionTimeDays,
-    int? MainLeadTimeDays,
+    int MainLeadTimeDays,
     int? SecondaryLeadTimeDays,
     int? SampleLeadTimeDays,
 
