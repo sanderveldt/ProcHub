@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ProcHub.Application.Abstractions;
-using ProcHub.Application.Exceptions;
+using ProcHub.Domain.PurchaseOrders.Enums;
 
 namespace ProcHub.Application.Features.PurchaseOrders.Get;
 
@@ -11,6 +11,12 @@ public sealed class DashboardListHandler(IProcHubDbContext dbContext)
     {
         return await dbContext.PurchaseOrders
             .AsNoTracking()
+
+            .Where(po => 
+                po.OrderStatus != PurchaseOrderStatus.OrderClosed)
+            .Where(po => 
+                po.OrderStatus != PurchaseOrderStatus.Cancelled)
+
             .OrderBy(po => po.OrderDate)
 
             .Select(po => new PurchaseOrderResult
@@ -54,6 +60,7 @@ public sealed class DashboardListHandler(IProcHubDbContext dbContext)
                 ShippingDate = po.ShippingDate,
                 BillOfLadingDate = po.BillOfLadingDate,
                 ArrivalDate = po.ArrivalDate,
+                ExpectedDeliveryDate = po.ExpectedDeliveryDate,
                 DeliveryDate = po.DeliveryDate,
 
                 ProductionTimeDays = po.ProductionTimeDays,

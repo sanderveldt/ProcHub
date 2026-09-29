@@ -5,6 +5,7 @@ using ProcHub.Application.Features.PaymentTerms.Delete;
 using ProcHub.Application.Features.PaymentTerms.Get;
 using ProcHub.Application.Features.PaymentTerms.Update;
 using ProcHub.Application.Features.PurchaseOrders.Create;
+using ProcHub.Application.Features.PurchaseOrders.Delete;
 using ProcHub.Application.Features.PurchaseOrders.Get;
 using ProcHub.Application.Features.ShippingTerms.Create;
 using ProcHub.Application.Features.ShippingTerms.Delete;
@@ -42,6 +43,7 @@ public static class DependencyInjection
         services.AddScoped<GetPurchaseOrderHandler>();
         services.AddScoped<ListPurchaseOrdersHandler>();
         services.AddScoped<DashboardListHandler>();
+        services.AddScoped<DeletePurchaseOrderHandler>();
 
         services.AddValidatorsFromAssembly(
             typeof(DependencyInjection).Assembly);

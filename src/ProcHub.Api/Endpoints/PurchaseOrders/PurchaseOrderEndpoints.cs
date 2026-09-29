@@ -15,6 +15,9 @@ public static class PurchaseOrderEndpoints
         group.MapListPurchaseOrdersEndpoint();
         group.MapDashboardListEndpoint();
 
+        // SuperUser or Admin
+        group.MapDeletePurchaseOrderEndpoint();
+
         return endpoints;
     }
 }
