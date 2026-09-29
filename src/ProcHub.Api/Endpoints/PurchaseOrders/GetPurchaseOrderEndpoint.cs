@@ -69,6 +69,7 @@ public static class GetPurchaseOrderEndpoint
                 ShippingDate = result.ShippingDate,
                 BillOfLadingDate = result.BillOfLadingDate,
                 ArrivalDate = result.ArrivalDate,
+                ExpectedDeliveryDate = result.ExpectedDeliveryDate,
                 DeliveryDate = result.DeliveryDate,
 
                 ProductionTimeDays = result.ProductionTimeDays,

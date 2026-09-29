@@ -58,11 +58,12 @@ public class PurchaseOrder
     public DateOnly? ShippingDate { get; private set; }
     public DateOnly? BillOfLadingDate { get; private set; }
     public DateOnly? ArrivalDate { get; private set; }
+    public DateOnly ExpectedDeliveryDate { get; private set; }
     public DateOnly? DeliveryDate { get; private set; }
 
     public int? ProductionTimeDays { get; private set; }
     public int? ShippingTimeDays { get; private set; }
-    public int? LeadTimeDays { get; private set; }
+    public int LeadTimeDays { get; private set; } = 0;
 
     public bool OrderConfirmationSent { get; private set; } = false;
     public bool InvoiceSent { get; private set; } = false;
@@ -84,6 +85,14 @@ public class PurchaseOrder
 
         SetTerms(supplier
             .GetTerms(orderType));
+
+        CalculateDeliveryDate(OrderDate);
+    }
+
+    private void CalculateDeliveryDate(DateOnly orderDate)
+    {
+        ExpectedDeliveryDate = orderDate
+            .AddDays(LeadTimeDays);
     }
 
     public void SetCode(string code)

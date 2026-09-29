@@ -44,6 +44,7 @@ public sealed record PurchaseOrderResult
     public DateOnly? ShippingDate { get; init; }
     public DateOnly? BillOfLadingDate { get; init; }
     public DateOnly? ArrivalDate { get; init; }
+    public DateOnly ExpectedDeliveryDate { get; init; }
     public DateOnly? DeliveryDate { get; init; }
 
     public int? ProductionTimeDays { get; init; }

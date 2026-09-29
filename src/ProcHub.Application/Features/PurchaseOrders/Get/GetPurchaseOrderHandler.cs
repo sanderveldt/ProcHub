@@ -1,4 +1,3 @@
-using System.Data;
 using Microsoft.EntityFrameworkCore;
 using ProcHub.Application.Exceptions;
 using ProcHub.Application.Abstractions;
@@ -65,6 +64,7 @@ public sealed class GetPurchaseOrderHandler(IProcHubDbContext dbContext)
                 ShippingDate = po.ShippingDate,
                 BillOfLadingDate = po.BillOfLadingDate,
                 ArrivalDate = po.ArrivalDate,
+                ExpectedDeliveryDate = po.ExpectedDeliveryDate,
                 DeliveryDate = po.DeliveryDate,
 
                 ProductionTimeDays = po.ProductionTimeDays,
