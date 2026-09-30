@@ -54,6 +54,12 @@ public class PaymentTerm
                 "Deposit percentage must be between 0 and 1.");
         }
 
+        if (depositPercentage != decimal.Round(depositPercentage, 2))
+        {
+            throw new DomainException(
+                "Deposit percentage cannot have more than 2 decimal places.");
+        }
+
         DepositPercentage = depositPercentage;
     }
 
