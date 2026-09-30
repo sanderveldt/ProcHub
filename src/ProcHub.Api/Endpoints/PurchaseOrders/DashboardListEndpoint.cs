@@ -79,6 +79,6 @@ public static class DashboardListEndpoint
             })
             .ToList();
 
-        return TypedResults.Ok(response);
+            return TypedResults.Ok(response);
     }
 }
