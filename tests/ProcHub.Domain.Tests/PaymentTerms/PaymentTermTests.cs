@@ -15,6 +15,80 @@ public class PaymentTermTests
             60);
     }
 
+    // SetDescription() Tests
+    [Fact]
+    public void SetDescription_ValidDescription_SetsDescription()
+    {
+        var paymentTerm = CreatePaymentTerm();
+        string description = "TestDescription";
+
+        paymentTerm.SetDescription(description);
+
+        Assert.Equal(
+            description, 
+            paymentTerm.Description);
+    }
+
+    [Fact]
+    public void SetDescription_WithOutsideWhitespace_TrimsDescription()
+    {
+        var paymentTerm = CreatePaymentTerm();
+        string description = "  TestDescription  ";
+
+        paymentTerm.SetDescription(description);
+        string trimmedDescription = "TestDescription";
+
+        Assert.Equal(
+            trimmedDescription,
+            paymentTerm.Description);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData("     ")]
+    public void SetDescription_WhenNullOrWhitespace_ThrowDomainException(
+        string? description)
+    {
+        var paymentTerm = CreatePaymentTerm();
+
+        Action act = () => paymentTerm
+            .SetDescription(description!);
+        
+        Assert.Throws<DomainException>(act);
+    }
+
+    [Fact]
+    public void SetDescription_WhenAtMaxLength_SetsDescription()
+    {
+        var paymentTerm = CreatePaymentTerm();
+        var description = new string(
+            'x',
+            PaymentTermConstants.DescriptionMaxLength);
+        
+        paymentTerm.SetDescription(description);
+
+        Assert.Equal(
+            description,
+            paymentTerm.Description);
+    }
+
+    [Fact]
+    public void SetDescription_WhenMoreThanMaxLength_ThrowDomainException()
+    {
+        var paymentTerm = CreatePaymentTerm();
+        var description = new string(
+            'x',
+            PaymentTermConstants.DescriptionMaxLength + 1);
+        
+        Action act = () => paymentTerm
+            .SetDescription(description);
+        
+        Assert.Throws<DomainException>(act);
+    }
+
+    // SetDepositPercentage Tests
     [Theory]
     [InlineData(0)]
     [InlineData(0.5)]
