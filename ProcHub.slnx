@@ -7,4 +7,7 @@
     <Project Path="src/ProcHub.Infrastructure/ProcHub.Infrastructure.csproj" />
     <Project Path="src/ProcHub.Wpf/ProcHub.Wpf.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ProcHub.Domain.Tests/ProcHub.Domain.Tests.csproj" />
+  </Folder>
 </Solution>
