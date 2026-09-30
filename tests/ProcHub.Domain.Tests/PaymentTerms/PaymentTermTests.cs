@@ -15,7 +15,8 @@ public class PaymentTermTests
             60);
     }
 
-    // SetDescription() Tests
+
+    // SetDescription()
     [Fact]
     public void SetDescription_ValidDescription_SetsDescription()
     {
@@ -88,7 +89,8 @@ public class PaymentTermTests
         Assert.Throws<DomainException>(act);
     }
 
-    // SetDepositPercentage Tests
+
+    // SetDepositPercentage()
     [Theory]
     [InlineData(0)]
     [InlineData(0.5)]
@@ -130,6 +132,103 @@ public class PaymentTermTests
 
         Action act = () => paymentTerm
             .SetDepositPercentage(depositPercentage);
+        
+        Assert.Throws<DomainException>(act);
+    }
+
+
+    // SetPaymentTiming()
+    [Fact]
+    public void SetPaymentTiming_WithInvalidInput_ThrowDomainException()
+    {
+        var paymentTerm = CreatePaymentTerm();
+        var invalidPaymentTiming = (PaymentTimings)999;
+
+        Action act = () => paymentTerm
+            .SetPaymentTiming(invalidPaymentTiming);
+        
+        Assert.Throws<DomainException>(act);
+    }
+
+    [Theory]
+    [InlineData(PaymentTimings.Before)]
+    [InlineData(PaymentTimings.On)]
+    [InlineData(PaymentTimings.After)]
+    public void SetPaymentTiming_WithValidInput_SetsPaymentTiming(
+        PaymentTimings paymentTiming)
+    {
+        var paymentTerm = CreatePaymentTerm();
+
+        paymentTerm.SetPaymentTiming(paymentTiming);
+
+        Assert.Equal(
+            paymentTiming, 
+            paymentTerm.PaymentTiming);
+    }
+
+
+    // SetDateReference()
+    [Fact]
+    public void SetDateReference_WithInvalidInput_ThrowDomainException()
+    {
+        var paymentTerm = CreatePaymentTerm();
+        var invalidDateReference = (PaymentDateReference)999;
+
+        Action act = () => paymentTerm
+            .SetDateReference(invalidDateReference);
+        
+        Assert.Throws<DomainException>(act);
+    }
+
+    [Theory]
+    [InlineData(PaymentDateReference.BillOfLadingDate)]
+    [InlineData(PaymentDateReference.DeliveryDate)]
+    [InlineData(PaymentDateReference.InvoiceDate)]
+    [InlineData(PaymentDateReference.OrderDate)]
+    [InlineData(PaymentDateReference.ProductionDoneDate)]
+    [InlineData(PaymentDateReference.ShippingDate)]
+    public void SetDateReference_WithValidInput_SetsDateReference(
+        PaymentDateReference dateReference)
+    {
+        var paymentTerm = CreatePaymentTerm();
+
+        paymentTerm.SetDateReference(dateReference);
+
+        Assert.Equal(
+            dateReference,
+            paymentTerm.DueDateReference);
+    }
+
+
+    // SetBalanceDueDays()
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(32)]
+    [InlineData(150)]
+    public void SetBalanceDueDays_WithValidInput_SetsBalanceDueDays(
+        int balanceDueDays)
+    {
+        var paymentTerm = CreatePaymentTerm();
+
+        paymentTerm.SetBalanceDueDays(balanceDueDays);
+
+        Assert.Equal(
+            balanceDueDays,
+            paymentTerm.BalanceDueDays);
+    }
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(-32)]
+    [InlineData(int.MinValue)]
+    public void SetBalanceDueDays_WhenNegative_ThrowDomainException(
+        int balanceDueDays)
+    {
+        var paymentTerm = CreatePaymentTerm();
+
+        Action act = () => paymentTerm
+            .SetBalanceDueDays(balanceDueDays);
         
         Assert.Throws<DomainException>(act);
     }
