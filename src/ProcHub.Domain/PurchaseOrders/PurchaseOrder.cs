@@ -58,7 +58,7 @@ public class PurchaseOrder
     public DateOnly? ShippingDate { get; private set; }
     public DateOnly? BillOfLadingDate { get; private set; }
     public DateOnly? ArrivalDate { get; private set; }
-    public DateOnly ExpectedDeliveryDate { get; private set; }
+    public DateOnly? ExpectedDeliveryDate { get; private set; }
     public DateOnly? DeliveryDate { get; private set; }
 
     public int? ProductionTimeDays { get; private set; }
@@ -93,6 +93,11 @@ public class PurchaseOrder
     {
         ExpectedDeliveryDate = orderDate
             .AddDays(LeadTimeDays);
+    }
+
+    public void SetExpectedDeliveryDate(DateOnly? expectedDeliveryDate)
+    {
+        ExpectedDeliveryDate = expectedDeliveryDate;
     }
 
     public void SetCode(string code)
