@@ -74,6 +74,11 @@ public sealed class PurchaseOrderConfiguration
         builder.Property(po => po.BalanceDueDays)
             .IsRequired();
 
+        builder.Property(po => po.PaymentStatus)
+            .HasConversion<string>()
+            .HasMaxLength(40)
+            .IsRequired();
+
         builder.HasOne(po => po.ShippingTerm)
             .WithMany()
             .HasForeignKey(po => po.ShippingTermId)
@@ -94,10 +99,10 @@ public sealed class PurchaseOrderConfiguration
         
         builder.Property(po => po.ShipmentSize)
             .HasMaxLength(PurchaseOrderConstants
-                .ShipmentSize);
+                .ShipmentSizeMaxLength);
         
         builder.Property(po => po.ShipmentReference)
             .HasMaxLength(PurchaseOrderConstants
-                .ShipmentReference);
+                .ShipmentRefMaxLength);
     }
 }

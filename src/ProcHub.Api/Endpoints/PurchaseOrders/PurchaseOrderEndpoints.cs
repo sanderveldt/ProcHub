@@ -15,6 +15,7 @@ public static class PurchaseOrderEndpoints
         group.MapListPurchaseOrdersEndpoint();
         group.MapDashboardListEndpoint();
         group.MapUpdatePurchaseOrderDatesEndpoint();
+        group.MapUpdatePurchaseOrderReferencesEndpoint();
 
         // SuperUser or Admin
         group.MapDeletePurchaseOrderEndpoint();

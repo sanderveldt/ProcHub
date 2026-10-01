@@ -359,11 +359,11 @@ public class PurchaseOrder
 
     public void SetShipmentSize(string? shipmentSize)
     {
-        if (shipmentSize?.Length > PurchaseOrderConstants.ShipmentSize)
+        if (shipmentSize?.Length > PurchaseOrderConstants.ShipmentSizeMaxLength)
         {
             throw new DomainException(
                  "Shipment Size cannot exceed " +
-                $"{PurchaseOrderConstants.ShipmentSize} characters.");
+                $"{PurchaseOrderConstants.ShipmentSizeMaxLength} characters.");
         }
 
         ShipmentSize = shipmentSize;
@@ -371,11 +371,11 @@ public class PurchaseOrder
 
     public void SetShipmentReference(string? shipRef)
     {
-        if (shipRef?.Length > PurchaseOrderConstants.ShipmentReference)
+        if (shipRef?.Length > PurchaseOrderConstants.ShipmentRefMaxLength)
         {
             throw new DomainException(
                 "Shipment reference cannot exceed " +
-                $"{PurchaseOrderConstants.ShipmentReference} characters.");
+                $"{PurchaseOrderConstants.ShipmentRefMaxLength} characters.");
         }
 
         ShipmentReference = shipRef;
