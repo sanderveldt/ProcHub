@@ -52,7 +52,7 @@ public static class GetPurchaseOrderEndpoint
                 OrderAmount = result.OrderAmount,   
                 DepositAmount = result.DepositAmount,
                 BalanceAmount = result.BalanceAmount,
-                OrderPaidDate = result.OrderPaidDate,
+                BalancePaidDate = result.BalancePaidDate,
                 ShippingTermId = result.ShippingTermId,
                 ShippingTermName = result.ShippingTermName,
 

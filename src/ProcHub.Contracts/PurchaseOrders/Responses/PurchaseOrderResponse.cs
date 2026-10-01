@@ -26,7 +26,7 @@ public sealed record PurchaseOrderResponse
     public decimal OrderAmount { get; init; }
     public decimal DepositAmount { get; init; }
     public decimal BalanceAmount { get; init; }
-    public DateOnly? OrderPaidDate { get; init; }
+    public DateOnly? BalancePaidDate { get; init; }
 
     public int ShippingTermId { get; init; }
     public required string ShippingTermName { get; init; }
@@ -44,7 +44,7 @@ public sealed record PurchaseOrderResponse
     public DateOnly? ShippingDate { get; init; }
     public DateOnly? BillOfLadingDate { get; init; }
     public DateOnly? ArrivalDate { get; init; }
-    public DateOnly ExpectedDeliveryDate { get; init; }
+    public DateOnly? ExpectedDeliveryDate { get; init; }
     public DateOnly? DeliveryDate { get; init; }
 
     public int? ProductionTimeDays { get; init; }

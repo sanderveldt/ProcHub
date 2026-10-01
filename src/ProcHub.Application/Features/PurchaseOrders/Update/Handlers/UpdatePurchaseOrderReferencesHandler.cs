@@ -24,11 +24,30 @@ public sealed class UpdatePurchaseOrderReferencesHandler(
             ?? throw new NotFoundException(
                 $"PurchaseOrder with code {command.Code} not found.");
 
-        purchaseOrder.SetConfirmationReference(command.ConfirmationReference);
-        purchaseOrder.SetInvoiceReference(command.InvoiceReference);
-        purchaseOrder.SetOrderNotes(command.OrderNotes);
-        purchaseOrder.SetShipmentSize(command.ShipmentSize);
-        purchaseOrder.SetShipmentReference(command.ShipmentReference);
+        if (command.ConfirmationReference is not null)
+        {
+            purchaseOrder.SetConfirmationReference(command.ConfirmationReference);
+        }
+
+        if (command.InvoiceReference is not null)
+        {
+            purchaseOrder.SetInvoiceReference(command.InvoiceReference);
+        }
+
+        if (command.OrderNotes is not null)
+        {
+            purchaseOrder.SetOrderNotes(command.OrderNotes);
+        }
+
+        if (command.ShipmentSize is not null)
+        {
+            purchaseOrder.SetShipmentSize(command.ShipmentSize);
+        }
+        
+        if (command.ShipmentReference is not null)
+        {
+            purchaseOrder.SetShipmentReference(command.ShipmentReference);
+        }
 
         await dbContext.SaveChangesAsync(cancellationToken);
     }

@@ -23,7 +23,7 @@ public static class UpdatePurchaseOrderReferencesEndpoint
     {
         var command = new UpdatePurchaseOrderReferencesCommand(code)
         {
-            ConfirmationReference = request.ConfirmationReference,
+            ConfirmationReference = request.OrderConfirmationReference,
             InvoiceReference = request.InvoiceReference,
             OrderNotes = request.OrderNotes,
             ShipmentSize = request.ShipmentSize,

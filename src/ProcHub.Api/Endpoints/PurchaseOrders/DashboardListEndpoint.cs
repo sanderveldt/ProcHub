@@ -48,7 +48,7 @@ public static class DashboardListEndpoint
                 OrderAmount = po.OrderAmount,   
                 DepositAmount = po.DepositAmount,
                 BalanceAmount = po.BalanceAmount,
-                OrderPaidDate = po.OrderPaidDate,
+                BalancePaidDate = po.BalancePaidDate,
                 ShippingTermId = po.ShippingTermId,
                 ShippingTermName = po.ShippingTermName,
 

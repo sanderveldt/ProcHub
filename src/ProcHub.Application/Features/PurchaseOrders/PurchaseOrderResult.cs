@@ -26,7 +26,7 @@ public sealed record PurchaseOrderResult
     public decimal OrderAmount { get; init; }
     public decimal DepositAmount { get; init; }
     public decimal BalanceAmount { get; init; }
-    public DateOnly? OrderPaidDate { get; init; }
+    public DateOnly? BalancePaidDate { get; init; }
 
     public int ShippingTermId { get; init; }
     public required string ShippingTermName { get; init; }

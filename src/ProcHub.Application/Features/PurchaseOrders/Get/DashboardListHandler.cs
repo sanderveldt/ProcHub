@@ -18,7 +18,6 @@ public sealed class DashboardListHandler(IProcHubDbContext dbContext)
                 po.OrderStatus != PurchaseOrderStatus.Cancelled)
 
             .OrderBy(po => po.OrderDate)
-
             .Select(po => new PurchaseOrderResult
             {
                 Code = po.Code,
@@ -42,7 +41,7 @@ public sealed class DashboardListHandler(IProcHubDbContext dbContext)
                 OrderAmount = po.OrderAmount,   
                 DepositAmount = po.DepositAmount,
                 BalanceAmount = po.BalanceAmount,
-                OrderPaidDate = po.OrderPaidDate,
+                BalancePaidDate = po.BalancePaidDate,
 
                 ShippingTermId = po.ShippingTermId,
                 ShippingTermName = po.ShippingTerm.Name,

@@ -11,7 +11,6 @@ public sealed class UpdatePurchaseOrderDatesHandler(
     IValidator<UpdatePurchaseOrderDatesCommand> validator)
 {
     public async Task HandleAsync(
-        string code,
         UpdatePurchaseOrderDatesCommand command,
         CancellationToken cancellationToken = default)
     {
@@ -21,10 +20,10 @@ public sealed class UpdatePurchaseOrderDatesHandler(
 
         var purchaseOrder = await dbContext.PurchaseOrders
             .SingleOrDefaultAsync(
-                po => po.Code == code,
+                po => po.Code == command.Code,
                 cancellationToken)
             ?? throw new NotFoundException(
-                $"PurchaseOrder with code {code} not found.");
+                $"PurchaseOrder with code {command.Code} not found.");
 
         purchaseOrder.SetOrderConfirmationDate(command.OrderConfirmationDate);
         purchaseOrder.SetRequestedProductionDate(command.RequestedProductionDate);

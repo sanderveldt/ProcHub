@@ -11,14 +11,16 @@ public sealed class DeletePurchaseOrderHandler(IProcHubDbContext dbContext)
         string code,
         CancellationToken cancellationToken)
     {
-        var trimmedCode = code.Trim();
+        // No trim on purpose
 
         var purchaseOrder = await dbContext.PurchaseOrders
             .FirstOrDefaultAsync(
-                po => po.Code == trimmedCode,
+                po => po.Code == code,
                 cancellationToken)
             ?? throw new NotFoundException(
                 $"PurchaseOrder with code {code} not found.");
+
+        // InUse checks later?
             
         dbContext.PurchaseOrders.Remove(purchaseOrder);
 

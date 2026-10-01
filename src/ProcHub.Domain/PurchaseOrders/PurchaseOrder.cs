@@ -40,7 +40,7 @@ public class PurchaseOrder
     public decimal BalanceAmount { get; private set; }
     public PaymentStatus PaymentStatus { get; private set; }
         = PaymentStatus.UnPaid;
-    public DateOnly? OrderPaidDate { get; private set; }
+    public DateOnly? BalancePaidDate { get; private set; }
     public bool OrderPaid { get; private set; } = false;
     public int ShippingTermId { get; private set; }
     public ShippingTerm ShippingTerm { get; private set; } = null!;
@@ -175,6 +175,12 @@ public class PurchaseOrder
                 "Order amount cannot be negative.");
         }
 
+        if (orderAmount != decimal.Round(orderAmount, 2))
+        {
+            throw new DomainException(
+                "Order amount cannot have more than 2 decimal places.");
+        }
+
         OrderAmount = orderAmount;
 
         CalculateAmounts();
@@ -224,7 +230,7 @@ public class PurchaseOrder
                 "Deposit hasn't been paid yet.");
         }
 
-        OrderPaidDate = paymentDate;
+        BalancePaidDate = paymentDate;
         OrderPaid = true;
         PaymentStatus = PaymentStatus.Paid;
     }

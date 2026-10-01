@@ -95,6 +95,34 @@ public sealed class PurchaseOrdersApiClient(
                 "PurchaseOrder response is empty.");
     }
 
+    public async Task UpdateDatesAsync(
+        string code,
+        UpdatePurchaseOrderDatesRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var client = CreateClient();
+
+        using var response = await client
+            .PutAsJsonAsync(
+                $"api/purchaseorders/{code}/dates",
+                request,
+                cancellationToken);
+    }
+
+    public async Task UpdateReferencesAsync(
+        string code,
+        UpdatePurchaseOrderReferencesRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var client = CreateClient();
+
+        using var response = await client
+            .PutAsJsonAsync(
+                $"api/purchaseorders/{code}/references",
+                request,
+                cancellationToken);
+    }
+
     public async Task DeleteAsync(
         string code,
         CancellationToken cancellationToken = default)
