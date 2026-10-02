@@ -143,7 +143,7 @@ namespace ProcHub.Infrastructure.Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ProcHub.Domain.Suppliers.PaymentTerm", b =>
+            modelBuilder.Entity("ProcHub.Domain.PaymentTerms.PaymentTerm", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -162,7 +162,7 @@ namespace ProcHub.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(40)
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("DueDateReference")
@@ -181,7 +181,188 @@ namespace ProcHub.Infrastructure.Persistence.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ProcHub.Domain.Suppliers.ShippingTerm", b =>
+            modelBuilder.Entity("ProcHub.Domain.PurchaseOrders.PurchaseOrder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateOnly?>("ArrivalDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("BalanceAmount")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateOnly?>("BalanceDueDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("BalanceDueDays")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateOnly?>("BalancePaidDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateOnly?>("BillOfLadingDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("CertificateOfOriginSaved")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ConfirmationReference")
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateOnly?>("DeliveryDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("DepositAmount")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("DepositPaid")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateOnly?>("DepositPaidDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("DepositPercentage")
+                        .ValueGeneratedOnAdd()
+                        .HasPrecision(4, 3)
+                        .HasColumnType("TEXT")
+                        .HasDefaultValue(0m);
+
+                    b.Property<string>("DueDateReference")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateOnly?>("ExpectedDeliveryDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateOnly?>("InvoiceDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("InvoiceReference")
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("InvoiceSent")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("LeadTimeDays")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("OrderAmount")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateOnly?>("OrderConfirmationDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("OrderConfirmationSent")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateOnly>("OrderDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("OrderInspectionDone")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("OrderNotes")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("OrderPaid")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("OrderStatus")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("OrderType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PaymentStatus")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PaymentTermDescription")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PaymentTermId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("PaymentTiming")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateOnly?>("ProductionDoneDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("ProductionTimeDays")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateOnly?>("RequestedProductionDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ShipmentReference")
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ShipmentSize")
+                        .HasMaxLength(15)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateOnly?>("ShippingDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ShippingTermId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ShippingTermName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("ShippingTimeDays")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("SupplierCode")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("SupplierId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("SupplierName")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.HasIndex("PaymentTermId");
+
+                    b.HasIndex("ShippingTermId");
+
+                    b.HasIndex("SupplierId");
+
+                    b.ToTable("PurchaseOrders", (string)null);
+                });
+
+            modelBuilder.Entity("ProcHub.Domain.ShippingTerms.ShippingTerm", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -194,7 +375,7 @@ namespace ProcHub.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(7)
+                        .HasMaxLength(10)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -226,10 +407,10 @@ namespace ProcHub.Infrastructure.Persistence.Migrations
                         .HasMaxLength(75)
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("MainLeadTimeDays")
+                    b.Property<int>("MainLeadTimeDays")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("MainShippingTermId")
+                    b.Property<int>("MainShippingTermId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
@@ -241,6 +422,9 @@ namespace ProcHub.Infrastructure.Persistence.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("SampleLeadTimeDays")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("SamplePaymentTermId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("SampleShippingTermId")
@@ -271,6 +455,8 @@ namespace ProcHub.Infrastructure.Persistence.Migrations
                     b.HasIndex("MainShippingTermId");
 
                     b.HasIndex("Name");
+
+                    b.HasIndex("SamplePaymentTermId");
 
                     b.HasIndex("SampleShippingTermId");
 
@@ -400,30 +586,62 @@ namespace ProcHub.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ProcHub.Domain.PurchaseOrders.PurchaseOrder", b =>
+                {
+                    b.HasOne("ProcHub.Domain.PaymentTerms.PaymentTerm", "PaymentTerm")
+                        .WithMany()
+                        .HasForeignKey("PaymentTermId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ProcHub.Domain.ShippingTerms.ShippingTerm", "ShippingTerm")
+                        .WithMany()
+                        .HasForeignKey("ShippingTermId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ProcHub.Domain.Suppliers.Supplier", "Supplier")
+                        .WithMany()
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("PaymentTerm");
+
+                    b.Navigation("ShippingTerm");
+
+                    b.Navigation("Supplier");
+                });
+
             modelBuilder.Entity("ProcHub.Domain.Suppliers.Supplier", b =>
                 {
-                    b.HasOne("ProcHub.Domain.Suppliers.PaymentTerm", "DefaultPaymentTerm")
+                    b.HasOne("ProcHub.Domain.PaymentTerms.PaymentTerm", "DefaultPaymentTerm")
                         .WithMany()
                         .HasForeignKey("DefaultPaymentTermId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ProcHub.Domain.Suppliers.ShippingTerm", "MainShippingTerm")
+                    b.HasOne("ProcHub.Domain.ShippingTerms.ShippingTerm", "MainShippingTerm")
                         .WithMany()
                         .HasForeignKey("MainShippingTermId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.HasOne("ProcHub.Domain.Suppliers.ShippingTerm", "SampleShippingTerm")
+                    b.HasOne("ProcHub.Domain.PaymentTerms.PaymentTerm", "SamplePaymentTerm")
+                        .WithMany()
+                        .HasForeignKey("SamplePaymentTermId");
+
+                    b.HasOne("ProcHub.Domain.ShippingTerms.ShippingTerm", "SampleShippingTerm")
                         .WithMany()
                         .HasForeignKey("SampleShippingTermId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("ProcHub.Domain.Suppliers.PaymentTerm", "SecondaryPaymentTerm")
+                    b.HasOne("ProcHub.Domain.PaymentTerms.PaymentTerm", "SecondaryPaymentTerm")
                         .WithMany()
                         .HasForeignKey("SecondaryPaymentTermId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("ProcHub.Domain.Suppliers.ShippingTerm", "SecondaryShippingTerm")
+                    b.HasOne("ProcHub.Domain.ShippingTerms.ShippingTerm", "SecondaryShippingTerm")
                         .WithMany()
                         .HasForeignKey("SecondaryShippingTermId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -431,6 +649,8 @@ namespace ProcHub.Infrastructure.Persistence.Migrations
                     b.Navigation("DefaultPaymentTerm");
 
                     b.Navigation("MainShippingTerm");
+
+                    b.Navigation("SamplePaymentTerm");
 
                     b.Navigation("SampleShippingTerm");
 
