@@ -123,6 +123,20 @@ public sealed class PurchaseOrdersApiClient(
                 cancellationToken);
     }
 
+    public async Task UpdatePaymentsAsync(
+        string code,
+        UpdatePurchaseOrderPaymentRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var client = CreateClient();
+        
+        using var response = await client
+            .PutAsJsonAsync(
+                $"api/purchaseorders/{code}/payments",
+                request,
+                cancellationToken);
+    }
+
     public async Task DeleteAsync(
         string code,
         CancellationToken cancellationToken = default)
@@ -134,8 +148,7 @@ public sealed class PurchaseOrdersApiClient(
                 $"api/purchaseorders/{code}",
                 cancellationToken);
     }
-
-
+    
 
     private HttpClient CreateClient()
     {
