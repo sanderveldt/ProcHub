@@ -9,7 +9,7 @@ using ProcHub.Wpf.Infrastructure.Authentication;
 using ProcHub.Wpf.Features.Home.ViewModels;
 using ProcHub.Wpf.Features.PaymentTerms.ViewModels;
 using OpenOrdersDashboardViewModel =
-    ProcHub.Wpf.Features.PurchaseOrders.Open.Dashboard.ViewModels.DashboardViewModel;
+    ProcHub.Wpf.Features.PurchaseOrders.Dashboard.ViewModels.DashboardViewModel;
 using ProcHub.Wpf.Features.ShippingTerms.ViewModels;
 using ProcHub.Wpf.Features.Suppliers.ViewModels;
 using ProcHub.Wpf.Features.Users.ViewModels;
