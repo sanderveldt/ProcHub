@@ -44,6 +44,7 @@ public static class DashboardListEndpoint
 
                 DepositPercentage = po.DepositPercentage,
                 DepositPaidDate = po.DepositPaidDate,
+                DepositPaid = po.DepositPaid,
 
                 OrderAmount = po.OrderAmount,   
                 DepositAmount = po.DepositAmount,

@@ -48,11 +48,13 @@ public static class GetPurchaseOrderEndpoint
 
                 DepositPercentage = result.DepositPercentage,
                 DepositPaidDate = result.DepositPaidDate,
+                DepositPaid = result.DepositPaid,
 
                 OrderAmount = result.OrderAmount,   
                 DepositAmount = result.DepositAmount,
                 BalanceAmount = result.BalanceAmount,
                 BalancePaidDate = result.BalancePaidDate,
+                OrderPaid = result.OrderPaid,
                 ShippingTermId = result.ShippingTermId,
                 ShippingTermName = result.ShippingTermName,
 
