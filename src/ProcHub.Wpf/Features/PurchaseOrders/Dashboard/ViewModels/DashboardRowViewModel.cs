@@ -359,7 +359,7 @@ public sealed partial class DashboardRowViewModel : ObservableObject
             if (IsPaymentsDirty)
             {
                 await SavePaymentsAsync(
-                    CancellationToken);
+                    cancellationToken);
             }
         }
         catch (OperationCanceledException)
@@ -376,7 +376,7 @@ public sealed partial class DashboardRowViewModel : ObservableObject
         }
     }
 
-    // SAVE TASKS
+    // API CALLS
     private async Task SaveDatesAsync(
         CancellationToken cancellationToken)
     {
@@ -402,6 +402,46 @@ public sealed partial class DashboardRowViewModel : ObservableObject
         IsDatesDirty = false;
     }
 
+    private async Task SaveReferencesAsync(
+        CancellationToken cancellationToken)
+    {
+        var request =
+            new UpdatePurchaseOrderReferencesRequest
+            {
+                OrderConfirmationReference = ConfirmationReference,
+                InvoiceReference = InvoiceReference,
+                OrderNotes = OrderNotes,
+                ShipmentSize = ShipmentSize,
+                ShipmentReference = ShipmentReference
+            };
+        
+        await _apiClient.UpdateReferencesAsync(
+            Code,
+            request,
+            cancellationToken);
 
+        IsReferencesDirty = false;
+    }
+
+    private async Task SavePaymentsAsync(
+        CancellationToken cancellationToken)
+    {
+        var request =
+            new UpdatePurchaseOrderPaymentRequest
+            {
+                OrderAmount = OrderAmount,
+                DepositPaid = DepositPaid,
+                DepositPaidDate = DepositPaidDate,
+                OrderPaid = OrderPaid,
+                BalancePaidDate = BalancePaidDate
+            };
+
+        await _apiClient.UpdatePaymentsAsync(
+            Code,
+            request,
+            cancellationToken);
+        
+        IsPaymentsDirty = false;
+    }
 
 }
