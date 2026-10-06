@@ -243,6 +243,11 @@ public sealed partial class DashboardRowViewModel : ObservableObject
         MarkDatesDirty();
     }
 
+    partial void OnDeliveryDateChanged(DateOnly? value)
+    {
+        MarkDatesDirty();
+    }
+
     // REFERENCES AND NOTES CHANGES
     partial void OnConfirmationReferenceChanged(string? value)
     {
