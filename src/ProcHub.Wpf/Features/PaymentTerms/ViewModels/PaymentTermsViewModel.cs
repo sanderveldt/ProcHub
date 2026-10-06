@@ -37,7 +37,7 @@ public sealed partial class PaymentTermsViewModel : PageViewModel
         new(PaymentDateReference.OrderDate, "Order Date"),
         new(PaymentDateReference.InvoiceDate, "Invoice Date"),
         new(PaymentDateReference.ShippingDate, "Shipping Date"),
-        new(PaymentDateReference.ArrivalDate, "Delivery Date"),
+        new(PaymentDateReference.DeliveryDate, "Delivery Date"),
         new(PaymentDateReference.BillOfLadingDate, "Bill of Lading Date"),
         new(PaymentDateReference.ProductionDoneDate, "Production Ready Date")
     ];

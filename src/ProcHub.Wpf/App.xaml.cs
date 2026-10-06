@@ -20,7 +20,7 @@ using ProcHub.Wpf.Shell.Views;
 using ProcHub.Wpf.Infrastructure.Services;
 
 using OpenOrdersDashboardViewModel = 
-    ProcHub.Wpf.Features.PurchaseOrders.Open.Dashboard.ViewModels.DashboardViewModel;
+    ProcHub.Wpf.Features.PurchaseOrders.Dashboard.ViewModels.DashboardViewModel;
 using System.Net.Sockets;
 
 namespace ProcHub.Wpf;
@@ -128,6 +128,7 @@ public partial class App : Application
 
         services.AddSingleton<ShippingTermsApiClient>();
         services.AddSingleton<PaymentTermsApiClient>();
+        services.AddSingleton<PurchaseOrdersApiClient>();
 
         services.AddHttpClient(
             ApiClientNames.Authentication,
