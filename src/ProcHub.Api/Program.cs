@@ -23,6 +23,8 @@ if (app.Environment.IsDevelopment())
     await app.Services.InitializeDatabaseAsync();   
 }
 
+await app.Services.SeedDatabaseAsync();
+
 await app.Services.InitializeIdentityAsync();
 
 app.UseAuthentication();

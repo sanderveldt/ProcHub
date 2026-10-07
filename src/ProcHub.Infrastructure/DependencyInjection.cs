@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ProcHub.Application.Abstractions;
 using ProcHub.Infrastructure.Identity;
 using ProcHub.Infrastructure.Persistence;
+using ProcHub.Infrastructure.Persistence.Seeding;
 
 namespace ProcHub.Infrastructure;
 
@@ -41,6 +42,30 @@ public static class DependencyInjection
         return services;
     }
 
+    public static async Task SeedDatabaseAsync(
+        this IServiceProvider serviceProvider,
+        CancellationToken cancellationToken = default)
+    {
+        await using var scope = serviceProvider
+            .CreateAsyncScope();
+        
+        var context = scope.ServiceProvider
+            .GetRequiredService<ProcHubContext>();
+
+        await using var transaction =
+            await context.Database
+                .BeginTransactionAsync(cancellationToken);
+                
+        
+        await ShippingTermSeeder.SeedAsync(
+            context, cancellationToken);
+        
+        await PaymentTermSeeder.SeedAsync(
+            context, cancellationToken);
+        
+        await transaction.CommitAsync(cancellationToken);
+    }
+
     public static async Task InitializeDatabaseAsync(
         this IServiceProvider serviceProvider,
         CancellationToken cancellationToken = default)
@@ -56,7 +81,8 @@ public static class DependencyInjection
     public static async Task InitializeIdentityAsync(
         this IServiceProvider serviceProvider)
     {
-        await using var scope = serviceProvider.CreateAsyncScope();
+        await using var scope = serviceProvider
+            .CreateAsyncScope();
 
         var seeder = scope.ServiceProvider
             .GetRequiredService<IdentitySeeder>();
