@@ -136,11 +136,14 @@ public static class PaymentTermSeeder
                 0.3m,
                 PaymentTimings.After,
                 PaymentDateReference.BillOfLadingDate,
-                60),
-            
-
+                60)
         };
 
-
+        await dbContext.PaymentTerms
+            .AddRangeAsync(
+                paymentTerms,
+                cancellationToken);
+        
+        await dbContext.SaveChangesAsync(cancellationToken);
     }
 }
