@@ -144,6 +144,7 @@ public static class PaymentTermSeeder
                 paymentTerms,
                 cancellationToken);
         
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await dbContext
+            .SaveChangesAsync(cancellationToken);
     }
 }

@@ -104,5 +104,14 @@ public sealed class PurchaseOrderConfiguration
         builder.Property(po => po.ShipmentReference)
             .HasMaxLength(PurchaseOrderConstants
                 .ShipmentRefMaxLength);
+
+        builder.Property(po => po.OrderAmount)
+            .HasPrecision(18, 2);
+
+        builder.Property(po => po.DepositAmount)
+            .HasPrecision(18, 2);
+
+        builder.Property(po => po.BalanceAmount)
+            .HasPrecision(18, 2);
     }
 }

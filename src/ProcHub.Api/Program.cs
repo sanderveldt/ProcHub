@@ -18,10 +18,9 @@ var app = builder.Build();
 
 app.UseExceptionHandler();
 
-if (app.Environment.IsDevelopment())
-{
-    await app.Services.InitializeDatabaseAsync();   
-}
+
+await app.Services.InitializeDatabaseAsync();   
+
 
 await app.Services.SeedDatabaseAsync();
 

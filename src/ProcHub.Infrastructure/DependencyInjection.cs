@@ -21,7 +21,7 @@ public static class DependencyInjection
                 "Connecting string 'ProcHubDb' not found.");
 
         services.AddDbContext<ProcHubContext>(options =>
-            options.UseSqlite(connectionString));
+            options.UseNpgsql(connectionString));
         
         services.AddScoped<IProcHubDbContext>(provider =>
             provider.GetRequiredService<ProcHubContext>());
