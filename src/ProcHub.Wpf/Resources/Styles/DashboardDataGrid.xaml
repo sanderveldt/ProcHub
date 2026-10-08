@@ -179,13 +179,13 @@
        BasedOn="{StaticResource DashboardEditingTextBoxStyle}">
 
         <Setter Property="Width"
-            Value="120" />
+                Value="120" />
 
         <Setter Property="MaxLength"
-            Value="10" />
+                Value="10" />
 
         <Setter Property="ToolTip"
-            Value="Format: dd-MM-yyyy" />
+                Value="Format: dd-MM-yyyy" />
 
         <Style.Triggers>
 
@@ -196,7 +196,7 @@
                                 Value="{DynamicResource SystemFillColorCriticalBrush}" />
 
                         <Setter Property="ToolTip"
-                        Value="{Binding
+                                Value="{Binding
                                 RelativeSource={RelativeSource Self},
                                 Path=(Validation.Errors)[0].ErrorContent}" />
 

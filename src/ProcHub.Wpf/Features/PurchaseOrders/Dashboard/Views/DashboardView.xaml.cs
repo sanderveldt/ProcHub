@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 using ProcHub.Wpf.Features.PurchaseOrders.Dashboard.ViewModels;
 
 namespace ProcHub.Wpf.Features.PurchaseOrders.Dashboard.Views;
