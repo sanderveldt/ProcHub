@@ -175,8 +175,8 @@ namespace ProcHub.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasMaxLength(75)
+                        .HasColumnType("character varying(75)");
 
                     b.Property<int>("DueDateReference")
                         .HasColumnType("integer");
