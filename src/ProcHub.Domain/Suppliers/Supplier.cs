@@ -52,7 +52,7 @@ public class Supplier
         SetMainShippingTerm(mainShippingTerm);
     }
 
-    public void SetCode(string code)
+    private void SetCode(string code)
     {
         if (string.IsNullOrWhiteSpace(code))
         {
