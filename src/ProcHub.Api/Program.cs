@@ -37,3 +37,5 @@ app.MapShippingTermEndpoints();
 app.MapPurchaseOrderEndpoints();
 
 app.Run();
+
+public partial class Program { }
