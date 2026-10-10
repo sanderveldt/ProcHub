@@ -33,7 +33,7 @@ public class SupplierTests
             "JustForTesting");
     }
 
-    // SetCode()
+    // Constructor SetCode()
     [Fact]
     public void Constructor_WithValidCode_SetsCode()
     {
@@ -152,8 +152,297 @@ public class SupplierTests
     }
 
     // SetFullName()
+    [Fact]
+    public void SetFullName_IsValid_SetsFullName()
+    {
+        var supplier = CreateSupplier();
+        string fullName = "TestName";
 
+        supplier.SetFullName(fullName);
 
+        Assert.Equal(
+            fullName,
+            supplier.FullName);
+    }
 
+    [Fact]
+    public void SetFullName_WithOutsideWhiteSpace_TrimsFullName()
+    {
+        var supplier = CreateSupplier();
+        string fullName = "  Test Name  ";
 
+        supplier.SetFullName(fullName);
+        string trimmedName = "Test Name";
+
+        Assert.Equal(
+            trimmedName,
+            supplier.FullName);
+    }
+
+    [Fact]
+    public void SetFullName_WhenWhiteSpace_SetsNull()
+    {
+        var supplier = CreateSupplier();
+        string fullName = "     ";
+
+        supplier.SetFullName(fullName);
+        
+        Assert.Null(supplier.FullName);
+    }
+
+    [Fact]
+    public void SetFullName_WhenOverMaxLength_ThrowDomainException()
+    {
+        var supplier = CreateSupplier();
+        var fullName = new string(
+            's',
+            SupplierConstants.FullNameMaxLength + 1);
+        
+        Action act = () => supplier
+            .SetFullName(fullName);
+
+        Assert.Throws<DomainException>(act);
+    }
+
+    // SetDefaultPaymentTerm()
+    [Fact]
+    public void SetDefaultPaymentTerm_IsValid_UpdatePaymentTerm()
+    {
+        var supplier = CreateSupplier();
+        var paymentTerm = CreatePaymentTerm();
+
+        supplier.SetDefaultPaymentTerm(paymentTerm);
+
+        Assert.Same(
+            paymentTerm, 
+            supplier.DefaultPaymentTerm);
+    }
+
+    [Fact]
+    public void SetDefaultPaymentTerm_WhenNull_ThrowDomainException()
+    {
+        var supplier = CreateSupplier();
+
+        Action act = () => supplier
+            .SetDefaultPaymentTerm(null!);
+        
+        Assert.Throws<DomainException>(act);
+    }
+
+    // SetMainShippingTerm()
+    [Fact]
+    public void SetMainShippingTerm_IsValid_UpdateShippingTerm()
+    {
+        var supplier = CreateSupplier();
+        var shippingTerm = CreateShippingTerm();
+
+        supplier.SetMainShippingTerm(shippingTerm);
+
+        Assert.Same(
+            shippingTerm,
+            supplier.MainShippingTerm);
+    }
+
+    [Fact]
+    public void SetMainShippingTerm_WhenNull_ThrowDomainException()
+    {
+        var supplier = CreateSupplier();
+
+        Action act = () => supplier
+            .SetMainShippingTerm(null!);
+
+        Assert.Throws<DomainException>(act);
+    }
+
+    // SetShippingTimeDays()
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(32)]
+    [InlineData(150)]
+    public void SetShippingTimeDays_WhenValid_SetShippingDays(
+        int? shippingDays)
+    {
+        var supplier = CreateSupplier();
+
+        supplier.SetShippingTimeDays(shippingDays);
+
+        Assert.Equal(
+            shippingDays,
+            supplier.ShippingTimeDays);
+    }
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(-32)]
+    [InlineData(int.MinValue)]
+    public void SetShippingTimeDays_WhenNegative_ThrowDomainException(
+        int? shippingDays)
+    {
+        var supplier = CreateSupplier();
+
+        Action act = () => supplier
+            .SetShippingTimeDays(shippingDays);
+        
+        Assert.Throws<DomainException>(act);
+    }
+
+    // SetProductionTimeDays()
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(32)]
+    [InlineData(150)]
+    public void SetProductionTimeDays_WhenValid_SetShippingDays(
+        int? prodDays)
+    {
+        var supplier = CreateSupplier();
+
+        supplier.SetProductionTimeDays(prodDays);
+
+        Assert.Equal(
+            prodDays,
+            supplier.ProductionTimeDays);
+    }
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(-32)]
+    [InlineData(int.MinValue)]
+    public void SetProductionTimeDays_WhenNegative_ThrowDomainException(
+        int? prodDays)
+    {
+        var supplier = CreateSupplier();
+
+        Action act = () => supplier
+            .SetProductionTimeDays(prodDays);
+        
+        Assert.Throws<DomainException>(act);
+    }
+
+    // SetMainLeadTimeDays()
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(32)]
+    [InlineData(150)]
+    public void SetMainLeadTimeDays_WhenValid_SetShippingDays(
+        int leadDays)
+    {
+        var supplier = CreateSupplier();
+
+        supplier.SetMainLeadTimeDays(leadDays);
+
+        Assert.Equal(
+            leadDays,
+            supplier.MainLeadTimeDays);
+    }
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(-32)]
+    [InlineData(int.MinValue)]
+    public void SetMainLeadTimeDays_WhenNegative_ThrowDomainException(
+        int leadDays)
+    {
+        var supplier = CreateSupplier();
+
+        Action act = () => supplier
+            .SetMainLeadTimeDays(leadDays);
+        
+        Assert.Throws<DomainException>(act);
+    }
+
+    // SetSecondaryLeadTimeDays()
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(32)]
+    [InlineData(150)]
+    public void SetSecondaryLeadTimeDays_WhenValid_SetShippingDays(
+        int? leadDays)
+    {
+        var supplier = CreateSupplier();
+
+        supplier.SetSecondaryLeadTimeDays(leadDays);
+
+        Assert.Equal(
+            leadDays,
+            supplier.SecondaryLeadTimeDays);
+    }
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(-32)]
+    [InlineData(int.MinValue)]
+    public void SetSecondaryLeadTimeDays_WhenNegative_ThrowDomainException(
+        int? leadDays)
+    {
+        var supplier = CreateSupplier();
+
+        Action act = () => supplier
+            .SetSecondaryLeadTimeDays(leadDays);
+        
+        Assert.Throws<DomainException>(act);
+    }
+
+    // SetSampleLeadTimeDays
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(32)]
+    [InlineData(150)]
+    public void SetSampleLeadTimeDays_WhenValid_SetShippingDays(
+        int? leadDays)
+    {
+        var supplier = CreateSupplier();
+
+        supplier.SetSampleLeadTimeDays(leadDays);
+
+        Assert.Equal(
+            leadDays,
+            supplier.SampleLeadTimeDays);
+    }
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(-32)]
+    [InlineData(int.MinValue)]
+    public void SetSampleLeadTimeDays_WhenNegative_ThrowDomainException(
+        int? leadDays)
+    {
+        var supplier = CreateSupplier();
+
+        Action act = () => supplier
+            .SetSampleLeadTimeDays(leadDays);
+        
+        Assert.Throws<DomainException>(act);
+    }
+
+    // Activate()
+    [Fact]
+    public void Activate_WhenInactive_SetStatusToActive()
+    {
+        var supplier = CreateSupplier();
+        supplier.Deactivate();
+
+        supplier.Activate();
+
+        Assert.Equal(
+            SupplierStatus.Active, 
+            supplier.Status);
+    }
+
+    // Deactivate()
+    [Fact]
+    public void Deactivate_WhenActive_SetStatusToInactive()
+    {
+        var supplier = CreateSupplier();
+
+        supplier.Deactivate();
+
+        Assert.Equal(
+            SupplierStatus.Inactive,
+            supplier.Status);
+    }
 }

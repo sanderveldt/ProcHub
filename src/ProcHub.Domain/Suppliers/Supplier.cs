@@ -1,3 +1,4 @@
+using System.Net.WebSockets;
 using ProcHub.Domain.Exceptions;
 using ProcHub.Domain.PaymentTerms;
 using ProcHub.Domain.PurchaseOrders.Enums;
@@ -59,15 +60,13 @@ public class Supplier
             throw new DomainException("Supplier code is required.");
         }
 
-        code = code.Trim();
-
         if (code.Length > SupplierConstants.CodeMaxLength)
         {
             throw new DomainException(
                 $"Supplier code cannot exceed {SupplierConstants.CodeMaxLength} characters.");
         }
 
-        Code = code;
+        Code = code.Trim();
     }
 
     public void SetName(string name)
@@ -109,7 +108,7 @@ public class Supplier
         if (paymentTerm is null)
         {
             throw new DomainException(
-                "Payment term is required.");
+                "A Payment term is required.");
         }
 
         DefaultPaymentTerm = paymentTerm;
@@ -122,6 +121,12 @@ public class Supplier
 
     public void SetMainShippingTerm(ShippingTerm shippingTerm)
     {
+        if (shippingTerm is null)
+        {
+            throw new DomainException(
+                "A shipping Term is required.");
+        }
+
         MainShippingTerm = shippingTerm;
     }
 
