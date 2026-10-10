@@ -119,6 +119,11 @@ public class Supplier
         SecondaryPaymentTerm = paymentTerm;
     }
 
+    public void SetSamplePaymentTerm(PaymentTerm? paymentTerm)
+    {
+        SamplePaymentTerm = paymentTerm;
+    }
+
     public void SetMainShippingTerm(ShippingTerm shippingTerm)
     {
         if (shippingTerm is null)
