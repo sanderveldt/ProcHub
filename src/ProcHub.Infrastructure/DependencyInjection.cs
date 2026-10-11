@@ -54,8 +54,7 @@ public static class DependencyInjection
 
         await using var transaction =
             await context.Database
-                .BeginTransactionAsync(cancellationToken);
-                
+                .BeginTransactionAsync(cancellationToken);     
         
         await ShippingTermSeeder.SeedAsync(
             context, cancellationToken);
@@ -88,5 +87,21 @@ public static class DependencyInjection
             .GetRequiredService<IdentitySeeder>();
         
         await seeder.SeedAsync();
+    }
+
+    public static async Task SeedDevelopmentAsync( 
+        this IServiceProvider serviceProvider,
+        CancellationToken cancellationToken = default)
+    {
+        await using var scope = serviceProvider 
+            .CreateAsyncScope();
+        
+        var dbContext = scope.ServiceProvider
+            .GetRequiredService<ProcHubContext>();
+        
+        await DevelopmentSeeding
+            .SeedDevelopmentAsync(
+                dbContext,
+                cancellationToken);
     }
 }

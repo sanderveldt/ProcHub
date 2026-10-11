@@ -7,6 +7,7 @@ using ProcHub.Api.Endpoints.Authentication;
 using ProcHub.Api.Endpoints.PaymentTerms;
 using ProcHub.Api.Endpoints.ShippingTerms;
 using ProcHub.Api.Endpoints.PurchaseOrders;
+using ProcHub.Infrastructure.Persistence.Seeding;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,10 +22,14 @@ app.UseExceptionHandler();
 
 await app.Services.InitializeDatabaseAsync();   
 
-
 await app.Services.SeedDatabaseAsync();
 
 await app.Services.InitializeIdentityAsync();
+
+if (app.Environment.IsDevelopment())
+{
+    await app.Services.SeedDevelopmentAsync();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();
