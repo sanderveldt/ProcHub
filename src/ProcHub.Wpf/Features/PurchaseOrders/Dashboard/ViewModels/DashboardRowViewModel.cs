@@ -5,7 +5,6 @@ using ProcHub.Contracts.PurchaseOrders.Requests;
 using ProcHub.Contracts.PurchaseOrders.Responses;
 using ProcHub.Wpf.Infrastructure.Api;
 using ProcHub.Wpf.Infrastructure.Api.Clients;
-using ProcHub.Wpf.Features.PurchaseOrders.Dashboard;
 
 namespace ProcHub.Wpf.Features.PurchaseOrders.Dashboard.ViewModels;
 

@@ -1,4 +1,4 @@
-﻿namespace ProcHub.Wpf.Features.PurchaseOrders.Dashboard;
+﻿namespace ProcHub.Wpf.Features.PurchaseOrders.Dashboard.ViewModels;
 
 public enum DashboardDetailsSection
 {

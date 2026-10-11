@@ -183,7 +183,9 @@
                             Grid.Row="5"
                             Grid.Column="1"
                             ItemsSource="{Binding AvailablePaymentTimings}"
-                            SelectedValue="{Binding PaymentTiming}" />
+                            SelectedValue="{Binding PaymentTiming}"
+                            HorizontalAlignment="Left"
+                            Width="200" />
 
                         <TextBlock
                             Grid.Row="6"
