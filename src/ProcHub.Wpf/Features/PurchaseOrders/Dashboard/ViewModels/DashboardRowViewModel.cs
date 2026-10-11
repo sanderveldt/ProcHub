@@ -167,11 +167,18 @@ public sealed partial class DashboardRowViewModel : ObservableObject
     public int? ShippingTimeDays { get; }
     public int? LeadTimeDays { get; }
 
-    // Status flags, add update later
-    public bool ConfirmationSent { get; }
-    public bool InvoiceSent { get; }
-    public bool InspectionDone { get; }
-    public bool CertificateOfOriginSaved { get; }
+    // Status flags, add dirty markings and update api call later
+    [ObservableProperty]
+    public partial bool ConfirmationSent { get; set; }
+
+    [ObservableProperty]
+    public partial bool InvoiceSent { get; set; }
+
+    [ObservableProperty]
+    public partial bool InspectionDone { get; set; }
+
+    [ObservableProperty]
+    public partial bool CertificateOfOriginSaved { get; set; }
 
 
     // UI states

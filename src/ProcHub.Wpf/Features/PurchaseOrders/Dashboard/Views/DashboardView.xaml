@@ -16,7 +16,7 @@
                     Value="SemiBold" />
 
             <Setter Property="Margin"
-                    Value="0,0,0,12" />
+                    Value="0,0,0,8" />
 
             <Setter Property="Foreground"
                     Value="{DynamicResource TextFillColorPrimaryBrush}" />
@@ -61,15 +61,15 @@
                     Value="190" />
 
             <Setter Property="Margin"
-                    Value="0,0,20,16" />
+                    Value="0,0,12,12" />
 
         </Style>
 
 
         <DataTemplate x:Key="PurchaseOrderDetailsTemplate">
 
-            <Border Margin="42,2,12,12"
-                    Padding="18"
+            <Border Margin="8,2,8,8"
+                    Padding="8"
                     CornerRadius="8"
                     Background="{DynamicResource CardBackgroundFillColorSecondaryBrush}"
                     BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
