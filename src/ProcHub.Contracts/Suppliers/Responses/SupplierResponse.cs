@@ -9,8 +9,8 @@ public sealed record SupplierResponse(
 
     string? FullName,
 
-    int? MainShippingTermId,
-    string? MainShippingTermName,
+    int MainShippingTermId,
+    string MainShippingTermName,
 
     int? SecondaryShippingTermId,
     string? SecondaryShippingTermName,

@@ -918,7 +918,7 @@
 
 	<!-- PAGE -->
 
-	<Grid Margin="20">
+	<Grid Margin="4">
 
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
@@ -928,7 +928,7 @@
 
 		<!-- HEADER -->
 
-		<Grid Margin="0,0,0,16">
+		<Grid Margin="0,0,0,4">
 
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*" />
@@ -941,7 +941,7 @@
                            FontSize="24"
                            FontWeight="SemiBold" />
 
-				<TextBlock Margin="0,4,0,0"
+				<TextBlock Margin="0,0,0,0"
                            Text="Manage open purchase orders"
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
 
