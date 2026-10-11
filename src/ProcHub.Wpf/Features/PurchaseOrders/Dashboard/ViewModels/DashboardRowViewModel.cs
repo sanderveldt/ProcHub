@@ -1,10 +1,11 @@
-using System.Security;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using ProcHub.Contracts.PurchaseOrders.Enums;
 using ProcHub.Contracts.PurchaseOrders.Requests;
 using ProcHub.Contracts.PurchaseOrders.Responses;
 using ProcHub.Wpf.Infrastructure.Api;
 using ProcHub.Wpf.Infrastructure.Api.Clients;
+using ProcHub.Wpf.Features.PurchaseOrders.Dashboard;
 
 namespace ProcHub.Wpf.Features.PurchaseOrders.Dashboard.ViewModels;
 
@@ -184,6 +185,26 @@ public sealed partial class DashboardRowViewModel : ObservableObject
     // UI states
     [ObservableProperty]
     public partial bool IsExpanded { get; set; }
+
+    [ObservableProperty]
+    public partial DashboardDetailsSection 
+        ActiveDetailsSection { get; set; }
+
+    [RelayCommand]
+    private void ToggleDetailsSection(
+        DashboardDetailsSection section)
+    {
+        if (section == DashboardDetailsSection.None ||
+            (IsExpanded && ActiveDetailsSection == section))
+        {
+            ActiveDetailsSection = DashboardDetailsSection.None;
+            IsExpanded = false;
+            return;
+        }
+
+        ActiveDetailsSection = section;
+        IsExpanded = true;
+    }
 
     [ObservableProperty]
     public partial bool IsSaving { get; private set; }
