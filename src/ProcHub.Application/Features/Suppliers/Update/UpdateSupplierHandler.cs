@@ -116,7 +116,7 @@ public sealed class UpdateSupplierHandler(
             supplier.FullName,
 
             supplier.MainShippingTermId,
-            supplier.MainShippingTerm?.Name,
+            supplier.MainShippingTerm.Name,
             supplier.SecondaryShippingTermId,
             supplier.SecondaryShippingTerm?.Name,
             supplier.SampleShippingTermId,

@@ -108,7 +108,7 @@ public sealed class CreateSupplierHandler(
             supplier.DefaultPaymentTerm.Description,
             supplier.FullName,
             supplier.MainShippingTermId,
-            supplier.MainShippingTerm?.Name,
+            supplier.MainShippingTerm.Name,
             supplier.SecondaryShippingTermId,
             supplier.SecondaryShippingTerm?.Name,
             supplier.SampleShippingTermId,

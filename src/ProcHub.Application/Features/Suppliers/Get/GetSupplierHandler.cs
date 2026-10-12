@@ -28,9 +28,7 @@ public sealed class GetSupplierHandler(IProcHubDbContext dbContext)
                 s.FullName,
 
                 s.MainShippingTermId,
-                s.MainShippingTerm == null
-                    ? null
-                    : s.MainShippingTerm.Name,
+                s.MainShippingTerm.Name,
 
                 s.SecondaryShippingTermId,
                 s.SecondaryShippingTerm != null
