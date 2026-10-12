@@ -5,1234 +5,1040 @@
             xmlns:vm="clr-namespace:ProcHub.Wpf.Features.PurchaseOrders.Dashboard.ViewModels"
             Loaded="DashboardView_OnLoaded">
 
-	<UserControl.Resources>
+    <UserControl.Resources>
 
-		<Style x:Key="DetailsSectionHeaderStyle"
+        <Style x:Key="DetailsSectionHeaderStyle"
                TargetType="{x:Type TextBlock}">
 
-			<Setter Property="FontSize"
+            <Setter Property="FontSize"
                     Value="14" />
 
-			<Setter Property="FontWeight"
+            <Setter Property="FontWeight"
                     Value="SemiBold" />
 
-			<Setter Property="Margin"
+            <Setter Property="Margin"
                     Value="0,0,0,8" />
 
-			<Setter Property="Foreground"
+            <Setter Property="Foreground"
                     Value="{DynamicResource TextFillColorPrimaryBrush}" />
 
-		</Style>
+        </Style>
 
 
-		<Style x:Key="DetailsLabelStyle"
+        <Style x:Key="DetailsLabelStyle"
                TargetType="{x:Type TextBlock}">
 
-			<Setter Property="FontSize"
+            <Setter Property="FontSize"
                     Value="11" />
 
-			<Setter Property="Margin"
+            <Setter Property="Margin"
                     Value="2,0,0,4" />
 
-			<Setter Property="Foreground"
+            <Setter Property="Foreground"
                     Value="{DynamicResource TextFillColorSecondaryBrush}" />
 
-		</Style>
+        </Style>
 
 
-		<Style x:Key="DetailsValueStyle"
+        <Style x:Key="DetailsValueStyle"
                TargetType="{x:Type TextBlock}">
 
-			<Setter Property="Margin"
+            <Setter Property="Margin"
                     Value="2,5,0,0" />
 
-			<Setter Property="FontWeight"
+            <Setter Property="FontWeight"
                     Value="SemiBold" />
 
-			<Setter Property="TextTrimming"
+            <Setter Property="TextTrimming"
                     Value="CharacterEllipsis" />
 
-		</Style>
+        </Style>
 
 
-		<Style x:Key="DetailsFieldStyle"
+        <Style x:Key="DetailsFieldStyle"
                TargetType="{x:Type StackPanel}">
 
-			<Setter Property="Width"
+            <Setter Property="Width"
                     Value="190" />
 
-			<Setter Property="Margin"
+            <Setter Property="Margin"
                     Value="0,0,12,12" />
 
-		</Style>
+        </Style>
 
 
-		<!-- Compact category buttons, with a visible active state. -->
-		<Style x:Key="DashboardDetailsCategoryButtonStyle"
+        <!-- Compact category buttons, with a visible active state. -->
+        <Style x:Key="DashboardDetailsCategoryButtonStyle"
                TargetType="{x:Type Button}">
-			<Setter Property="FontSize" Value="11" />
-			<Setter Property="MinHeight" Value="30" />
-			<Setter Property="MinWidth" Value="0" />
-			<Setter Property="Width" Value="62" />
-			<Setter Property="Padding" Value="2,4" />
-			<Setter Property="Margin" Value="0,0,3,0" />
-			<Setter Property="Background" 
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="MinHeight" Value="24" />
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="Width" Value="35" />
+            <Setter Property="Padding" Value="0,1" />
+            <Setter Property="Margin" Value="0,0,2,0" />
+            <Setter Property="Background" 
 					Value="{DynamicResource AccentFillColorDisabledBrush}" />
-		</Style>
+        </Style>
 
-		<Style x:Key="DashboardPaymentDetailsButtonStyle"
+        <Style x:Key="DashboardPaymentDetailsButtonStyle"
                TargetType="{x:Type Button}"
                BasedOn="{StaticResource DashboardDetailsCategoryButtonStyle}">
-			<Style.Triggers>
-				<DataTrigger Binding="{Binding ActiveDetailsSection}"
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ActiveDetailsSection}"
                              Value="{x:Static vm:DashboardDetailsSection.Payment}">
-					<Setter Property="Background"
+                    <Setter Property="Background"
                             Value="{DynamicResource SubtleFillColorTertiaryBrush}" />
-					<Setter Property="BorderBrush"
+                    <Setter Property="BorderBrush"
                             Value="{DynamicResource AccentFillColorDefaultBrush}" />
-					<Setter Property="FontWeight" Value="SemiBold" />
-				</DataTrigger>
-			</Style.Triggers>
-		</Style>
+                    <Setter Property="FontWeight" Value="SemiBold" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
 
-		<Style x:Key="DashboardReferencesDetailsButtonStyle"
+
+        <Style x:Key="DashboardLogisticsDetailsButtonStyle"
                TargetType="{x:Type Button}"
                BasedOn="{StaticResource DashboardDetailsCategoryButtonStyle}">
-			<Style.Triggers>
-				<DataTrigger Binding="{Binding ActiveDetailsSection}"
-                             Value="{x:Static vm:DashboardDetailsSection.References}">
-					<Setter Property="Background"
-                            Value="{DynamicResource SubtleFillColorTertiaryBrush}" />
-					<Setter Property="BorderBrush"
-                            Value="{DynamicResource AccentFillColorDefaultBrush}" />
-					<Setter Property="FontWeight" Value="SemiBold" />
-				</DataTrigger>
-			</Style.Triggers>
-		</Style>
-
-		<Style x:Key="DashboardTimelineDetailsButtonStyle"
-               TargetType="{x:Type Button}"
-               BasedOn="{StaticResource DashboardDetailsCategoryButtonStyle}">
-			<Style.Triggers>
-				<DataTrigger Binding="{Binding ActiveDetailsSection}"
-                             Value="{x:Static vm:DashboardDetailsSection.Timeline}">
-					<Setter Property="Background"
-                            Value="{DynamicResource SubtleFillColorTertiaryBrush}" />
-					<Setter Property="BorderBrush"
-                            Value="{DynamicResource AccentFillColorDefaultBrush}" />
-					<Setter Property="FontWeight" Value="SemiBold" />
-				</DataTrigger>
-			</Style.Triggers>
-		</Style>
-
-		<Style x:Key="DashboardLogisticsDetailsButtonStyle"
-               TargetType="{x:Type Button}"
-               BasedOn="{StaticResource DashboardDetailsCategoryButtonStyle}">
-			<Style.Triggers>
-				<DataTrigger Binding="{Binding ActiveDetailsSection}"
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ActiveDetailsSection}"
                              Value="{x:Static vm:DashboardDetailsSection.Logistics}">
-					<Setter Property="Background"
+                    <Setter Property="Background"
                             Value="{DynamicResource SubtleFillColorTertiaryBrush}" />
-					<Setter Property="BorderBrush"
+                    <Setter Property="BorderBrush"
                             Value="{DynamicResource AccentFillColorDefaultBrush}" />
-					<Setter Property="FontWeight" Value="SemiBold" />
-				</DataTrigger>
-			</Style.Triggers>
-		</Style>
+                    <Setter Property="FontWeight" Value="SemiBold" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
 
-		<Style x:Key="DashboardStatusDetailsButtonStyle"
-               TargetType="{x:Type Button}"
-               BasedOn="{StaticResource DashboardDetailsCategoryButtonStyle}">
-			<Style.Triggers>
-				<DataTrigger Binding="{Binding ActiveDetailsSection}"
-                             Value="{x:Static vm:DashboardDetailsSection.Status}">
-					<Setter Property="Background"
-                            Value="{DynamicResource SubtleFillColorTertiaryBrush}" />
-					<Setter Property="BorderBrush"
-                            Value="{DynamicResource AccentFillColorDefaultBrush}" />
-					<Setter Property="FontWeight" Value="SemiBold" />
-				</DataTrigger>
-			</Style.Triggers>
-		</Style>
+        <!-- The fields from the former long row-details panel, separated by category. -->
+        <DataTemplate x:Key="PaymentDetailsSectionTemplate">
+            <StackPanel>
+                <!-- PAYMENT -->
 
-		<!-- The fields from the former long row-details panel, separated by category. -->
-		<DataTemplate x:Key="PaymentDetailsSectionTemplate">
-			<StackPanel>
-				<!-- PAYMENT -->
-
-				<TextBlock Text="Payment"
+                <TextBlock Text="Payment"
                            Style="{StaticResource DetailsSectionHeaderStyle}" />
 
-				<WrapPanel>
+                <WrapPanel>
 
 
-					<!-- Payment term -->
+                    <!-- Payment term -->
 
-					<StackPanel Style="{StaticResource DetailsFieldStyle}">
+                    <StackPanel Style="{StaticResource DetailsFieldStyle}">
 
-						<TextBlock Text="Payment term"
+                        <TextBlock Text="Payment term"
                                    Style="{StaticResource DetailsLabelStyle}" />
 
-						<TextBlock Text="{Binding PaymentTermDescription}"
+                        <TextBlock Text="{Binding PaymentTermDescription}"
                                    Style="{StaticResource DetailsValueStyle}" />
 
-					</StackPanel>
+                    </StackPanel>
 
 
-					<!-- Order amount -->
+                    <!-- Order amount -->
 
-					<StackPanel Style="{StaticResource DetailsFieldStyle}">
+                    <StackPanel Style="{StaticResource DetailsFieldStyle}">
 
-						<TextBlock Text="Order amount"
+                        <TextBlock Text="Order amount"
                                    Style="{StaticResource DetailsLabelStyle}" />
 
-						<TextBox Style="{StaticResource DashboardEditingTextBoxStyle}"
+                        <TextBox Style="{StaticResource DashboardEditingTextBoxStyle}"
                                  Text="{Binding OrderAmount,
                                                 Mode=TwoWay,
                                                 UpdateSourceTrigger=LostFocus}" />
 
-					</StackPanel>
+                    </StackPanel>
 
 
-					<!-- Deposit percentage -->
+                    <!-- Deposit percentage -->
 
-					<StackPanel Style="{StaticResource DetailsFieldStyle}">
+                    <StackPanel Style="{StaticResource DetailsFieldStyle}">
 
-						<TextBlock Text="Deposit"
+                        <TextBlock Text="Deposit"
                                    Style="{StaticResource DetailsLabelStyle}" />
 
-						<TextBlock Text="{Binding DepositPercentage,
+                        <TextBlock Text="{Binding DepositPercentage,
                                                  StringFormat={}{0:P0}}"
                                    Style="{StaticResource DetailsValueStyle}" />
 
-					</StackPanel>
+                    </StackPanel>
 
 
-					<!-- Deposit amount -->
+                    <!-- Deposit amount -->
 
-					<StackPanel Style="{StaticResource DetailsFieldStyle}">
+                    <StackPanel Style="{StaticResource DetailsFieldStyle}">
 
-						<TextBlock Text="Deposit amount"
+                        <TextBlock Text="Deposit amount"
                                    Style="{StaticResource DetailsLabelStyle}" />
 
-						<TextBlock Text="{Binding DepositAmount,
+                        <TextBlock Text="{Binding DepositAmount,
                                                  StringFormat={}{0:N2}}"
                                    Style="{StaticResource DetailsValueStyle}" />
 
-					</StackPanel>
+                    </StackPanel>
 
 
-					<!-- Deposit paid -->
+                    <!-- Deposit paid -->
 
-					<StackPanel Style="{StaticResource DetailsFieldStyle}">
+                    <StackPanel Style="{StaticResource DetailsFieldStyle}">
 
-						<TextBlock Text="Deposit status"
+                        <TextBlock Text="Deposit status"
                                    Style="{StaticResource DetailsLabelStyle}" />
 
-						<CheckBox Margin="2,7,0,0"
+                        <CheckBox Margin="2,7,0,0"
                                   Content="Deposit paid"
                                   IsChecked="{Binding DepositPaid,
                                                       Mode=TwoWay,
                                                       UpdateSourceTrigger=PropertyChanged}" />
 
-					</StackPanel>
+                    </StackPanel>
 
 
-					<!-- Deposit paid date -->
+                    <!-- Deposit paid date -->
 
-					<StackPanel Style="{StaticResource DetailsFieldStyle}">
+                    <StackPanel Style="{StaticResource DetailsFieldStyle}">
 
-						<TextBlock Text="Deposit paid date"
+                        <TextBlock Text="Deposit paid date"
                                    Style="{StaticResource DetailsLabelStyle}" />
 
-						<TextBox Style="{StaticResource DashboardDateTextBoxStyle}">
+                        <TextBox Style="{StaticResource DashboardDateTextBoxStyle}">
 
-							<TextBox.Text>
+                            <TextBox.Text>
 
-								<Binding Path="DepositPaidDate"
+                                <Binding Path="DepositPaidDate"
                                          Mode="TwoWay"
                                          UpdateSourceTrigger="LostFocus"
                                          StringFormat="{}{0:dd-MM-yyyy}"
                                          ValidatesOnExceptions="True">
 
-									<Binding.ValidationRules>
+                                    <Binding.ValidationRules>
 
-										<datevalidation:DateOnlyValidationRule
+                                        <datevalidation:DateOnlyValidationRule
                                             DateFormat="dd-MM-yyyy" />
 
-									</Binding.ValidationRules>
+                                    </Binding.ValidationRules>
 
-								</Binding>
+                                </Binding>
 
-							</TextBox.Text>
+                            </TextBox.Text>
 
-						</TextBox>
+                        </TextBox>
 
-					</StackPanel>
+                    </StackPanel>
 
 
-					<!-- Balance -->
+                    <!-- Balance -->
 
-					<StackPanel Style="{StaticResource DetailsFieldStyle}">
+                    <StackPanel Style="{StaticResource DetailsFieldStyle}">
 
-						<TextBlock Text="Balance amount"
+                        <TextBlock Text="Balance amount"
                                    Style="{StaticResource DetailsLabelStyle}" />
 
-						<TextBlock Text="{Binding BalanceAmount,
+                        <TextBlock Text="{Binding BalanceAmount,
                                                  StringFormat={}{0:N2}}"
                                    Style="{StaticResource DetailsValueStyle}" />
 
-					</StackPanel>
+                    </StackPanel>
 
 
-					<!-- Balance due -->
+                    <!-- Balance due -->
 
-					<StackPanel Style="{StaticResource DetailsFieldStyle}">
+                    <StackPanel Style="{StaticResource DetailsFieldStyle}">
 
-						<TextBlock Text="Balance due"
+                        <TextBlock Text="Balance due"
                                    Style="{StaticResource DetailsLabelStyle}" />
 
-						<TextBlock Text="{Binding BalanceDueDate,
+                        <TextBlock Text="{Binding BalanceDueDate,
                                                  StringFormat={}{0:dd-MM-yyyy}}"
                                    Style="{StaticResource DetailsValueStyle}" />
 
-					</StackPanel>
+                    </StackPanel>
 
 
-					<!-- Order paid -->
+                    <!-- Order paid -->
 
-					<StackPanel Style="{StaticResource DetailsFieldStyle}">
+                    <StackPanel Style="{StaticResource DetailsFieldStyle}">
 
-						<TextBlock Text="Order status"
+                        <TextBlock Text="Order status"
                                    Style="{StaticResource DetailsLabelStyle}" />
 
-						<CheckBox Margin="2,7,0,0"
+                        <CheckBox Margin="2,7,0,0"
                                   Content="Order paid"
                                   IsChecked="{Binding OrderPaid,
                                                       Mode=TwoWay,
                                                       UpdateSourceTrigger=PropertyChanged}" />
 
-					</StackPanel>
+                    </StackPanel>
 
 
-					<!-- Balance paid date -->
+                    <!-- Balance paid date -->
 
-					<StackPanel Style="{StaticResource DetailsFieldStyle}">
+                    <StackPanel Style="{StaticResource DetailsFieldStyle}">
 
-						<TextBlock Text="Balance paid date"
+                        <TextBlock Text="Balance paid date"
                                    Style="{StaticResource DetailsLabelStyle}" />
 
-						<TextBox Style="{StaticResource DashboardDateTextBoxStyle}">
+                        <TextBox Style="{StaticResource DashboardDateTextBoxStyle}">
 
-							<TextBox.Text>
+                            <TextBox.Text>
 
-								<Binding Path="BalancePaidDate"
+                                <Binding Path="BalancePaidDate"
                                          Mode="TwoWay"
                                          UpdateSourceTrigger="LostFocus"
                                          StringFormat="{}{0:dd-MM-yyyy}"
                                          ValidatesOnExceptions="True">
 
-									<Binding.ValidationRules>
+                                    <Binding.ValidationRules>
 
-										<datevalidation:DateOnlyValidationRule
+                                        <datevalidation:DateOnlyValidationRule
                                             DateFormat="dd-MM-yyyy" />
 
-									</Binding.ValidationRules>
+                                    </Binding.ValidationRules>
 
-								</Binding>
+                                </Binding>
 
-							</TextBox.Text>
+                            </TextBox.Text>
 
-						</TextBox>
+                        </TextBox>
 
-					</StackPanel>
+                    </StackPanel>
 
-				</WrapPanel>
-			</StackPanel>
-		</DataTemplate>
+                </WrapPanel>
+            </StackPanel>
+        </DataTemplate>
 
-		<!-- The fields from the former long row-details panel, separated by category. -->
-		<DataTemplate x:Key="ReferencesDetailsSectionTemplate">
-			<StackPanel>
-				<!-- REFERENCES -->
 
-				<TextBlock Text="References"
+        <!-- The fields from the former long row-details panel, separated by category. -->
+        <DataTemplate x:Key="LogisticsDetailsSectionTemplate">
+            <StackPanel>
+                <!-- LOGISTICS -->
+
+                <TextBlock Text="Logistics"
                            Style="{StaticResource DetailsSectionHeaderStyle}" />
 
-				<WrapPanel>
+                <WrapPanel>
 
 
-					<!-- Confirmation -->
+                    <StackPanel Style="{StaticResource DetailsFieldStyle}">
 
-					<StackPanel Width="230"
-                                Margin="0,0,20,16">
-
-						<TextBlock Text="Confirmation reference"
+                        <TextBlock Text="Shipping term"
                                    Style="{StaticResource DetailsLabelStyle}" />
 
-						<TextBox Style="{StaticResource DashboardEditingTextBoxStyle}"
-                                 Text="{Binding ConfirmationReference,
-                                                Mode=TwoWay,
-                                                UpdateSourceTrigger=PropertyChanged}" />
-
-					</StackPanel>
-
-
-					<!-- Invoice -->
-
-					<StackPanel Width="230"
-                                Margin="0,0,20,16">
-
-						<TextBlock Text="Invoice reference"
-                                   Style="{StaticResource DetailsLabelStyle}" />
-
-						<TextBox Style="{StaticResource DashboardEditingTextBoxStyle}"
-                                 Text="{Binding InvoiceReference,
-                                                Mode=TwoWay,
-                                                UpdateSourceTrigger=PropertyChanged}" />
-
-					</StackPanel>
-
-
-					<!-- Shipment -->
-
-					<StackPanel Width="230"
-                                Margin="0,0,20,16">
-
-						<TextBlock Text="Shipment reference"
-                                   Style="{StaticResource DetailsLabelStyle}" />
-
-						<TextBox Style="{StaticResource DashboardEditingTextBoxStyle}"
-                                 Text="{Binding ShipmentReference,
-                                                Mode=TwoWay,
-                                                UpdateSourceTrigger=PropertyChanged}" />
-
-					</StackPanel>
-
-
-					<!-- Shipment size -->
-
-					<StackPanel Width="160"
-                                Margin="0,0,20,16">
-
-						<TextBlock Text="Shipment size"
-                                   Style="{StaticResource DetailsLabelStyle}" />
-
-						<TextBox Style="{StaticResource DashboardEditingTextBoxStyle}"
-                                 Text="{Binding ShipmentSize,
-                                                Mode=TwoWay,
-                                                UpdateSourceTrigger=PropertyChanged}" />
-
-					</StackPanel>
-
-				</WrapPanel>
-
-
-				<!-- Notes -->
-
-				<StackPanel Margin="0,0,0,16">
-
-					<TextBlock Text="Order notes"
-                               Style="{StaticResource DetailsLabelStyle}" />
-
-					<TextBox MinHeight="72"
-                             Padding="8"
-                             AcceptsReturn="True"
-                             TextWrapping="Wrap"
-                             VerticalScrollBarVisibility="Auto"
-                             Text="{Binding OrderNotes,
-                                            Mode=TwoWay,
-                                            UpdateSourceTrigger=PropertyChanged}" />
-
-				</StackPanel>
-			</StackPanel>
-		</DataTemplate>
-
-		<!-- The fields from the former long row-details panel, separated by category. -->
-		<DataTemplate x:Key="TimelineDetailsSectionTemplate">
-			<StackPanel>
-				<!-- TIMELINE -->
-
-				<TextBlock Text="Order timeline"
-                           Style="{StaticResource DetailsSectionHeaderStyle}" />
-
-				<WrapPanel>
-
-
-					<!-- Confirmation date -->
-
-					<StackPanel Style="{StaticResource DetailsFieldStyle}">
-
-						<TextBlock Text="Confirmation"
-                                   Style="{StaticResource DetailsLabelStyle}" />
-
-						<TextBox Style="{StaticResource DashboardDateTextBoxStyle}">
-
-							<TextBox.Text>
-
-								<Binding Path="ConfirmationDate"
-                                         Mode="TwoWay"
-                                         UpdateSourceTrigger="LostFocus"
-                                         StringFormat="{}{0:dd-MM-yyyy}"
-                                         ValidatesOnExceptions="True">
-
-									<Binding.ValidationRules>
-										<datevalidation:DateOnlyValidationRule />
-									</Binding.ValidationRules>
-
-								</Binding>
-
-							</TextBox.Text>
-
-						</TextBox>
-
-					</StackPanel>
-
-
-					<!-- Requested production -->
-
-					<StackPanel Style="{StaticResource DetailsFieldStyle}">
-
-						<TextBlock Text="Requested production"
-                                   Style="{StaticResource DetailsLabelStyle}" />
-
-						<TextBox Style="{StaticResource DashboardDateTextBoxStyle}">
-
-							<TextBox.Text>
-
-								<Binding Path="RequestedProductionDate"
-                                         Mode="TwoWay"
-                                         UpdateSourceTrigger="LostFocus"
-                                         StringFormat="{}{0:dd-MM-yyyy}"
-                                         ValidatesOnExceptions="True">
-
-									<Binding.ValidationRules>
-										<datevalidation:DateOnlyValidationRule />
-									</Binding.ValidationRules>
-
-								</Binding>
-
-							</TextBox.Text>
-
-						</TextBox>
-
-					</StackPanel>
-
-
-					<!-- Production done -->
-
-					<StackPanel Style="{StaticResource DetailsFieldStyle}">
-
-						<TextBlock Text="Production done"
-                                   Style="{StaticResource DetailsLabelStyle}" />
-
-						<TextBox Style="{StaticResource DashboardDateTextBoxStyle}">
-
-							<TextBox.Text>
-
-								<Binding Path="ProductionDoneDate"
-                                         Mode="TwoWay"
-                                         UpdateSourceTrigger="LostFocus"
-                                         StringFormat="{}{0:dd-MM-yyyy}"
-                                         ValidatesOnExceptions="True">
-
-									<Binding.ValidationRules>
-										<datevalidation:DateOnlyValidationRule />
-									</Binding.ValidationRules>
-
-								</Binding>
-
-							</TextBox.Text>
-
-						</TextBox>
-
-					</StackPanel>
-
-
-					<!-- Invoice -->
-
-					<StackPanel Style="{StaticResource DetailsFieldStyle}">
-
-						<TextBlock Text="Invoice date"
-                                   Style="{StaticResource DetailsLabelStyle}" />
-
-						<TextBox Style="{StaticResource DashboardDateTextBoxStyle}">
-
-							<TextBox.Text>
-
-								<Binding Path="InvoiceDate"
-                                         Mode="TwoWay"
-                                         UpdateSourceTrigger="LostFocus"
-                                         StringFormat="{}{0:dd-MM-yyyy}"
-                                         ValidatesOnExceptions="True">
-
-									<Binding.ValidationRules>
-										<datevalidation:DateOnlyValidationRule />
-									</Binding.ValidationRules>
-
-								</Binding>
-
-							</TextBox.Text>
-
-						</TextBox>
-
-					</StackPanel>
-
-
-					<!-- Shipping -->
-
-					<StackPanel Style="{StaticResource DetailsFieldStyle}">
-
-						<TextBlock Text="Shipping date"
-                                   Style="{StaticResource DetailsLabelStyle}" />
-
-						<TextBox Style="{StaticResource DashboardDateTextBoxStyle}">
-
-							<TextBox.Text>
-
-								<Binding Path="ShippingDate"
-                                         Mode="TwoWay"
-                                         UpdateSourceTrigger="LostFocus"
-                                         StringFormat="{}{0:dd-MM-yyyy}"
-                                         ValidatesOnExceptions="True">
-
-									<Binding.ValidationRules>
-										<datevalidation:DateOnlyValidationRule />
-									</Binding.ValidationRules>
-
-								</Binding>
-
-							</TextBox.Text>
-
-						</TextBox>
-
-					</StackPanel>
-
-
-					<!-- Bill of lading -->
-
-					<StackPanel Style="{StaticResource DetailsFieldStyle}">
-
-						<TextBlock Text="Bill of lading"
-                                   Style="{StaticResource DetailsLabelStyle}" />
-
-						<TextBox Style="{StaticResource DashboardDateTextBoxStyle}">
-
-							<TextBox.Text>
-
-								<Binding Path="BillOfLadingDate"
-                                         Mode="TwoWay"
-                                         UpdateSourceTrigger="LostFocus"
-                                         StringFormat="{}{0:dd-MM-yyyy}"
-                                         ValidatesOnExceptions="True">
-
-									<Binding.ValidationRules>
-										<datevalidation:DateOnlyValidationRule />
-									</Binding.ValidationRules>
-
-								</Binding>
-
-							</TextBox.Text>
-
-						</TextBox>
-
-					</StackPanel>
-
-
-					<!-- Arrival -->
-
-					<StackPanel Style="{StaticResource DetailsFieldStyle}">
-
-						<TextBlock Text="Arrival date"
-                                   Style="{StaticResource DetailsLabelStyle}" />
-
-						<TextBox Style="{StaticResource DashboardDateTextBoxStyle}">
-
-							<TextBox.Text>
-
-								<Binding Path="ArrivalDate"
-                                         Mode="TwoWay"
-                                         UpdateSourceTrigger="LostFocus"
-                                         StringFormat="{}{0:dd-MM-yyyy}"
-                                         ValidatesOnExceptions="True">
-
-									<Binding.ValidationRules>
-										<datevalidation:DateOnlyValidationRule />
-									</Binding.ValidationRules>
-
-								</Binding>
-
-							</TextBox.Text>
-
-						</TextBox>
-
-					</StackPanel>
-
-
-					<!-- Expected delivery -->
-
-					<StackPanel Style="{StaticResource DetailsFieldStyle}">
-
-						<TextBlock Text="Expected delivery"
-                                   Style="{StaticResource DetailsLabelStyle}" />
-
-						<TextBox Style="{StaticResource DashboardDateTextBoxStyle}">
-
-							<TextBox.Text>
-
-								<Binding Path="ExpectedDeliveryDate"
-                                         Mode="TwoWay"
-                                         UpdateSourceTrigger="LostFocus"
-                                         StringFormat="{}{0:dd-MM-yyyy}"
-                                         ValidatesOnExceptions="True">
-
-									<Binding.ValidationRules>
-										<datevalidation:DateOnlyValidationRule />
-									</Binding.ValidationRules>
-
-								</Binding>
-
-							</TextBox.Text>
-
-						</TextBox>
-
-					</StackPanel>
-
-
-					<!-- Delivery -->
-
-					<StackPanel Style="{StaticResource DetailsFieldStyle}">
-
-						<TextBlock Text="Delivery date"
-                                   Style="{StaticResource DetailsLabelStyle}" />
-
-						<TextBox Style="{StaticResource DashboardDateTextBoxStyle}">
-
-							<TextBox.Text>
-
-								<Binding Path="DeliveryDate"
-                                         Mode="TwoWay"
-                                         UpdateSourceTrigger="LostFocus"
-                                         StringFormat="{}{0:dd-MM-yyyy}"
-                                         ValidatesOnExceptions="True">
-
-									<Binding.ValidationRules>
-										<datevalidation:DateOnlyValidationRule />
-									</Binding.ValidationRules>
-
-								</Binding>
-
-							</TextBox.Text>
-
-						</TextBox>
-
-					</StackPanel>
-
-				</WrapPanel>
-			</StackPanel>
-		</DataTemplate>
-
-		<!-- The fields from the former long row-details panel, separated by category. -->
-		<DataTemplate x:Key="LogisticsDetailsSectionTemplate">
-			<StackPanel>
-				<!-- LOGISTICS -->
-
-				<TextBlock Text="Logistics"
-                           Style="{StaticResource DetailsSectionHeaderStyle}" />
-
-				<WrapPanel>
-
-
-					<StackPanel Style="{StaticResource DetailsFieldStyle}">
-
-						<TextBlock Text="Shipping term"
-                                   Style="{StaticResource DetailsLabelStyle}" />
-
-						<TextBlock Text="{Binding ShippingTermName}"
+                        <TextBlock Text="{Binding ShippingTermName}"
                                    Style="{StaticResource DetailsValueStyle}" />
 
-					</StackPanel>
+                    </StackPanel>
 
 
-					<StackPanel Style="{StaticResource DetailsFieldStyle}">
+                    <StackPanel Style="{StaticResource DetailsFieldStyle}">
 
-						<TextBlock Text="Production time"
+                        <TextBlock Text="Production time"
                                    Style="{StaticResource DetailsLabelStyle}" />
 
-						<TextBlock Text="{Binding ProductionTimeDays,
+                        <TextBlock Text="{Binding ProductionTimeDays,
                                                  StringFormat={}{0} days}"
                                    Style="{StaticResource DetailsValueStyle}" />
 
-					</StackPanel>
+                    </StackPanel>
 
 
-					<StackPanel Style="{StaticResource DetailsFieldStyle}">
+                    <StackPanel Style="{StaticResource DetailsFieldStyle}">
 
-						<TextBlock Text="Shipping time"
+                        <TextBlock Text="Shipping time"
                                    Style="{StaticResource DetailsLabelStyle}" />
 
-						<TextBlock Text="{Binding ShippingTimeDays,
+                        <TextBlock Text="{Binding ShippingTimeDays,
                                                  StringFormat={}{0} days}"
                                    Style="{StaticResource DetailsValueStyle}" />
 
-					</StackPanel>
+                    </StackPanel>
 
 
-					<StackPanel Style="{StaticResource DetailsFieldStyle}">
+                    <StackPanel Style="{StaticResource DetailsFieldStyle}">
 
-						<TextBlock Text="Lead time"
+                        <TextBlock Text="Lead time"
                                    Style="{StaticResource DetailsLabelStyle}" />
 
-						<TextBlock Text="{Binding LeadTimeDays,
+                        <TextBlock Text="{Binding LeadTimeDays,
                                                  StringFormat={}{0} days}"
                                    Style="{StaticResource DetailsValueStyle}" />
 
-					</StackPanel>
+                    </StackPanel>
 
-				</WrapPanel>
-			</StackPanel>
-		</DataTemplate>
+                </WrapPanel>
+            </StackPanel>
+        </DataTemplate>
 
-		<!-- The fields from the former long row-details panel, separated by category. -->
-		<DataTemplate x:Key="StatusDetailsSectionTemplate">
-			<StackPanel>
-				<!-- STATUS FLAGS -->
-
-				<TextBlock Text="Status flags"
-                           Style="{StaticResource DetailsSectionHeaderStyle}" />
-
-				<WrapPanel Margin="0,0,0,8">
-
-					<CheckBox Margin="0,0,24,8"
-                              Content="Confirmation sent"
-                              IsChecked="{Binding ConfirmationSent}"
-                              IsHitTestVisible="False"
-                              Focusable="False" />
-
-					<CheckBox Margin="0,0,24,8"
-                              Content="Invoice sent"
-                              IsChecked="{Binding InvoiceSent}"
-                              IsHitTestVisible="False"
-                              Focusable="False" />
-
-					<CheckBox Margin="0,0,24,8"
-                              Content="Inspection done"
-                              IsChecked="{Binding InspectionDone}"
-                              IsHitTestVisible="False"
-                              Focusable="False" />
-
-					<CheckBox Margin="0,0,24,8"
-                              Content="Certificate of origin"
-                              IsChecked="{Binding CertificateOfOriginSaved}"
-                              IsHitTestVisible="False"
-                              Focusable="False" />
-
-				</WrapPanel>
-			</StackPanel>
-		</DataTemplate>
-
-		<!-- Only one category is shown in the expanded row at a time. -->
-		<DataTemplate x:Key="PurchaseOrderDetailsTemplate">
-			<Border Margin="8,2,8,8"
+        <!-- Only one category is shown in the expanded row at a time. -->
+        <DataTemplate x:Key="PurchaseOrderDetailsTemplate">
+            <Border Margin="8,2,8,8"
                     Padding="8"
                     CornerRadius="8"
                     Background="{DynamicResource CardBackgroundFillColorSecondaryBrush}"
                     BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1">
 
-				<StackPanel>
-					<!-- Keep tall categories compact, with internal scrolling if needed. -->
-					<ScrollViewer MaxHeight="225"
+                <StackPanel>
+                    <!-- Keep tall categories compact, with internal scrolling if needed. -->
+                    <ScrollViewer MaxHeight="225"
                                   HorizontalScrollBarVisibility="Disabled"
                                   VerticalScrollBarVisibility="Auto">
-						<ContentControl Content="{Binding}"
+                        <ContentControl Content="{Binding}"
                                         HorizontalContentAlignment="Stretch">
-							<ContentControl.Style>
-								<Style TargetType="{x:Type ContentControl}">
-									<Setter Property="ContentTemplate"
+                            <ContentControl.Style>
+                                <Style TargetType="{x:Type ContentControl}">
+                                    <Setter Property="ContentTemplate"
                                             Value="{StaticResource PaymentDetailsSectionTemplate}" />
-									<Style.Triggers>
-										<DataTrigger Binding="{Binding ActiveDetailsSection}"
-                                                     Value="{x:Static vm:DashboardDetailsSection.References}">
-											<Setter Property="ContentTemplate"
-                                                    Value="{StaticResource ReferencesDetailsSectionTemplate}" />
-										</DataTrigger>
-										<DataTrigger Binding="{Binding ActiveDetailsSection}"
-                                                     Value="{x:Static vm:DashboardDetailsSection.Timeline}">
-											<Setter Property="ContentTemplate"
-                                                    Value="{StaticResource TimelineDetailsSectionTemplate}" />
-										</DataTrigger>
-										<DataTrigger Binding="{Binding ActiveDetailsSection}"
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ActiveDetailsSection}"
                                                      Value="{x:Static vm:DashboardDetailsSection.Logistics}">
-											<Setter Property="ContentTemplate"
+                                            <Setter Property="ContentTemplate"
                                                     Value="{StaticResource LogisticsDetailsSectionTemplate}" />
-										</DataTrigger>
-										<DataTrigger Binding="{Binding ActiveDetailsSection}"
-                                                     Value="{x:Static vm:DashboardDetailsSection.Status}">
-											<Setter Property="ContentTemplate"
-                                                    Value="{StaticResource StatusDetailsSectionTemplate}" />
-										</DataTrigger>
-									</Style.Triggers>
-								</Style>
-							</ContentControl.Style>
-						</ContentControl>
-					</ScrollViewer>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ContentControl.Style>
+                        </ContentControl>
+                    </ScrollViewer>
 
-					<!-- Save errors remain visible regardless of selected category. -->
-					<!-- SAVE ERROR -->
+                    <!-- Save errors remain visible regardless of selected category. -->
+                    <!-- SAVE ERROR -->
 
-					<TextBlock Margin="0,8,0,0"
+                    <TextBlock Margin="0,8,0,0"
                                Text="{Binding SaveError}"
                                TextWrapping="Wrap"
                                Foreground="{DynamicResource SystemFillColorCriticalBrush}">
 
-						<TextBlock.Style>
+                        <TextBlock.Style>
 
-							<Style TargetType="{x:Type TextBlock}">
+                            <Style TargetType="{x:Type TextBlock}">
 
-								<Setter Property="Visibility"
+                                <Setter Property="Visibility"
                                         Value="Visible" />
 
-								<Style.Triggers>
+                                <Style.Triggers>
 
-									<DataTrigger Binding="{Binding SaveError}"
+                                    <DataTrigger Binding="{Binding SaveError}"
                                                  Value="{x:Null}">
 
-										<Setter Property="Visibility"
+                                        <Setter Property="Visibility"
                                                 Value="Collapsed" />
 
-									</DataTrigger>
+                                    </DataTrigger>
 
-								</Style.Triggers>
+                                </Style.Triggers>
 
-							</Style>
+                            </Style>
 
-						</TextBlock.Style>
+                        </TextBlock.Style>
 
-					</TextBlock>
-				</StackPanel>
-			</Border>
-		</DataTemplate>
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
 
-	</UserControl.Resources>
+    </UserControl.Resources>
 
-	<!-- PAGE -->
+    <!-- PAGE -->
 
-	<Grid Margin="4">
+    <Grid Margin="4">
 
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="*" />
-		</Grid.RowDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
 
-		<!-- HEADER -->
+        <!-- HEADER -->
 
-		<Grid Margin="0,0,0,4">
+        <Grid Margin="0,0,0,4">
 
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="*" />
-				<ColumnDefinition Width="Auto" />
-			</Grid.ColumnDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-			<StackPanel>
+            <StackPanel>
 
-				<TextBlock Text="Purchase Orders"
+                <TextBlock Text="Purchase Orders"
                            FontSize="24"
                            FontWeight="SemiBold" />
 
-				<TextBlock Margin="0,0,0,0"
-                           Text="Manage open purchase orders"
+                <TextBlock Margin="0,0,0,0"
+                           Text="Edit references and dates in-row; open Pay or Ship for more details"
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
 
-			</StackPanel>
+            </StackPanel>
 
-		</Grid>
+        </Grid>
 
 
-		<!-- DATAGRID -->
+        <!-- DATAGRID -->
 
-		<DataGrid Grid.Row="1"
+        <DataGrid Grid.Row="1"
                   ItemsSource="{Binding PurchaseOrders}"
                   SelectedItem="{Binding SelectedPurchaseOrder,
                                          Mode=TwoWay}"
                   Style="{StaticResource DashboardDataGridStyle}"
                   RowDetailsTemplate="{StaticResource PurchaseOrderDetailsTemplate}"
-                  FrozenColumnCount="3">
+                  FrozenColumnCount="2">
 
-			<DataGrid.Columns>
+            <DataGrid.Columns>
 
-
-				<!-- Five independent actions in one compact grid column.
-                     The selected category is stored in DashboardRowViewModel. -->
-				<DataGridTemplateColumn Header="Details"
-                                        Width="333"
-                                        CanUserSort="False"
-                                        CanUserResize="False">
-					<DataGridTemplateColumn.CellTemplate>
-						<DataTemplate>
-							<StackPanel Orientation="Horizontal"
-                                        VerticalAlignment="Center">
-								<Button Content="Pay ▾"
-                                        ToolTip="Payment details"
-                                        Style="{StaticResource DashboardPaymentDetailsButtonStyle}"
-                                        Command="{Binding ToggleDetailsSectionCommand}"
-                                        CommandParameter="{x:Static vm:DashboardDetailsSection.Payment}" />
-								<Button Content="Refs ▾"
-                                        ToolTip="References and notes"
-                                        Style="{StaticResource DashboardReferencesDetailsButtonStyle}"
-                                        Command="{Binding ToggleDetailsSectionCommand}"
-                                        CommandParameter="{x:Static vm:DashboardDetailsSection.References}" />
-								<Button Content="Dates ▾"
-                                        ToolTip="Order timeline"
-                                        Style="{StaticResource DashboardTimelineDetailsButtonStyle}"
-                                        Command="{Binding ToggleDetailsSectionCommand}"
-                                        CommandParameter="{x:Static vm:DashboardDetailsSection.Timeline}" />
-								<Button Content="Ship ▾"
-                                        ToolTip="Logistics and shipping"
-                                        Style="{StaticResource DashboardLogisticsDetailsButtonStyle}"
-                                        Command="{Binding ToggleDetailsSectionCommand}"
-                                        CommandParameter="{x:Static vm:DashboardDetailsSection.Logistics}" />
-								<Button Content="Flags ▾"
-                                        ToolTip="Read-only status flags"
-                                        Style="{StaticResource DashboardStatusDetailsButtonStyle}"
-                                        Command="{Binding ToggleDetailsSectionCommand}"
-                                        CommandParameter="{x:Static vm:DashboardDetailsSection.Status}" />
-							</StackPanel>
-						</DataTemplate>
-					</DataGridTemplateColumn.CellTemplate>
-				</DataGridTemplateColumn>
+                <!-- Compact main row: Pay, Flags and Ship now have independent narrow cells
+                     near their related fields. All overlay editors and bindings are retained. -->
 
 
-				<!-- Purchase order -->
+                <!-- Purchase order -->
 
-				<DataGridTextColumn Header="PO"
-                                    Width="110"
+                <DataGridTextColumn Header="PO"
+                                    Width="70"
                                     IsReadOnly="True"
                                     Binding="{Binding Code}"
                                     ElementStyle="{StaticResource DashboardCellTextStyle}" />
 
 
-				<!-- Supplier -->
+                <!-- Supplier -->
 
-				<DataGridTextColumn Header="Supplier"
-                                    Width="220"
+                <DataGridTextColumn Header="Supplier"
+                                    Width="2*" MinWidth="111"
                                     IsReadOnly="True"
                                     Binding="{Binding SupplierName}"
                                     ElementStyle="{StaticResource DashboardCellTextStyle}" />
 
 
-				<!-- Order date -->
+                <!-- Order date -->
 
-				<DataGridTextColumn Header="Order date"
-                                    Width="110"
+                <DataGridTextColumn Header="Order date"
+                                    Width="85"
                                     IsReadOnly="True"
                                     Binding="{Binding OrderDate,
                                                       StringFormat={}{0:dd-MM-yyyy}}"
                                     ElementStyle="{StaticResource DashboardCellTextStyle}" />
 
 
-				<!-- Type -->
+                <!-- Type -->
 
-				<DataGridTextColumn Header="Type"
-                                    Width="110"
+                <DataGridTextColumn Header="Type"
+                                    Width="56"
                                     IsReadOnly="True"
                                     Binding="{Binding OrderType}"
                                     ElementStyle="{StaticResource DashboardCellTextStyle}" />
 
 
-				<!-- Status -->
+                <!-- Status -->
 
-				<DataGridTextColumn Header="Status"
-                                    Width="125"
+                <DataGridTextColumn Header="Status"
+                                    Width="76"
                                     IsReadOnly="True"
                                     Binding="{Binding OrderStatus}"
                                     ElementStyle="{StaticResource DashboardCellTextStyle}" />
 
 
-				<!-- Order amount -->
+                <!-- Order amount -->
 
-				<DataGridTemplateColumn Header="Amount"
-                                        Width="125"
+                <DataGridTemplateColumn Header="Amount"
+                                        Width="79"
                                         CellStyle="{StaticResource DashboardEditorCellStyle}">
 
-					<DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
 
-						<DataTemplate>
+                        <DataTemplate>
 
-							<TextBox Style="{StaticResource DashboardInlineTextBoxStyle}"
+                            <TextBox Style="{StaticResource DashboardInlineTextBoxStyle}"
                                      TextAlignment="Right"
                                      Text="{Binding OrderAmount,
                                                     Mode=TwoWay,
                                                     UpdateSourceTrigger=LostFocus}" />
 
-						</DataTemplate>
+                        </DataTemplate>
 
-					</DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
 
-				</DataGridTemplateColumn>
+                </DataGridTemplateColumn>
+
+                <!-- Payment details immediately after Amount, before Deposit. -->
+                <DataGridTemplateColumn Header="Pay" Width="39"
+                                        CanUserSort="False" CanUserResize="False"
+                                        CellStyle="{StaticResource DashboardEditorCellStyle}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Pay ▾"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    ToolTip="Payment details"
+                                    Style="{StaticResource DashboardPaymentDetailsButtonStyle}"
+                                    Command="{Binding ToggleDetailsSectionCommand}"
+                                    CommandParameter="{x:Static vm:DashboardDetailsSection.Payment}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
 
 
-				<!-- Deposit paid -->
+                <!-- Deposit paid -->
 
-				<DataGridTemplateColumn Header="Deposit"
-                                        Width="85"
+                <DataGridTemplateColumn Header="Deposit"
+                                        Width="48"
                                         CellStyle="{StaticResource DashboardEditorCellStyle}">
 
-					<DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
 
-						<DataTemplate>
+                        <DataTemplate>
 
-							<CheckBox HorizontalAlignment="Center"
+                            <CheckBox HorizontalAlignment="Center"
                                       VerticalAlignment="Center"
                                       IsChecked="{Binding DepositPaid,
                                                           Mode=TwoWay,
                                                           UpdateSourceTrigger=PropertyChanged}" />
 
-						</DataTemplate>
+                        </DataTemplate>
 
-					</DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
 
-				</DataGridTemplateColumn>
+                </DataGridTemplateColumn>
 
 
-				<!-- Order paid -->
+                <!-- Order paid -->
 
-				<DataGridTemplateColumn Header="Paid"
-                                        Width="70"
+                <DataGridTemplateColumn Header="Paid"
+                                        Width="38"
                                         CellStyle="{StaticResource DashboardEditorCellStyle}">
 
-					<DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
 
-						<DataTemplate>
+                        <DataTemplate>
 
-							<CheckBox HorizontalAlignment="Center"
+                            <CheckBox HorizontalAlignment="Center"
                                       VerticalAlignment="Center"
                                       IsChecked="{Binding OrderPaid,
                                                           Mode=TwoWay,
                                                           UpdateSourceTrigger=PropertyChanged}" />
 
-						</DataTemplate>
+                        </DataTemplate>
 
-					</DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
 
-				</DataGridTemplateColumn>
+                </DataGridTemplateColumn>
 
 
-				<!-- Confirmation reference -->
-
-				<DataGridTemplateColumn Header="Confirmation ref."
-                                        Width="165"
+                <!-- Confirmation reference stays editable directly in the row.
+                     The same field plus the invoice reference/date are available
+                     from the small overlay without opening expanded details. -->
+                <DataGridTemplateColumn Header="References" Width="2*" MinWidth="118"
+                                        SortMemberPath="ConfirmationReference"
                                         CellStyle="{StaticResource DashboardEditorCellStyle}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid x:Name="ReferencesCell">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0"
+                                         ToolTip="Confirmation reference"
+                                         Style="{StaticResource DashboardInlineTextBoxStyle}"
+                                         Text="{Binding ConfirmationReference, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <ToggleButton Grid.Column="1" x:Name="ReferencesToggle"
+                                              Style="{StaticResource DashboardCellPopupToggleStyle}"
+                                              ToolTip="Edit confirmation reference, invoice reference and invoice date"
+                                              AutomationProperties.Name="Reference details" />
+                                <Popup Placement="Bottom"
+                                       PlacementTarget="{Binding ElementName=ReferencesCell}"
+                                       IsOpen="{Binding IsChecked, ElementName=ReferencesToggle, Mode=TwoWay}"
+                                       DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}"
+                                       StaysOpen="False" AllowsTransparency="True"
+                                       PopupAnimation="Fade">
+                                    <Border Style="{StaticResource DashboardCellPopupBorderStyle}" MinWidth="237">
+                                        <StackPanel>
+                                            <TextBlock Text="Confirmation reference"
+                                                       Style="{StaticResource DashboardPopupFieldLabelStyle}" />
+                                            <TextBox Style="{StaticResource DashboardPopupTextBoxStyle}"
+                                                     Text="{Binding ConfirmationReference, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            <TextBlock Text="Invoice reference"
+                                                       Style="{StaticResource DashboardPopupFieldLabelStyle}" />
+                                            <TextBox Style="{StaticResource DashboardPopupTextBoxStyle}"
+                                                     Text="{Binding InvoiceReference, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            <!-- Invoice date is no longer a grid column; it remains editable here. -->
+                                            <TextBlock Text="Invoice date"
+                                                       Style="{StaticResource DashboardPopupFieldLabelStyle}" />
+                                            <TextBox Style="{StaticResource DashboardCompactDateTextBoxStyle}"
+                                                     Width="126" HorizontalAlignment="Left">
+                                                <TextBox.Text>
+                                                    <Binding Path="InvoiceDate" Mode="TwoWay"
+                                                             UpdateSourceTrigger="LostFocus"
+                                                             StringFormat="{}{0:dd-MM-yyyy}"
+                                                             ValidatesOnExceptions="True">
+                                                        <Binding.ValidationRules>
+                                                            <datevalidation:DateOnlyValidationRule DateFormat="dd-MM-yyyy" />
+                                                        </Binding.ValidationRules>
+                                                    </Binding>
+                                                </TextBox.Text>
+                                            </TextBox>
+                                        </StackPanel>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
 
-					<DataGridTemplateColumn.CellTemplate>
-
-						<DataTemplate>
-
-							<TextBox Style="{StaticResource DashboardInlineTextBoxStyle}"
-                                     Text="{Binding ConfirmationReference,
-                                                    Mode=TwoWay,
-                                                    UpdateSourceTrigger=PropertyChanged}" />
-
-						</DataTemplate>
-
-					</DataGridTemplateColumn.CellTemplate>
-
-				</DataGridTemplateColumn>
-
-
-				<!-- Invoice reference -->
-
-				<DataGridTemplateColumn Header="Invoice ref."
-                                        Width="145"
+                <!-- Floating flags menu after References, before Shipment. -->
+                <DataGridTemplateColumn Header="Flags" Width="48"
+                                        CanUserSort="False" CanUserResize="False"
                                         CellStyle="{StaticResource DashboardEditorCellStyle}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <ToggleButton x:Name="FlagsToggle"
+                                              Style="{StaticResource DashboardFlagsPopupToggleStyle}"
+                                              ToolTip="Edit flags for this purchase order"
+                                              AutomationProperties.Name="Purchase order flags" />
+                                <Popup x:Name="FlagsPopup"
+                                       Placement="Bottom"
+                                       PlacementTarget="{Binding ElementName=FlagsToggle}"
+                                       IsOpen="{Binding IsChecked, ElementName=FlagsToggle, Mode=TwoWay}"
+                                       StaysOpen="False"
+                                       AllowsTransparency="True"
+                                       PopupAnimation="Fade"
+                                       DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                    <Border Style="{StaticResource DashboardCellPopupBorderStyle}"
+                                            MinWidth="196">
+                                        <StackPanel>
+                                            <TextBlock Text="Order flags" FontSize="12"
+                                                       FontWeight="SemiBold" Margin="0,0,0,5" />
+                                            <CheckBox Content="Confirmation sent"
+                                                      Style="{StaticResource DashboardPopupCheckBoxStyle}"
+                                                      IsChecked="{Binding ConfirmationSent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            <CheckBox Content="Invoice sent"
+                                                      Style="{StaticResource DashboardPopupCheckBoxStyle}"
+                                                      IsChecked="{Binding InvoiceSent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            <CheckBox Content="Inspection done"
+                                                      Style="{StaticResource DashboardPopupCheckBoxStyle}"
+                                                      IsChecked="{Binding InspectionDone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            <CheckBox Content="Certificate of origin"
+                                                      Style="{StaticResource DashboardPopupCheckBoxStyle}"
+                                                      IsChecked="{Binding CertificateOfOriginSaved, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        </StackPanel>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
 
-					<DataGridTemplateColumn.CellTemplate>
+                <!-- Shipment reference inline, with shipment reference and size in an overlay. -->
+                <DataGridTemplateColumn Header="Shipment" Width="1.5*" MinWidth="109"
+                                        SortMemberPath="ShipmentReference"
+                                        CellStyle="{StaticResource DashboardEditorCellStyle}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid x:Name="ShipmentCell">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0"
+                                         ToolTip="Shipment reference"
+                                         Style="{StaticResource DashboardInlineTextBoxStyle}"
+                                         Text="{Binding ShipmentReference, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <ToggleButton Grid.Column="1" x:Name="ShipmentToggle"
+                                              Style="{StaticResource DashboardCellPopupToggleStyle}"
+                                              ToolTip="Edit shipment reference and shipment size"
+                                              AutomationProperties.Name="Shipment details" />
+                                <Popup Placement="Bottom"
+                                       PlacementTarget="{Binding ElementName=ShipmentCell}"
+                                       IsOpen="{Binding IsChecked, ElementName=ShipmentToggle, Mode=TwoWay}"
+                                       DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}"
+                                       StaysOpen="False" AllowsTransparency="True"
+                                       PopupAnimation="Fade">
+                                    <Border Style="{StaticResource DashboardCellPopupBorderStyle}" MinWidth="237">
+                                        <StackPanel>
+                                            <TextBlock Text="Shipment reference"
+                                                       Style="{StaticResource DashboardPopupFieldLabelStyle}" />
+                                            <TextBox Style="{StaticResource DashboardPopupTextBoxStyle}"
+                                                     Text="{Binding ShipmentReference, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            <TextBlock Text="Shipment size"
+                                                       Style="{StaticResource DashboardPopupFieldLabelStyle}" />
+                                            <TextBox Style="{StaticResource DashboardPopupTextBoxStyle}"
+                                                     Text="{Binding ShipmentSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        </StackPanel>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
 
-						<DataTemplate>
+                <!-- Logistics details after Shipment, before Notes. -->
+                <DataGridTemplateColumn Header="Ship" Width="39"
+                                        CanUserSort="False" CanUserResize="False"
+                                        CellStyle="{StaticResource DashboardEditorCellStyle}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Ship ▾"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    ToolTip="Logistics and shipping"
+                                    Style="{StaticResource DashboardLogisticsDetailsButtonStyle}"
+                                    Command="{Binding ToggleDetailsSectionCommand}"
+                                    CommandParameter="{x:Static vm:DashboardDetailsSection.Logistics}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
 
-							<TextBox Style="{StaticResource DashboardInlineTextBoxStyle}"
-                                     Text="{Binding InvoiceReference,
-                                                    Mode=TwoWay,
-                                                    UpdateSourceTrigger=PropertyChanged}" />
+                <!-- Notes are edited only in a short floating textbox; no extra row. -->
+                <DataGridTemplateColumn Header="Notes" Width="32"
+                                        CanUserSort="False" CanUserResize="False"
+                                        CellStyle="{StaticResource DashboardEditorCellStyle}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid x:Name="OrderNotesCell">
+                                <ToggleButton x:Name="OrderNotesToggle"
+                                              Style="{StaticResource DashboardCellPopupToggleStyle}"
+                                              ToolTip="Edit order notes"
+                                              AutomationProperties.Name="Edit order notes" />
+                                <Popup Placement="Bottom"
+                                       PlacementTarget="{Binding ElementName=OrderNotesCell}"
+                                       IsOpen="{Binding IsChecked, ElementName=OrderNotesToggle, Mode=TwoWay}"
+                                       DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}"
+                                       StaysOpen="False" AllowsTransparency="True"
+                                       PopupAnimation="Fade">
+                                    <Border Style="{StaticResource DashboardCellPopupBorderStyle}" MinWidth="238">
+                                        <StackPanel>
+                                            <TextBlock Text="Order notes"
+                                                       Style="{StaticResource DashboardPopupFieldLabelStyle}" />
+                                            <TextBox Width="230" Height="62" MinHeight="0"
+                                                     Style="{StaticResource DashboardPopupTextBoxStyle}"
+                                                     AcceptsReturn="True" TextWrapping="Wrap"
+                                                     VerticalScrollBarVisibility="Auto"
+                                                     Text="{Binding OrderNotes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        </StackPanel>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
 
-						</DataTemplate>
+                <DataGridTemplateColumn Header="Confirmed" Width="96"
+                                        SortMemberPath="ConfirmationDate"
+                                        CellStyle="{StaticResource DashboardEditorCellStyle}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Style="{StaticResource DashboardCompactDateTextBoxStyle}">
+                                <TextBox.Text>
+                                    <Binding Path="ConfirmationDate" Mode="TwoWay"
+                                             UpdateSourceTrigger="LostFocus"
+                                             StringFormat="{}{0:dd-MM-yyyy}"
+                                             ValidatesOnExceptions="True">
+                                        <Binding.ValidationRules>
+                                            <datevalidation:DateOnlyValidationRule DateFormat="dd-MM-yyyy" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
 
-					</DataGridTemplateColumn.CellTemplate>
+                <!-- Primary date is editable in the row; secondary dates float below it. -->
+                <DataGridTemplateColumn Header="Production done" Width="106"
+                                        SortMemberPath="ProductionDoneDate"
+                                        CellStyle="{StaticResource DashboardEditorCellStyle}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid x:Name="ProductionDoneDateCell">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox Style="{StaticResource DashboardCompactDateTextBoxStyle}">
+                                    <TextBox.Text>
+                                        <Binding Path="ProductionDoneDate" Mode="TwoWay"
+                                                 UpdateSourceTrigger="LostFocus"
+                                                 StringFormat="{}{0:dd-MM-yyyy}"
+                                                 ValidatesOnExceptions="True">
+                                            <Binding.ValidationRules>
+                                                <datevalidation:DateOnlyValidationRule DateFormat="dd-MM-yyyy" />
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
+                                <ToggleButton Grid.Column="1" x:Name="ProductionDoneDatesToggle"
+                                              Style="{StaticResource DashboardCellPopupToggleStyle}"
+                                              ToolTip="Edit related dates without expanding this row" />
+                                <Popup Placement="Bottom"
+                                       PlacementTarget="{Binding ElementName=ProductionDoneDateCell}"
+                                       IsOpen="{Binding IsChecked, ElementName=ProductionDoneDatesToggle, Mode=TwoWay}"
+                                       DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}"
+                                       StaysOpen="False" AllowsTransparency="True"
+                                       PopupAnimation="Fade">
+                                    <Border Style="{StaticResource DashboardCellPopupBorderStyle}"
+                                            MinWidth="158">
+                                        <StackPanel>
+                                            <TextBlock Text="Requested production"
+                                                       Style="{StaticResource DashboardPopupFieldLabelStyle}" />
+                                            <TextBox Style="{StaticResource DashboardCompactDateTextBoxStyle}" Width="128">
+                                                <TextBox.Text>
+                                                    <Binding Path="RequestedProductionDate" Mode="TwoWay"
+                                                             UpdateSourceTrigger="LostFocus"
+                                                             StringFormat="{}{0:dd-MM-yyyy}"
+                                                             ValidatesOnExceptions="True">
+                                                        <Binding.ValidationRules>
+                                                            <datevalidation:DateOnlyValidationRule DateFormat="dd-MM-yyyy" />
+                                                        </Binding.ValidationRules>
+                                                    </Binding>
+                                                </TextBox.Text>
+                                            </TextBox>
+                                        </StackPanel>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
 
-				</DataGridTemplateColumn>
+                <!-- Primary date is editable in the row; secondary dates float below it. -->
+                <DataGridTemplateColumn Header="Shipped" Width="106"
+                                        SortMemberPath="ShippingDate"
+                                        CellStyle="{StaticResource DashboardEditorCellStyle}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid x:Name="ShippingDateCell">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox Style="{StaticResource DashboardCompactDateTextBoxStyle}">
+                                    <TextBox.Text>
+                                        <Binding Path="ShippingDate" Mode="TwoWay"
+                                                 UpdateSourceTrigger="LostFocus"
+                                                 StringFormat="{}{0:dd-MM-yyyy}"
+                                                 ValidatesOnExceptions="True">
+                                            <Binding.ValidationRules>
+                                                <datevalidation:DateOnlyValidationRule DateFormat="dd-MM-yyyy" />
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
+                                <ToggleButton Grid.Column="1" x:Name="ShippingDatesToggle"
+                                              Style="{StaticResource DashboardCellPopupToggleStyle}"
+                                              ToolTip="Edit related dates without expanding this row" />
+                                <Popup Placement="Bottom"
+                                       PlacementTarget="{Binding ElementName=ShippingDateCell}"
+                                       IsOpen="{Binding IsChecked, ElementName=ShippingDatesToggle, Mode=TwoWay}"
+                                       DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}"
+                                       StaysOpen="False" AllowsTransparency="True"
+                                       PopupAnimation="Fade">
+                                    <Border Style="{StaticResource DashboardCellPopupBorderStyle}"
+                                            MinWidth="158">
+                                        <StackPanel>
+                                            <TextBlock Text="Bill of lading"
+                                                       Style="{StaticResource DashboardPopupFieldLabelStyle}" />
+                                            <TextBox Style="{StaticResource DashboardCompactDateTextBoxStyle}" Width="128">
+                                                <TextBox.Text>
+                                                    <Binding Path="BillOfLadingDate" Mode="TwoWay"
+                                                             UpdateSourceTrigger="LostFocus"
+                                                             StringFormat="{}{0:dd-MM-yyyy}"
+                                                             ValidatesOnExceptions="True">
+                                                        <Binding.ValidationRules>
+                                                            <datevalidation:DateOnlyValidationRule DateFormat="dd-MM-yyyy" />
+                                                        </Binding.ValidationRules>
+                                                    </Binding>
+                                                </TextBox.Text>
+                                            </TextBox>
+                                            <TextBlock Text="Arrival"
+                                                       Style="{StaticResource DashboardPopupFieldLabelStyle}" />
+                                            <TextBox Style="{StaticResource DashboardCompactDateTextBoxStyle}" Width="128">
+                                                <TextBox.Text>
+                                                    <Binding Path="ArrivalDate" Mode="TwoWay"
+                                                             UpdateSourceTrigger="LostFocus"
+                                                             StringFormat="{}{0:dd-MM-yyyy}"
+                                                             ValidatesOnExceptions="True">
+                                                        <Binding.ValidationRules>
+                                                            <datevalidation:DateOnlyValidationRule DateFormat="dd-MM-yyyy" />
+                                                        </Binding.ValidationRules>
+                                                    </Binding>
+                                                </TextBox.Text>
+                                            </TextBox>
+                                        </StackPanel>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Primary date is editable in the row; secondary dates float below it. -->
+                <DataGridTemplateColumn Header="Delivered" Width="106"
+                                        SortMemberPath="DeliveryDate"
+                                        CellStyle="{StaticResource DashboardEditorCellStyle}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid x:Name="DeliveryDateCell">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox Style="{StaticResource DashboardCompactDateTextBoxStyle}">
+                                    <TextBox.Text>
+                                        <Binding Path="DeliveryDate" Mode="TwoWay"
+                                                 UpdateSourceTrigger="LostFocus"
+                                                 StringFormat="{}{0:dd-MM-yyyy}"
+                                                 ValidatesOnExceptions="True">
+                                            <Binding.ValidationRules>
+                                                <datevalidation:DateOnlyValidationRule DateFormat="dd-MM-yyyy" />
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
+                                <ToggleButton Grid.Column="1" x:Name="DeliveryDatesToggle"
+                                              Style="{StaticResource DashboardCellPopupToggleStyle}"
+                                              ToolTip="Edit related dates without expanding this row" />
+                                <Popup Placement="Bottom"
+                                       PlacementTarget="{Binding ElementName=DeliveryDateCell}"
+                                       IsOpen="{Binding IsChecked, ElementName=DeliveryDatesToggle, Mode=TwoWay}"
+                                       DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}"
+                                       StaysOpen="False" AllowsTransparency="True"
+                                       PopupAnimation="Fade">
+                                    <Border Style="{StaticResource DashboardCellPopupBorderStyle}"
+                                            MinWidth="158">
+                                        <StackPanel>
+                                            <TextBlock Text="Expected delivery"
+                                                       Style="{StaticResource DashboardPopupFieldLabelStyle}" />
+                                            <TextBox Style="{StaticResource DashboardCompactDateTextBoxStyle}" Width="128">
+                                                <TextBox.Text>
+                                                    <Binding Path="ExpectedDeliveryDate" Mode="TwoWay"
+                                                             UpdateSourceTrigger="LostFocus"
+                                                             StringFormat="{}{0:dd-MM-yyyy}"
+                                                             ValidatesOnExceptions="True">
+                                                        <Binding.ValidationRules>
+                                                            <datevalidation:DateOnlyValidationRule DateFormat="dd-MM-yyyy" />
+                                                        </Binding.ValidationRules>
+                                                    </Binding>
+                                                </TextBox.Text>
+                                            </TextBox>
+                                        </StackPanel>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
 
 
-				<!-- Shipping term -->
 
-				<DataGridTextColumn Header="Shipping"
-                                    Width="120"
-                                    IsReadOnly="True"
-                                    Binding="{Binding ShippingTermName}"
-                                    ElementStyle="{StaticResource DashboardCellTextStyle}" />
+                <!-- Save status -->
 
-
-				<!-- Production -->
-
-				<DataGridTextColumn Header="Production"
-                                    Width="115"
-                                    IsReadOnly="True"
-                                    Binding="{Binding ProductionDoneDate,
-                                                      StringFormat={}{0:dd-MM-yyyy}}"
-                                    ElementStyle="{StaticResource DashboardCellTextStyle}" />
-
-
-				<!-- Shipping date -->
-
-				<DataGridTextColumn Header="Shipped"
-                                    Width="110"
-                                    IsReadOnly="True"
-                                    Binding="{Binding ShippingDate,
-                                                      StringFormat={}{0:dd-MM-yyyy}}"
-                                    ElementStyle="{StaticResource DashboardCellTextStyle}" />
-
-
-				<!-- Expected delivery -->
-
-				<DataGridTextColumn Header="Expected"
-                                    Width="115"
-                                    IsReadOnly="True"
-                                    Binding="{Binding ExpectedDeliveryDate,
-                                                      StringFormat={}{0:dd-MM-yyyy}}"
-                                    ElementStyle="{StaticResource DashboardCellTextStyle}" />
-
-
-				<!-- Delivery -->
-
-				<DataGridTextColumn Header="Delivered"
-                                    Width="115"
-                                    IsReadOnly="True"
-                                    Binding="{Binding DeliveryDate,
-                                                      StringFormat={}{0:dd-MM-yyyy}}"
-                                    ElementStyle="{StaticResource DashboardCellTextStyle}" />
-
-
-				<!-- Lead time -->
-
-				<DataGridTextColumn Header="Lead"
-                                    Width="80"
-                                    IsReadOnly="True"
-                                    Binding="{Binding LeadTimeDays,
-                                                      StringFormat={}{0} d}"
-                                    ElementStyle="{StaticResource DashboardCellTextStyle}" />
-
-
-				<!-- Save status -->
-
-				<DataGridTemplateColumn Width="44"
+                <DataGridTemplateColumn Width="26"
                                         CanUserSort="False"
                                         CanUserResize="False"
                                         CellTemplate="{StaticResource DashboardSaveStateCellTemplate}" />
 
-			</DataGrid.Columns>
+            </DataGrid.Columns>
 
-		</DataGrid>
+        </DataGrid>
 
-	</Grid>
+    </Grid>
 
 </UserControl>
