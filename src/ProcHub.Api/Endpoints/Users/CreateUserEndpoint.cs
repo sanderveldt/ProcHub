@@ -1,8 +1,7 @@
-using Microsoft.AspNetCore.Identity;
 using ProcHub.Contracts.Users.Requests;
 using ProcHub.Contracts.Users.Responses;
-using ProcHub.Infrastructure.Identity;
-using ProcHub.Application.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
+using ProcHub.Application.Features.Users.Create;
 
 namespace ProcHub.Api.Endpoints.Users;
 
@@ -16,64 +15,31 @@ public static class CreateUserEndpoint
         return group;
     }
 
-    private static async Task<IResult> HandleAsync(
+    private static async Task<Created<UserResponse>> HandleAsync(
         CreateUserRequest request,
-        UserManager<ApplicationUser> userManager)
+        CreateUserHandler handler,
+        CancellationToken cancellationToken)
     {
-        if (!AppRoles.IsValid(request.Role))
+        var command = new CreateUserCommand(
+            request.Email,
+            request.Password,
+            request.Role)
         {
-            return TypedResults.BadRequest(
-                $"Role '{request.Role}' is invalid.");
-        }
-
-        var existingUser =
-            await userManager.FindByEmailAsync(request.Email);
-
-        if (existingUser is not null)
-        {
-            return TypedResults.Conflict(
-                $"A user with email '{request.Email}' already exists.");
-        }
-
-        var user = new ApplicationUser
-        {
-            UserName = request.Email.Trim(),
-            Email = request.Email.Trim(),
-            DisplayName = request.DisplayName?.Trim()
+            DisplayName = request.DisplayName
         };
 
-        var createResult = await userManager.CreateAsync(
-            user,
-            request.Password);
-
-        if (!createResult.Succeeded)
-        {
-            var errors = createResult.Errors
-                .ToDictionary(
-                    e => e.Code,
-                    e => new[] { e.Description });
-
-            return TypedResults.ValidationProblem(errors);
-        }
-
-        var roleResult = await userManager.AddToRoleAsync(
-            user,
-            request.Role);
-
-        if (!roleResult.Succeeded)
-        {
-            await userManager.DeleteAsync(user);
-
-            return TypedResults.BadRequest(
-                "The user was created but the role could not be assigned.");
-        }
-
+        var result = await handler.HandleAsync(
+            command,
+            cancellationToken);
+        
+        var response = new UserResponse(
+            result.Id,
+            result.Email,
+            result.DisplayName,
+            result.Role);
+        
         return TypedResults.Created(
-            $"/api/users/{user.Id}",
-            new UserResponse(
-                user.Id,
-                user.Email!,
-                user.DisplayName,
-                request.Role));
+            $"/api/users/{response.Id}",
+            response);   
     }
 }
