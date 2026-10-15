@@ -1,7 +1,6 @@
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using ProcHub.Application.Abstractions;
 using ProcHub.Application.Exceptions;
 using ProcHub.Application.Features.Users;
@@ -92,4 +91,36 @@ public sealed class UserIdentityService(
             user.DisplayName,
             role);
     }
+
+    public async Task<UserResult> GetByIdAsync(
+        int id,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await userManager
+            .FindByIdAsync(id.ToString());
+        
+        if (user is null)
+        {
+            throw new NotFoundException(
+                $"User with id '{id}' not found.");
+        }
+
+        var roles = await userManager
+            .GetRolesAsync(user);
+        
+        if (roles.Count != 1)
+        {
+            throw new InvalidStateException(
+                $"A user should have 1 role.");
+        }
+
+        var role = roles[0];
+
+        return new UserResult(
+            user.Id,
+            user.Email ?? string.Empty,
+            user.DisplayName,
+            role);
+    }
+
 }

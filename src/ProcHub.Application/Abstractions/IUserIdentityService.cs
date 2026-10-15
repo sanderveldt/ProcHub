@@ -14,4 +14,8 @@ public interface IUserIdentityService
         string role,
         string? displayName,
         CancellationToken cancellationToken = default);
+
+    Task<UserResult> GetByIdAsync(
+        int id,
+        CancellationToken cancellationToken = default);
 }
