@@ -15,6 +15,8 @@ using ProcHub.Application.Features.Suppliers.ChangeStatus;
 using ProcHub.Application.Features.Suppliers.Create;
 using ProcHub.Application.Features.Suppliers.Get;
 using ProcHub.Application.Features.Suppliers.Update;
+using ProcHub.Application.Features.Users.Create;
+using ProcHub.Application.Features.Users.Get;
 
 namespace ProcHub.Application;
 
@@ -48,6 +50,9 @@ public static class DependencyInjection
         services.AddScoped<UpdatePurchaseOrderReferencesHandler>();
         services.AddScoped<UpdatePurchaseOrderPaymentHandler>();
         services.AddScoped<DeletePurchaseOrderHandler>();
+
+        services.AddScoped<CreateUserHandler>();
+        services.AddScoped<GetUserHandler>();
 
         services.AddValidatorsFromAssembly(
             typeof(DependencyInjection).Assembly);

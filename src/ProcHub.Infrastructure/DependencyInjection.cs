@@ -37,6 +37,10 @@ public static class DependencyInjection
             .AddRoles<IdentityRole<int>>()
             .AddEntityFrameworkStores<ProcHubContext>();
 
+        services.AddScoped<
+            IUserIdentityService,
+            UserIdentityService>();
+            
         services.AddScoped<IdentitySeeder>();
         
         return services;
