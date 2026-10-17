@@ -43,12 +43,10 @@ public sealed class ProcHubApiFactory
         });
     }
 
-
     async Task IAsyncLifetime.DisposeAsync()
     {
         await base.DisposeAsync();
         await _postgres.DisposeAsync();
     }
-
 }
 

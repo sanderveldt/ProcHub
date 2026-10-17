@@ -40,7 +40,7 @@ public static class DependencyInjection
         services.AddScoped<
             IUserIdentityService,
             UserIdentityService>();
-            
+
         services.AddScoped<IdentitySeeder>();
         
         return services;
