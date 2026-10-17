@@ -18,4 +18,11 @@ public interface IUserIdentityService
     Task<UserResult> GetByIdAsync(
         int id,
         CancellationToken cancellationToken = default);
+
+    Task<UserResult> EditAsync(
+        int id,
+        string userName,
+        string role,
+        string? displayName,
+        CancellationToken cancellationToken = default);
 }
