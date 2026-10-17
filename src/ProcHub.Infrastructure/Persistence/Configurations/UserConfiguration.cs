@@ -12,7 +12,7 @@ public sealed class UserConfiguration
     public void Configure(
         EntityTypeBuilder<ApplicationUser> builder)
     {
-         builder.Property(u => u.UserName)
+        builder.Property(u => u.UserName)
             .HasMaxLength(UserConstants.UserNameMaxLength);
 
         builder.Property(u => u.NormalizedUserName)

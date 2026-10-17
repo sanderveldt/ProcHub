@@ -34,6 +34,7 @@ public static class CreateUserEndpoint
         
         var response = new UserResponse(
             result.Id,
+            result.UserName,
             result.Email,
             result.DisplayName,
             result.Role);

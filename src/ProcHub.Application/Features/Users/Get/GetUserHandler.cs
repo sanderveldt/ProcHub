@@ -1,7 +1,4 @@
-using System.Runtime.CompilerServices;
-using Microsoft.EntityFrameworkCore;
 using ProcHub.Application.Abstractions;
-using ProcHub.Application.Exceptions;
 
 namespace ProcHub.Application.Features.Users.Get;
 

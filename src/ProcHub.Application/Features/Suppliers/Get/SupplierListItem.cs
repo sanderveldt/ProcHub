@@ -5,3 +5,4 @@ public sealed record SupplierListItem(
     string Name,
     string? FullName,
     string DefaultPaymentTermDescription);
+    
