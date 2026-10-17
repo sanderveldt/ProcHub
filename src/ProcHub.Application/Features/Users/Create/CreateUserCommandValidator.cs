@@ -1,5 +1,6 @@
 using FluentValidation;
 using ProcHub.Application.Authorization;
+using ProcHub.Application.Common.Constants;
 
 namespace ProcHub.Application.Features.Users.Create;
 
@@ -8,15 +9,15 @@ public sealed class CreateUserCommandValidator
 {
     public CreateUserCommandValidator()
     {
-        int emailLength = 75;
-
         RuleFor(u => u.Email)
             .NotEmpty()
             .WithMessage("User email is required.")
             .EmailAddress()
             .WithMessage("Invalid email address.")
-            .MaximumLength(emailLength)
-            .WithMessage($"User email cannot exceed {emailLength} characters.");
+            .MaximumLength(UserConstants.EmailMaxLength)
+            .WithMessage(
+                "User email cannot exceed " + 
+                $"{UserConstants.EmailMaxLength} characters.");
 
         RuleFor(u => u.Password)
             .NotEmpty()
