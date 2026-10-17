@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using ProcHub.Application.Features.Users.Get;
 using ProcHub.Contracts.Users.Responses;
 using ProcHub.Infrastructure.Identity;
 
@@ -18,34 +19,20 @@ public static class ListUsersEndpoint
     }
 
     private static async Task<Ok<List<UserResponse>>> HandleAsync(
-        UserManager<ApplicationUser> userManager,
+        ListUsersHandler handler,
         CancellationToken cancellationToken)
     {
-        var users = await userManager.Users
-            .OrderBy(u => u.DisplayName)
-            .ThenBy(u => u.Email)
-            .ToListAsync(cancellationToken);
+        var result = await handler
+            .HandleAsync(cancellationToken);
         
-        var response = new List<UserResponse>();
-
-        foreach (var user in users)
-        {
-            var roles = await userManager.GetRolesAsync(user);
-
-            if (roles.Count != 1)
-            {
-                throw new InvalidOperationException(
-                    $"User '{user.Id}' must have exactly one role, but has {roles.Count}.");
-            }
-
-            var role = roles[0];
-
-            response.Add(new UserResponse(
-                user.Id,
-                user.Email ?? string.Empty,
-                user.DisplayName,
-                role));
-        }
+        var response = result
+            .Select(u => new UserResponse(
+                u.Id,
+                u.UserName,
+                u.Email,
+                u.DisplayName,
+                u.Role))
+            .ToList();
         
         return TypedResults.Ok(response);
     }

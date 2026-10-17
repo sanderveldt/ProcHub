@@ -1,6 +1,7 @@
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using ProcHub.Application.Abstractions;
 using ProcHub.Application.Authorization;
 using ProcHub.Application.Exceptions;
@@ -130,6 +131,41 @@ public sealed class UserIdentityService(
             user.Email!,
             user.DisplayName,
             role);
+    }
+
+    public async Task<List<UserResult>> ListAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var users = await userManager.Users
+            .AsNoTracking()
+            .OrderBy(u => u.UserName)
+            .ToListAsync(cancellationToken);
+        
+        var response = new List<UserResult>();
+
+        foreach (var user in users)
+        {
+            // N+1 query problem, should be fine < 50 users
+            var roles = await userManager
+                .GetRolesAsync(user);
+
+            if (roles.Count != 1)
+            {
+                throw new InvalidStateException(
+                    $"User {user.Id} must have 1 role.");
+            }
+
+            var role = roles[0];
+
+            response.Add(new UserResult(
+                user.Id,
+                user.UserName!,
+                user.Email!,
+                user.DisplayName,
+                role));
+        }
+
+        return response;
     }
 
     public async Task<UserResult> EditAsync(

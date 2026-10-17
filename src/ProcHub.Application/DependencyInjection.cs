@@ -54,6 +54,7 @@ public static class DependencyInjection
 
         services.AddScoped<CreateUserHandler>();
         services.AddScoped<GetUserHandler>();
+        services.AddScoped<ListUsersHandler>();
         services.AddScoped<UpdateUserHandler>();
 
         services.AddValidatorsFromAssembly(

@@ -18,6 +18,9 @@ public interface IUserIdentityService
     Task<UserResult> GetByIdAsync(
         int id,
         CancellationToken cancellationToken = default);
+    
+    Task<List<UserResult>> ListAsync(
+        CancellationToken cancellationToken = default);
 
     Task<UserResult> EditAsync(
         int id,
