@@ -190,6 +190,25 @@ public sealed class UserIdentityService(
                 $"User with id '{id}' not found.");
         }
 
+        bool isAdmin = await userManager
+            .IsInRoleAsync(
+                user,
+                AppRoles.Admin);
+
+        if (isAdmin)
+        {
+            var admins = await userManager
+                .GetUsersInRoleAsync("Admin");
+            
+            bool isOnlyAdmin = admins.Count == 1;
+
+            if (isOnlyAdmin && role != AppRoles.Admin)
+            {
+                throw new InvalidStateException(
+                    $"You cant change the role of the only admin.");
+            }
+        }    
+
         await using var transaction = 
             await dbContext.Database
                 .BeginTransactionAsync(cancellationToken);
@@ -238,6 +257,42 @@ public sealed class UserIdentityService(
         await transaction.CommitAsync(cancellationToken);
 
         return await GetByIdAsync(id, cancellationToken);
+    }
+
+    public async Task DeleteAsync(
+        int id,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await userManager
+            .FindByIdAsync(id.ToString());
+        
+        if (user is null)
+        {
+            throw new NotFoundException(
+                $"User with id '{id}' not found.");
+        }
+
+        bool isAdmin = await userManager
+            .IsInRoleAsync(
+                user,
+                AppRoles.Admin);
+        
+        if (isAdmin)
+        {
+            var admins = await userManager
+                .GetUsersInRoleAsync("Admin");
+            
+            bool isOnlyAdmin = admins.Count == 1;
+
+            if (isOnlyAdmin)
+            {
+                throw new InvalidStateException(
+                    "You can't delete the only admin.");
+            }
+        }
+
+        EnsureSucceeded(await userManager
+            .DeleteAsync(user));
     }
 
     private static void EnsureSucceeded(IdentityResult result)

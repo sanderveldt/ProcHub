@@ -28,4 +28,8 @@ public interface IUserIdentityService
         string role,
         string? displayName,
         CancellationToken cancellationToken = default);
+
+    Task DeleteAsync(
+        int id,
+        CancellationToken cancellationToken = default);
 }
