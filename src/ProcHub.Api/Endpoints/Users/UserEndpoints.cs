@@ -11,7 +11,8 @@ public static class UserEndpoints
         var group = endpoints
             .MapGroup("/api/users")
             .WithTags("Users")
-            .RequireAuthorization(AppPolicies.AdminOnly);
+            .RequireAuthorization(
+                AppPolicies.SuperUserOrAdmin);
         
         group.MapCreateUserEndpoint();
         group.MapUpdateUserEndpoint();

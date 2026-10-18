@@ -2,6 +2,7 @@ using ProcHub.Contracts.Users.Requests;
 using ProcHub.Contracts.Users.Responses;
 using Microsoft.AspNetCore.Http.HttpResults;
 using ProcHub.Application.Features.Users.Create;
+using ProcHub.Application.Authorization;
 
 namespace ProcHub.Api.Endpoints.Users;
 
@@ -10,7 +11,9 @@ public static class CreateUserEndpoint
     public static RouteGroupBuilder MapCreateUserEndpoint(
         this RouteGroupBuilder group)
     {
-        group.MapPost("/", HandleAsync);
+        group.MapPost("/", HandleAsync)
+             .RequireAuthorization(
+                AppPolicies.AdminOnly);
 
         return group;
     }
