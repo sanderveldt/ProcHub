@@ -13,6 +13,7 @@ using ProcHub.Application.Features.ShippingTerms.Delete;
 using ProcHub.Application.Features.ShippingTerms.Get;
 using ProcHub.Application.Features.Suppliers.ChangeStatus;
 using ProcHub.Application.Features.Suppliers.Create;
+using ProcHub.Application.Features.Suppliers.Delete;
 using ProcHub.Application.Features.Suppliers.Get;
 using ProcHub.Application.Features.Suppliers.Update;
 using ProcHub.Application.Features.Users.Create;
@@ -43,6 +44,7 @@ public static class DependencyInjection
         services.AddScoped<ListSuppliersHandler>();
         services.AddScoped<UpdateSupplierHandler>();
         services.AddScoped<ChangeSupplierStatusHandler>();
+        services.AddScoped<DeleteSupplierHandler>();
 
         services.AddScoped<CreatePurchaseOrderHandler>();
         services.AddScoped<GetPurchaseOrderHandler>();

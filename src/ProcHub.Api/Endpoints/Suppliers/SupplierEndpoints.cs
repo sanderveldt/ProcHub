@@ -14,6 +14,7 @@ public static class SupplierEndpoints
         group.MapListSuppliersEndpoint();
         group.MapCreateSupplierEndpoint();
         group.MapUpdateSupplierEndpoint();
+        group.MapDeleteSupplierEndpoint();
 
         // SuperUser or Admin roles
         group.MapChangeSupplierStatusEndpoint();
