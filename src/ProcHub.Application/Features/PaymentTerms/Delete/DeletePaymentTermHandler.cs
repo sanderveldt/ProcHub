@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using ProcHub.Application.Abstractions;
 using ProcHub.Application.Exceptions;
@@ -11,6 +12,12 @@ public sealed class DeletePaymentTermHandler(
         int id,
         CancellationToken cancellationToken = default)
     {
+        if (id <= 0)
+        {
+            throw new ValidationException(
+                "PaymentTerm id cannot be 0 or below.");
+        }
+
         var paymentTerm = await dbContext.PaymentTerms
             .FirstOrDefaultAsync(
                 pt => pt.Id == id,
@@ -18,7 +25,7 @@ public sealed class DeletePaymentTermHandler(
             ?? throw new NotFoundException(
                 $"PaymentTerm with id {id} not found.");
 
-        var isInUse = await dbContext.Suppliers
+        bool isInUse = await dbContext.Suppliers
             .AnyAsync(supplier =>
                 supplier.DefaultPaymentTermId == id ||
                 supplier.SecondaryPaymentTermId == id,
@@ -27,7 +34,8 @@ public sealed class DeletePaymentTermHandler(
         if (isInUse)
         {
             throw new ResourceInUseException(
-                $"Payment Term '{paymentTerm.Description}' is still assigned to a Supplier.");
+                $"Payment Term '{paymentTerm.Description}' " +
+                "is still assigned to a Supplier.");
         }
 
         dbContext.PaymentTerms.Remove(paymentTerm);

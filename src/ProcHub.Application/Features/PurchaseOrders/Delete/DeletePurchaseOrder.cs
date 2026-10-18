@@ -1,4 +1,4 @@
-using System.Security.Cryptography;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using ProcHub.Application.Abstractions;
 using ProcHub.Application.Exceptions;
@@ -9,14 +9,19 @@ public sealed class DeletePurchaseOrderHandler(IProcHubDbContext dbContext)
 {
     public async Task HandleAsync(
         string code,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
-        // No trim on purpose
+        if(string.IsNullOrWhiteSpace(code))
+        {
+            throw new ValidationException(
+                "PurchaseOrder code cannot empty.");
+        }
 
         var purchaseOrder = await dbContext.PurchaseOrders
             .FirstOrDefaultAsync(
                 po => po.Code == code,
                 cancellationToken)
+
             ?? throw new NotFoundException(
                 $"PurchaseOrder with code {code} not found.");
 

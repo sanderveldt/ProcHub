@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using ProcHub.Application.Abstractions;
 using ProcHub.Application.Exceptions;
@@ -10,6 +11,12 @@ public sealed class DeleteShippingTermHandler(IProcHubDbContext dbContext)
         int id,
         CancellationToken cancellationToken)
     {
+        if (id <= 0)
+        {
+            throw new ValidationException(
+                "ShippingTerm id cannot be 0 or below");
+        }
+
         var shippingTerm = await dbContext.ShippingTerms
             .FirstOrDefaultAsync(
                 st => st.Id == id,
