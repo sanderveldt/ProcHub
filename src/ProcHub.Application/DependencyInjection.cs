@@ -16,6 +16,7 @@ using ProcHub.Application.Features.Suppliers.Create;
 using ProcHub.Application.Features.Suppliers.Get;
 using ProcHub.Application.Features.Suppliers.Update;
 using ProcHub.Application.Features.Users.Create;
+using ProcHub.Application.Features.Users.Delete;
 using ProcHub.Application.Features.Users.Get;
 using ProcHub.Application.Features.Users.Update;
 
@@ -56,6 +57,7 @@ public static class DependencyInjection
         services.AddScoped<GetUserHandler>();
         services.AddScoped<ListUsersHandler>();
         services.AddScoped<UpdateUserHandler>();
+        services.AddScoped<DeleteUserHandler>();
 
         services.AddValidatorsFromAssembly(
             typeof(DependencyInjection).Assembly);

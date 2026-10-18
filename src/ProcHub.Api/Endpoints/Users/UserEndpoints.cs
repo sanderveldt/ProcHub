@@ -1,4 +1,3 @@
-using ProcHub.Api.Endpoints.Users;
 using ProcHub.Application.Authorization;
 
 namespace ProcHub.Api.Endpoints.Users;
@@ -18,6 +17,7 @@ public static class UserEndpoints
         group.MapUpdateUserEndpoint();
         group.MapGetUserEndpoint();
         group.MapListUsersEndpoint();
+        group.MapDeleteUserEndpoint();
 
         return endpoints;
     }
