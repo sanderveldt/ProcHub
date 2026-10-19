@@ -35,6 +35,8 @@ public class Supplier
     public int? SecondaryLeadTimeDays { get; private set; }
     public int? SampleLeadTimeDays { get; private set; }
 
+    public int? ResponsibleBuyerId { get; private set; }
+
     public SupplierStatus Status { get; private set; } = SupplierStatus.Active;
 
     private Supplier()
@@ -71,7 +73,7 @@ public class Supplier
 
     public void SetName(string name)
     {
-        if(string.IsNullOrWhiteSpace(name))
+        if (string.IsNullOrWhiteSpace(name))
         {
             throw new DomainException(
                 "Supplier name is required.");
@@ -198,6 +200,11 @@ public class Supplier
         }
 
         SampleLeadTimeDays = sampleLeadTimeDays;
+    }
+
+    public void SetResponsibleBuyer(int? userId)
+    {
+        ResponsibleBuyerId = userId;
     }
 
     public void Activate()

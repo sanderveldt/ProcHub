@@ -54,6 +54,9 @@ public static class GetSupplierEndpoint
             result.SecondaryLeadTimeDays,
             result.SampleLeadTimeDays,
 
+            result.ResponsibleBuyerId,
+            result.BuyerName,
+
             result.Status.ToString(),
             result.CreationDate);
         

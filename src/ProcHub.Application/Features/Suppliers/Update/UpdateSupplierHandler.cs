@@ -2,11 +2,13 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using ProcHub.Application.Abstractions;
 using ProcHub.Application.Exceptions;
+using ProcHub.Application.Features.Users;
 
 namespace ProcHub.Application.Features.Suppliers.Update;
 
 public sealed class UpdateSupplierHandler(
     IProcHubDbContext dbContext,
+    IUserIdentityService identityService,
     IValidator<UpdateSupplierCommand> validator)
 {
     public async Task<SupplierResult> HandleAsync(
@@ -104,6 +106,17 @@ public sealed class UpdateSupplierHandler(
         supplier.SetSecondaryLeadTimeDays(command.SecondaryLeadTimeDays);
         supplier.SetSampleLeadTimeDays(command.SampleLeadTimeDays);
 
+        UserResult? buyer = null;
+
+        if (command.ResponsibleBuyerId is int userId)
+        {
+            buyer = await identityService.GetByIdAsync(
+                userId,
+                cancellationToken);
+        }
+
+        supplier.SetResponsibleBuyer(command.ResponsibleBuyerId);
+
         await dbContext.SaveChangesAsync(cancellationToken);
 
         return new SupplierResult(
@@ -130,6 +143,9 @@ public sealed class UpdateSupplierHandler(
             supplier.MainLeadTimeDays,
             supplier.SecondaryLeadTimeDays,
             supplier.SampleLeadTimeDays,
+
+            supplier.ResponsibleBuyerId,
+            buyer?.DisplayName,
 
             supplier.Status,
             supplier.CreationDate);

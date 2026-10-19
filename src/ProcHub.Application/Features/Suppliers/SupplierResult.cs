@@ -26,5 +26,8 @@ public sealed record SupplierResult(
     int? SecondaryLeadTimeDays,
     int? SampleLeadTimeDays,
 
+    int? ResponsibleBuyerId,
+    string? BuyerName,
+
     SupplierStatus Status,
     DateOnly CreationDate);

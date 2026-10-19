@@ -1,11 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using ProcHub.Application.Exceptions;
 using ProcHub.Application.Abstractions;
+using ProcHub.Application.Features.Users;
 using System.Data;
 
 namespace ProcHub.Application.Features.Suppliers.Get;
 
-public sealed class GetSupplierHandler(IProcHubDbContext dbContext)
+public sealed class GetSupplierHandler(
+    IProcHubDbContext dbContext,
+    IUserIdentityService identityService)
 {
     public async Task<SupplierResult> HandleAsync(
         GetSupplierQuery query,
@@ -14,6 +17,8 @@ public sealed class GetSupplierHandler(IProcHubDbContext dbContext)
         ArgumentException.ThrowIfNullOrWhiteSpace(query.Code);
 
         var code = query.Code.Trim();
+
+        string? buyerName = null;
 
         var supplier = await dbContext.Suppliers
             .AsNoTracking()
@@ -49,6 +54,9 @@ public sealed class GetSupplierHandler(IProcHubDbContext dbContext)
                 s.MainLeadTimeDays,
                 s.SecondaryLeadTimeDays,
                 s.SampleLeadTimeDays,
+
+                s.ResponsibleBuyerId,
+                buyerName,
                 
                 s.Status,
                 s.CreationDate))
@@ -56,6 +64,18 @@ public sealed class GetSupplierHandler(IProcHubDbContext dbContext)
             .FirstOrDefaultAsync(cancellationToken)
             ?? throw new NotFoundException(
                 $"Supplier with code {code} not found");
+
+        if (supplier.ResponsibleBuyerId is int userId)
+        {
+            var buyer = await identityService.GetByIdAsync(
+                userId,
+                cancellationToken);
+            
+            return supplier with
+            {
+                BuyerName = buyer.DisplayName
+            };
+        }
             
         return supplier;
     }

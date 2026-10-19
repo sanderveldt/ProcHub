@@ -16,4 +16,5 @@ public sealed record UpdateSupplierRequest(
     public int MainLeadTimeDays { get; init; } = 0;
     public int? SecondaryLeadTimeDays { get; init; }
     public int? SampleLeadTimeDays { get; init; }
+    public int? ResponsibleBuyerId { get; init; }
 }

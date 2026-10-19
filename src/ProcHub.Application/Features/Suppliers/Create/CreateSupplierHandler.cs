@@ -3,11 +3,13 @@ using FluentValidation;
 using ProcHub.Application.Abstractions;
 using ProcHub.Application.Exceptions;
 using ProcHub.Domain.Suppliers;
+using ProcHub.Application.Features.Users;
 
 namespace ProcHub.Application.Features.Suppliers.Create;
 
 public sealed class CreateSupplierHandler(
     IProcHubDbContext dbContext,
+    IUserIdentityService identityService,
     IValidator<CreateSupplierCommand> validator)
 {
     public async Task<SupplierResult> HandleAsync(
@@ -97,6 +99,20 @@ public sealed class CreateSupplierHandler(
         supplier.SetSecondaryLeadTimeDays(command.SecondaryLeadTimeDays);
         supplier.SetSampleLeadTimeDays(command.SampleLeadTimeDays);
 
+        string? buyerName = null;
+
+        if (command.ResponsibleBuyerId is int userId)
+        {
+            var buyer = await identityService
+                .GetByIdAsync(
+                    userId,
+                    cancellationToken);
+
+            buyerName = buyer.DisplayName;
+        }
+
+        supplier.SetResponsibleBuyer(command.ResponsibleBuyerId);
+
         dbContext.Suppliers.Add(supplier);
 
         await dbContext.SaveChangesAsync(cancellationToken);
@@ -120,6 +136,8 @@ public sealed class CreateSupplierHandler(
             supplier.MainLeadTimeDays,
             supplier.SecondaryLeadTimeDays,
             supplier.SampleLeadTimeDays,
+            supplier.ResponsibleBuyerId,
+            buyerName,
             supplier.Status,
             supplier.CreationDate);
     }

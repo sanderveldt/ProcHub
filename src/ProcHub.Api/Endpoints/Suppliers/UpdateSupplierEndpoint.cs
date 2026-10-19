@@ -38,7 +38,8 @@ public static class UpdateSupplierEndpoint
             ProductionTimeDays = request.ProductionTimeDays,
             MainLeadTimeDays = request.MainLeadTimeDays,
             SecondaryLeadTimeDays = request.SecondaryLeadTimeDays,
-            SampleLeadTimeDays = request.SampleLeadTimeDays
+            SampleLeadTimeDays = request.SampleLeadTimeDays,
+            ResponsibleBuyerId = request.ResponsibleBuyerId
         };
 
         var result = await handler.HandleAsync(
@@ -72,6 +73,9 @@ public static class UpdateSupplierEndpoint
             result.MainLeadTimeDays,
             result.SecondaryLeadTimeDays,
             result.SampleLeadTimeDays,
+
+            result.ResponsibleBuyerId,
+            result.BuyerName,
 
             result.Status.ToString(),
             result.CreationDate);

@@ -38,6 +38,10 @@ public sealed class GlobalExceptionHandler(
                 (StatusCodes.Status400BadRequest, 
                     "Business rule violation."),
             
+            ArgumentException =>
+                (StatusCodes.Status400BadRequest,
+                    "Invalid input."),
+            
             _ =>
                 (StatusCodes.Status500InternalServerError,
                     "An unexpected error occured.")

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using ProcHub.Domain.Suppliers;
+using ProcHub.Infrastructure.Identity;
 
 namespace ProcHub.Infrastructure.Persistence.Configurations;
 
@@ -57,6 +58,11 @@ public sealed class SupplierConfiguration
         builder.HasOne(x => x.SecondaryPaymentTerm)
             .WithMany()
             .HasForeignKey(x => x.SecondaryPaymentTermId)
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        builder.HasOne<ApplicationUser>()
+            .WithMany()
+            .HasForeignKey(s => s.ResponsibleBuyerId)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }
