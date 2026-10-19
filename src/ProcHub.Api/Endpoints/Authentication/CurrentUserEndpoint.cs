@@ -1,7 +1,7 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Identity;
+using ProcHub.Application.Abstractions;
 using ProcHub.Contracts.Authentication.Responses;
-using ProcHub.Infrastructure.Identity;
 
 namespace ProcHub.Api.Endpoints.Authentication;
 
@@ -21,28 +21,28 @@ public static class CurrentUserEndpoint
     Results<Ok<CurrentUserResponse>, 
     UnauthorizedHttpResult>> HandleAsync(
         HttpContext httpContext,
-        UserManager<ApplicationUser> userManager)
+        IUserIdentityService identityService,
+        CancellationToken cancellationToken = default)
     {
-        var user = await userManager.GetUserAsync(httpContext.User);
+        var userIdClaim = httpContext.User
+            .FindFirstValue(
+                ClaimTypes.NameIdentifier);
 
-        if (user is null)
+        if (!int.TryParse(userIdClaim, out int userId))
         {
             return TypedResults.Unauthorized();
         }
 
-        var roles = await userManager.GetRolesAsync(user);
+        var user = await identityService
+            .GetByIdAsync(
+                userId,
+                cancellationToken);
 
-        var role = roles.FirstOrDefault();
-
-        if (role is null)
-        {
-            return TypedResults.Unauthorized();
-        }
-
-        return TypedResults.Ok(new CurrentUserResponse(
-            user.Id,
-            user.Email ?? string.Empty,
-            user.DisplayName,
-            role));
+        return TypedResults.Ok(
+            new CurrentUserResponse(
+                user.Id,
+                user.Email,
+                user.DisplayName,
+                user.Role));
     }
 }

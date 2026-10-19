@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Identity;
-using ProcHub.Infrastructure.Identity;
 using ProcHub.Contracts.Users.Responses;
 using ProcHub.Application.Features.Users.Get;
 

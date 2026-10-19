@@ -1,9 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using ProcHub.Application.Features.Users.Get;
 using ProcHub.Contracts.Users.Responses;
-using ProcHub.Infrastructure.Identity;
 
 namespace ProcHub.Api.Endpoints.Users;
 

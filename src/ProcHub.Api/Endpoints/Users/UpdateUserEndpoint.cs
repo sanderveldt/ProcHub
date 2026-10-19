@@ -1,6 +1,3 @@
-using Microsoft.AspNetCore.Identity;
-using ProcHub.Application.Authorization;
-using ProcHub.Infrastructure.Identity;
 using ProcHub.Contracts.Users.Requests;
 using ProcHub.Contracts.Users.Responses;
 using Microsoft.AspNetCore.Http.HttpResults;
