@@ -50,6 +50,6 @@ public class ShippingTerm
                 $"ShippingTerm description cannot exceed {ShippingTermConstants.DescriptionMaxLength} characters.");
         }
 
-        Description = description;
+        Description = description.Trim();
     }
 }
