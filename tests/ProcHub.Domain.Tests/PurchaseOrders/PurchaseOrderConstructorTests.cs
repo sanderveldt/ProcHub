@@ -4,11 +4,10 @@ using ProcHub.Domain.Suppliers;
 using ProcHub.Domain.PaymentTerms;
 using ProcHub.Domain.ShippingTerms;
 using ProcHub.Domain.Exceptions;
-using Microsoft.VisualBasic;
 
 namespace ProcHub.Domain.Tests.PurchaseOrders;
 
-public class PurchaseOrderTests
+public class PurchaseOrderConstructorTests
 {
     private static PurchaseOrder CreatePurchaseOrder()
     {
@@ -27,21 +26,6 @@ public class PurchaseOrderTests
             CreateShippingTerm());
     }
 
-    private static Supplier CreateCompleteSupplier()
-    {
-        var supplier = new Supplier(
-            "3200",
-            "CompleteSupplier",
-            CreatePaymentTerm(),
-            CreateShippingTerm());
-
-        supplier.SetMainLeadTimeDays(50);
-        supplier.SetSecondaryLeadTimeDays(32);
-        supplier.SetSampleLeadTimeDays(25);
-
-        return supplier;
-    }
-
     private static PaymentTerm CreatePaymentTerm()
     {
         return new PaymentTerm(
@@ -49,7 +33,7 @@ public class PurchaseOrderTests
             0.32m,
             PaymentTimings.After,
             PaymentDateReference.OrderDate,
-            60);
+            32);
     }
 
     private static ShippingTerm CreateShippingTerm()
@@ -93,6 +77,57 @@ public class PurchaseOrderTests
         Assert.False(order.OrderPaid);
         Assert.Null(order.DepositPaidDate);
         Assert.Null(order.BalancePaidDate);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("  ")]
+    [InlineData(null)]
+    public void Constructor_CodeIsNullOrWhiteSpace_ThrowDomainException(
+        string? code)
+    {
+        var supplier = CreateSupplier();
+
+        Action act = () => new PurchaseOrder(
+            code!,
+            PurchaseOrderType.Regular,
+            supplier);
+        
+        Assert.Throws<DomainException>(act);
+    }
+
+    [Fact]
+    public void Constructor_WithCodeAtMaxLength_SetsCode()
+    {
+        var supplier = CreateSupplier();
+        var code = new string(
+            'x',
+            PurchaseOrderConstants.CodeMaxLength);
+        
+        var purchaseOrder = new PurchaseOrder(
+            code,
+            PurchaseOrderType.Regular,
+            supplier);
+
+        Assert.Equal(
+            code,
+            purchaseOrder.Code);
+    }
+
+    [Fact]
+    public void Constructor_WithCodeOverMaxLength_ThrowDomainException()
+    {
+        var supplier = CreateSupplier();
+        var code = new string(
+            'x',
+            PurchaseOrderConstants.CodeMaxLength + 1);
+        
+        Action act = () => new PurchaseOrder(
+            code,
+            PurchaseOrderType.Regular,
+            supplier);
+        
+        Assert.Throws<DomainException>(act);
     }
 
     [Fact]
@@ -156,7 +191,58 @@ public class PurchaseOrderTests
             order.ExpectedDeliveryDate);
     }
 
+    [Fact]
+    public void Constructor_WithNullSupplier_ThrowDomainException()
+    {
+        Action act = () => new PurchaseOrder(
+            "0032",
+            PurchaseOrderType.Regular,
+            null!);
+        
+        Assert.Throws<DomainException>(act);
+    }
 
+    [Fact]
+    public void Constructor_WithInvalidOrderType_ThrowDomainException()
+    {
+        var supplier = CreateSupplier();
+        var invalidOrderType = (PurchaseOrderType)32;
 
+        Action act = () => new PurchaseOrder(
+            "0032",
+            invalidOrderType,
+            supplier);
+        
+        Assert.Throws<DomainException>(act);
+    }
 
+    [Fact]
+    public void Constructor_WithOrderDateReference_CalculateBalanceDueDate()
+    {
+        int balanceDueDays = 60;
+
+        var paymentTerm = new PaymentTerm(
+            "TestTerm",
+            0.32m,
+            PaymentTimings.After,
+            PaymentDateReference.OrderDate,
+            balanceDueDays);
+        
+        var supplier = new Supplier(
+            "0032",
+            "TestSupp",
+            paymentTerm,
+            CreateShippingTerm());
+
+        
+        var order = new PurchaseOrder(
+            "3232",
+            PurchaseOrderType.Regular,
+            supplier);
+        
+
+        Assert.Equal(
+            order.OrderDate.AddDays(balanceDueDays),
+            order.BalanceDueDate);
+    }
 }
