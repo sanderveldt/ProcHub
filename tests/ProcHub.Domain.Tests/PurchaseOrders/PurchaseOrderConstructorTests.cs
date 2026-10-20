@@ -9,14 +9,6 @@ namespace ProcHub.Domain.Tests.PurchaseOrders;
 
 public class PurchaseOrderConstructorTests
 {
-    private static PurchaseOrder CreatePurchaseOrder()
-    {
-        return new PurchaseOrder(
-            "003200",
-            PurchaseOrderType.Regular,
-            CreateSupplier());
-    }
-
     private static Supplier CreateSupplier()
     {
         return new Supplier(
