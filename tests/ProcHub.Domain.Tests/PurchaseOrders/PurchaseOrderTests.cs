@@ -4,17 +4,19 @@ using ProcHub.Domain.Suppliers;
 using ProcHub.Domain.PurchaseOrders;
 using ProcHub.Domain.PurchaseOrders.Enums;
 using ProcHub.Domain.Exceptions;
+using Microsoft.VisualBasic;
 
 namespace ProcHub.Domain.Tests.PurchaseOrders;
 
 public class PurchaseOrderTests
 {
-    private static PurchaseOrder CreatePurchaseOrder()
+    private static PurchaseOrder CreatePurchaseOrder(
+        Supplier? supplier = null)
     {
         return new PurchaseOrder(
             "PO-32",
             PurchaseOrderType.Regular,
-            CreateSupplier());
+            supplier ?? CreateSupplier());
     }
 
     private static Supplier CreateSupplier()
@@ -42,6 +44,13 @@ public class PurchaseOrderTests
             "TestTerm",
             "Just for Testing");
     }
+
+    private static DateOnly CreateTestDate()
+    {
+        return DateOnly
+            .FromDateTime(DateTime.Today);
+    }
+
 
     // SetOrderAmount()
 
@@ -133,6 +142,12 @@ public class PurchaseOrderTests
 
 
         Assert.True(purchaseOrder.RequiresDeposit);
+        Assert.False(purchaseOrder.DepositPaid);
+        Assert.Null(purchaseOrder.DepositPaidDate);
+
+        Assert.Equal(
+            PaymentStatus.UnPaid,
+            purchaseOrder.PaymentStatus);
 
         Assert.Equal(
             orderAmount,
@@ -172,9 +187,6 @@ public class PurchaseOrderTests
 
         purchaseOrder.SetOrderAmount(orderAmount);
 
-        
-        Assert.False(purchaseOrder.RequiresDeposit);
-
         Assert.Equal(
             orderAmount,
             purchaseOrder.OrderAmount);
@@ -186,5 +198,223 @@ public class PurchaseOrderTests
         Assert.Equal(
             expectedBalanceAmount,
             purchaseOrder.BalanceAmount);
+    }
+
+    [Fact]
+    public void SetOrderAmount_BeforeDepositPaid_RecalculatesDepositAmount()
+    {
+        decimal depositPercentage = 0.50m;
+        decimal orderAmount = 100.00m;
+        decimal newOrderAmount = 150.00m;
+        decimal expectedDepositAmount = 75.00m;
+        decimal expectedBalanceAmount = 75.00m;
+
+        var paymentTerm = CreatePaymentTerm();
+        paymentTerm.SetDepositPercentage(depositPercentage);
+
+        var supplier = new Supplier(
+            "032",
+            "TestSupp",
+            paymentTerm,
+            CreateShippingTerm());
+        
+        var purchaseOrder = new PurchaseOrder(
+            "0320",
+            PurchaseOrderType.Regular,
+            supplier);
+        purchaseOrder.SetOrderAmount(orderAmount);
+        
+
+        purchaseOrder.SetOrderAmount(newOrderAmount);
+
+
+        Assert.Equal(
+            newOrderAmount,
+            purchaseOrder.OrderAmount);
+
+        Assert.Equal(
+            expectedDepositAmount,
+            purchaseOrder.DepositAmount);
+        
+        Assert.Equal(
+            expectedBalanceAmount,
+            purchaseOrder.BalanceAmount);
+    }
+
+    [Fact]
+    public void SetOrderAmount_AfterDepositPaid_KeepOriginalDeposit()
+    {
+        decimal depositPercentage = 0.25m;
+        decimal orderAmount = 100.00m;
+        var depositPaidDate = CreateTestDate();
+        decimal newOrderAmount = 150.00m;
+        decimal expectedDepositAmount = 25.00m;
+        decimal expectedBalanceAmount = 125.00m;
+
+        var paymentTerm = CreatePaymentTerm();
+        paymentTerm.SetDepositPercentage(depositPercentage);
+
+        var supplier = CreateSupplier();
+        supplier.SetDefaultPaymentTerm(paymentTerm);
+
+        var purchaseOrder = new PurchaseOrder(
+            "32",
+            PurchaseOrderType.Regular,
+            supplier);
+
+        purchaseOrder.SetOrderAmount(orderAmount);
+        purchaseOrder.MarkDepositPaid(depositPaidDate);
+
+    
+        purchaseOrder.SetOrderAmount(newOrderAmount);
+
+
+        Assert.True(purchaseOrder.DepositPaid);
+
+        Assert.Equal(
+            PaymentStatus.DepositPaid,
+            purchaseOrder.PaymentStatus);
+
+        Assert.Equal(
+            depositPaidDate,
+            purchaseOrder.DepositPaidDate);
+        
+        Assert.Equal(
+            expectedDepositAmount,
+            purchaseOrder.DepositAmount);
+        
+        Assert.Equal(
+            expectedBalanceAmount,
+            purchaseOrder.BalanceAmount);
+    }
+
+    [Fact]
+    public void SetOrderAmount_WithFullDeposit_SetBalanceToZero()
+    {
+        decimal depositPercentage = 1.00m;
+        decimal orderAmount = 32.00m;
+        decimal expectedDepositAmount = 32.00m;
+        decimal expectedBalanceAmount = 00.00m;
+
+        var paymentTerm = CreatePaymentTerm();
+        paymentTerm.SetDepositPercentage(depositPercentage);
+
+        var supplier = CreateSupplier();
+        supplier.SetDefaultPaymentTerm(paymentTerm);
+
+        var purchaseOrder = new PurchaseOrder(
+            "32",
+            PurchaseOrderType.Regular,
+            supplier);
+
+
+        purchaseOrder.SetOrderAmount(orderAmount);
+
+
+        Assert.Equal(
+            expectedDepositAmount,
+            purchaseOrder.DepositAmount);
+
+        Assert.Equal(
+            expectedBalanceAmount,
+            purchaseOrder.BalanceAmount);
+    }
+
+    [Fact]
+    public void SetOrderAmount_WithInvalidAmount_KeepPreviousAmounts()
+    {
+        decimal depositPercentage = 0.50m;
+        decimal orderAmount = 100.00m;
+        decimal expectedDepositAmount = 50.00m;
+        decimal expectedBalanceAmount = 50.00m;
+        decimal invalidOrderAmount = -32.00m;
+
+        var paymentTerm = CreatePaymentTerm();
+        paymentTerm.SetDepositPercentage(depositPercentage);
+
+        var supplier = CreateSupplier();
+        supplier.SetDefaultPaymentTerm(paymentTerm);
+
+        var purchaseOrder = new PurchaseOrder(
+            "32",
+            PurchaseOrderType.Regular,
+            supplier);
+        purchaseOrder.SetOrderAmount(orderAmount);
+
+
+        Action act = () => purchaseOrder
+            .SetOrderAmount(invalidOrderAmount);
+
+
+        Assert.Throws<DomainException>(act);
+        Assert.Equal(
+            expectedDepositAmount,
+            purchaseOrder.DepositAmount);
+
+        Assert.Equal(
+            expectedBalanceAmount,
+            purchaseOrder.BalanceAmount);
+    }
+
+    [Fact]
+    public void MarkDepositPaid_WithoutRequiredDeposit_ThrowDomainException()
+    {
+        var testDate = CreateTestDate();
+        var purchaseOrder = CreatePurchaseOrder();
+
+        Action act = () => purchaseOrder
+            .MarkDepositPaid(testDate);
+        
+        Assert.Throws<DomainException>(act);
+    }
+
+    [Fact]
+    public void MarkDepositPaid_WithRequiredDeposit_UpdatePaymentStates()
+    {
+        var testDate = CreateTestDate();
+
+        var paymentTerm = CreatePaymentTerm();
+        paymentTerm.SetDepositPercentage(0.32m);
+
+        var supplier = CreateSupplier();
+        supplier.SetDefaultPaymentTerm(paymentTerm);
+
+        var purchaseOrder = CreatePurchaseOrder(supplier);
+        purchaseOrder.SetOrderAmount(32);
+
+
+        purchaseOrder.MarkDepositPaid(testDate);
+
+
+        Assert.True(purchaseOrder.DepositPaid);
+        Assert.Equal(
+            testDate,
+            purchaseOrder.DepositPaidDate);
+        
+        Assert.Equal(
+            PaymentStatus.DepositPaid,
+            purchaseOrder.PaymentStatus);
+    }
+
+    [Fact]
+    public void MarkDepositPaid_WhenAlreadyPaid_ThrowDomainException()
+    {
+        var testDate = CreateTestDate();
+
+        var paymentTerm = CreatePaymentTerm();
+        paymentTerm.SetDepositPercentage(0.32m);
+
+        var supplier = CreateSupplier();
+        supplier.SetDefaultPaymentTerm(paymentTerm);
+
+        var purchaseOrder = CreatePurchaseOrder(supplier);
+
+
+        purchaseOrder.MarkDepositPaid(testDate);
+        Action act = () => purchaseOrder
+            .MarkDepositPaid(testDate);
+
+
+        Assert.Throws<DomainException>(act);
     }
 }
