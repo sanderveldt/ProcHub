@@ -282,6 +282,7 @@ public class PurchaseOrder
         };
     }
 
+    // CalculateBalanceDueDate() added to dates that are in PaymentDateReference
     public void SetOrderConfirmationDate(DateOnly? confirmDate)
     {
         OrderConfirmationDate = confirmDate;

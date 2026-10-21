@@ -6,7 +6,7 @@ using ProcHub.Domain.PurchaseOrders.Enums;
 
 namespace ProcHub.Domain.Tests.Helpers;
 
-public class PurchaseOrderBuilder
+public class DomainBuilder
 {
     public static PurchaseOrder CreatePurchaseOrder(
         PurchaseOrderType? orderType = null,

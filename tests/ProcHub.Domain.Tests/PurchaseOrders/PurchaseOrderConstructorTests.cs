@@ -7,7 +7,8 @@ using ProcHub.Domain.Exceptions;
 
 namespace ProcHub.Domain.Tests.PurchaseOrders;
 
-public class PurchaseOrderConstructorTests
+public class PurchaseOrderConstructorTests()
+
 {
     private static Supplier CreateSupplier()
     {
@@ -24,7 +25,7 @@ public class PurchaseOrderConstructorTests
             "Test PaymentTerm",
             0.32m,
             PaymentTimings.After,
-            PaymentDateReference.OrderDate,
+            PaymentDateReference.InvoiceDate,
             32);
     }
 
@@ -236,5 +237,29 @@ public class PurchaseOrderConstructorTests
         Assert.Equal(
             order.OrderDate.AddDays(balanceDueDays),
             order.BalanceDueDate);
+    }
+
+    [Fact]
+    public void Constructor_WithNoDateReference_LeaveBalanceDueDateNull()
+    {
+        var paymentTerm = new PaymentTerm(
+        "Test PaymentTerm",
+        0.32m,
+        PaymentTimings.After,
+        PaymentDateReference.InvoiceDate,
+        32);
+
+        var supplier = CreateSupplier();
+        supplier.SetDefaultPaymentTerm(paymentTerm);
+
+        
+        var purchaseOrder = new PurchaseOrder(
+        "PO-0032",
+        PurchaseOrderType.Regular,
+        supplier);
+
+    
+        Assert.Null(purchaseOrder.InvoiceDate);
+        Assert.Null(purchaseOrder.BalanceDueDate);
     }
 }
