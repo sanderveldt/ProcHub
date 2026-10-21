@@ -4,7 +4,6 @@ using ProcHub.Domain.Suppliers;
 using ProcHub.Domain.PurchaseOrders;
 using ProcHub.Domain.PurchaseOrders.Enums;
 using ProcHub.Domain.Exceptions;
-using Microsoft.VisualBasic;
 
 namespace ProcHub.Domain.Tests.PurchaseOrders;
 
@@ -19,20 +18,22 @@ public class PurchaseOrderTests
             supplier ?? CreateSupplier());
     }
 
-    private static Supplier CreateSupplier()
+    private static Supplier CreateSupplier(
+        PaymentTerm? paymentTerm = null)
     {
         return new Supplier(
             "0032",
             "TestSupplier",
-            CreatePaymentTerm(),
+            paymentTerm ?? CreatePaymentTerm(),
             CreateShippingTerm());
     }
 
-    private static PaymentTerm CreatePaymentTerm()
+    private static PaymentTerm CreatePaymentTerm(
+        decimal? depositPercentage = null)
     {
         return new PaymentTerm(
             "TestTerm",
-            0.00m,
+            depositPercentage ?? 0.00m,
             PaymentTimings.After,
             PaymentDateReference.OrderDate,
             32);
@@ -416,5 +417,118 @@ public class PurchaseOrderTests
 
 
         Assert.Throws<DomainException>(act);
+    }
+
+    [Fact]
+    public void MarkDepositPaid_AfterOrderPaid_ThrowDomainException()
+    {
+        var depositTestDate = CreateTestDate();
+        var balanceTestDate = CreateTestDate().AddDays(32);
+
+        var paymentTerm = CreatePaymentTerm();
+        paymentTerm.SetDepositPercentage(0.32m);
+
+        var supplier = CreateSupplier(paymentTerm);
+
+        var purchaseOrder = CreatePurchaseOrder(supplier);
+        purchaseOrder.MarkDepositPaid(depositTestDate);
+        purchaseOrder.MarkOrderPaid(balanceTestDate);
+
+
+        Action act = () => purchaseOrder
+            .MarkDepositPaid(balanceTestDate.AddDays(32));
+
+
+        Assert.Throws<DomainException>(act);
+
+        Assert.Equal(
+            depositTestDate,
+            purchaseOrder.DepositPaidDate);
+    }
+
+    [Fact]
+    public void MarkOrderPaid_WithoutRequiredDeposit_MarkOrderPaid()
+    {
+        decimal depositPercentage = 0.00m;
+        var testDate = CreateTestDate();
+
+        var paymentTerm = CreatePaymentTerm(depositPercentage);
+        var supplier = CreateSupplier(paymentTerm);
+        var purchaseOrder = CreatePurchaseOrder(supplier);
+
+
+        purchaseOrder.MarkOrderPaid(testDate);
+
+
+        Assert.Null(purchaseOrder.DepositPaidDate);
+        Assert.False(purchaseOrder.RequiresDeposit);
+        Assert.False(purchaseOrder.DepositPaid);
+        
+        Assert.True(purchaseOrder.OrderPaid);
+        Assert.Equal(
+            testDate,
+            purchaseOrder.BalancePaidDate);
+        Assert.Equal(
+            PaymentStatus.Paid,
+            purchaseOrder.PaymentStatus);
+    }
+
+    [Fact]
+    public void MarkOrderPaid_WithUnpaidDeposit_ThrowDomainException()
+    {
+        decimal depositPercentage = 0.32m;
+        var testDate = CreateTestDate();
+
+        var paymentTerm = CreatePaymentTerm(depositPercentage);
+        var supplier = CreateSupplier(paymentTerm);
+        var purchaseOrder = CreatePurchaseOrder(supplier);
+
+
+        Action act = () => purchaseOrder
+            .MarkOrderPaid(testDate);
+
+        
+        Assert.Throws<DomainException>(act);
+
+        Assert.Null(purchaseOrder.DepositPaidDate);
+        Assert.False(purchaseOrder.DepositPaid);
+        Assert.True(purchaseOrder.RequiresDeposit);
+        Assert.Equal(
+            PaymentStatus.UnPaid,
+            purchaseOrder.PaymentStatus);
+
+        Assert.Null(purchaseOrder.BalancePaidDate);
+        Assert.False(purchaseOrder.OrderPaid);
+    }
+
+    [Fact]
+    public void MarkOrderPaid_AfterDepositPaid_MarkOrderPaid()
+    {
+        decimal depositPercentage = 0.32m;
+        var depositTestDate = CreateTestDate();
+        var balanceTestDate = CreateTestDate().AddDays(32);
+
+        var paymentTerm = CreatePaymentTerm(depositPercentage);
+        var supplier = CreateSupplier(paymentTerm);
+        var purchaseOrder = CreatePurchaseOrder(supplier);
+
+
+        purchaseOrder.MarkDepositPaid(depositTestDate);
+        purchaseOrder.MarkOrderPaid(balanceTestDate);
+
+
+        Assert.True(purchaseOrder.DepositPaid);
+        Assert.True(purchaseOrder.RequiresDeposit);
+        Assert.Equal(
+            depositTestDate,
+            purchaseOrder.DepositPaidDate);
+        
+        Assert.True(purchaseOrder.OrderPaid);
+        Assert.Equal(
+            PaymentStatus.Paid,
+            purchaseOrder.PaymentStatus);
+        Assert.Equal(
+            balanceTestDate,
+            purchaseOrder.BalancePaidDate);
     }
 }
