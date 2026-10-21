@@ -7,7 +7,7 @@ using ProcHub.Domain.Exceptions;
 
 namespace ProcHub.Domain.Tests.PurchaseOrders;
 
-public class PurchaseOrderTests
+public class PurchaseOrderPaymentTests
 {
     private static PurchaseOrder CreatePurchaseOrder(
         Supplier? supplier = null)
