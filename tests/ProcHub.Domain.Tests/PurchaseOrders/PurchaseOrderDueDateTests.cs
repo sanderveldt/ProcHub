@@ -1,11 +1,5 @@
 using ProcHub.Domain.PaymentTerms;
-using ProcHub.Domain.ShippingTerms;
-using ProcHub.Domain.Suppliers;
-using ProcHub.Domain.PurchaseOrders;
-using ProcHub.Domain.PurchaseOrders.Enums;
-using ProcHub.Domain.Exceptions;
 using ProcHub.Domain.Tests.Helpers;
-using Microsoft.VisualBasic;
 
 namespace ProcHub.Domain.Tests.PurchaseOrders;
 
