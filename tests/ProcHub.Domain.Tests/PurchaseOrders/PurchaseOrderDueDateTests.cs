@@ -75,4 +75,119 @@ public class PurchaseOrderDueDateTests()
             testDate,
             purchaseOrder.ProductionDoneDate);
     }
+
+    [Fact]
+    public void SetShippingDate_WhenDueDateReference_CalculateBalanceDueDate()
+    {
+        var testDate = DomainBuilder.CreateTestDate();
+        var paymentTerm = DomainBuilder
+            .CreatePaymentTerm(
+                paymentTiming: PaymentTimings.On,
+                dateReference: PaymentDateReference.ShippingDate);
+        var supplier = DomainBuilder
+            .CreateSupplier(paymentTerm: paymentTerm);
+        var purchaseOrder = DomainBuilder
+            .CreatePurchaseOrder(supplier: supplier);
+
+        purchaseOrder.SetShippingDate(testDate);
+
+        Assert.Equal(
+            testDate,
+            purchaseOrder.BalanceDueDate);
+        Assert.Equal(
+            testDate,
+            purchaseOrder.ShippingDate);
+    }
+
+    [Fact]
+    public void SetInvoiceDate_WhenDueDateReference_CalculateBalanceDueDate()
+    {
+        var testDate = DomainBuilder.CreateTestDate();
+        var paymentTerm = DomainBuilder
+            .CreatePaymentTerm(
+                paymentTiming: PaymentTimings.On,
+                dateReference: PaymentDateReference.InvoiceDate);
+        var supplier = DomainBuilder
+            .CreateSupplier(paymentTerm: paymentTerm);
+        var purchaseOrder = DomainBuilder
+            .CreatePurchaseOrder(supplier: supplier);
+
+        purchaseOrder.SetInvoiceDate(testDate);
+
+        Assert.Equal(
+            testDate,
+            purchaseOrder.BalanceDueDate);
+        Assert.Equal(
+            testDate,
+            purchaseOrder.InvoiceDate);
+    } 
+
+    [Fact]
+    public void SetOrderDate_WhenDueDateReference_CalculateBalanceDueDate()
+    {
+        var testDate = DomainBuilder.CreateTestDate();
+        var paymentTerm = DomainBuilder
+            .CreatePaymentTerm(
+                paymentTiming: PaymentTimings.On,
+                dateReference: PaymentDateReference.OrderDate);
+        var supplier = DomainBuilder
+            .CreateSupplier(paymentTerm: paymentTerm);
+
+        // OrderDate property is automatically set to 
+        var purchaseOrder = DomainBuilder
+            .CreatePurchaseOrder(supplier: supplier);
+
+        Assert.Equal(
+            testDate,
+            purchaseOrder.BalanceDueDate);
+        Assert.Equal(
+            testDate,
+            purchaseOrder.OrderDate);
+    } 
+
+    [Fact]
+    public void SetDeliverydate_WhenDueDateReference_CalculateBalanceDueDate()
+    {
+        var testDate = DomainBuilder.CreateTestDate();
+        var paymentTerm = DomainBuilder
+            .CreatePaymentTerm(
+                paymentTiming: PaymentTimings.On,
+                dateReference: PaymentDateReference.DeliveryDate);
+        var supplier = DomainBuilder
+            .CreateSupplier(paymentTerm: paymentTerm);
+        var purchaseOrder = DomainBuilder
+            .CreatePurchaseOrder(supplier: supplier);
+
+        purchaseOrder.SetDeliveryDate(testDate);
+
+        Assert.Equal(
+            testDate,
+            purchaseOrder.BalanceDueDate);
+        Assert.Equal(
+            testDate,
+            purchaseOrder.DeliveryDate);
+    } 
+
+    [Fact]
+    public void SetBOLdate_WhenDueDateReference_CalculateBalanceDueDate()
+    {
+        var testDate = DomainBuilder.CreateTestDate();
+        var paymentTerm = DomainBuilder
+            .CreatePaymentTerm(
+                paymentTiming: PaymentTimings.On,
+                dateReference: PaymentDateReference.BillOfLadingDate);
+        var supplier = DomainBuilder
+            .CreateSupplier(paymentTerm: paymentTerm);
+        var purchaseOrder = DomainBuilder
+            .CreatePurchaseOrder(supplier: supplier);
+
+        purchaseOrder.SetBillOfLadingDate(testDate);
+
+        Assert.Equal(
+            testDate,
+            purchaseOrder.BalanceDueDate);
+        Assert.Equal(
+            testDate,
+            purchaseOrder.BillOfLadingDate);
+    } 
 }
