@@ -388,23 +388,24 @@ public class PurchaseOrder
         ShipmentReference = shipRef;
     }
 
-    public void MarkConfirmationSent()
+    public void MarkConfirmationSent(bool isSent)
     {
-        OrderConfirmationSent = true;
+        OrderConfirmationSent = isSent;
     }
 
-    public void MarkInvoiceSent()
+    public void MarkInvoiceSent(bool isSent)
     {
-        InvoiceSent = true;
+        InvoiceSent = isSent;
+    }
+    
+
+    public void MarkInspectionDone(bool isDone)
+    {
+        OrderInspectionDone = isDone;
     }
 
-    public void MarkInspectionDone()
+    public void MarkCertificateOfOriginSaved(bool isSaved)
     {
-        OrderInspectionDone = true;
-    }
-
-    public void MarkCertificateOfOriginSaved()
-    {
-        CertificateOfOriginSaved = true;
+        CertificateOfOriginSaved = isSaved;
     }
 }
