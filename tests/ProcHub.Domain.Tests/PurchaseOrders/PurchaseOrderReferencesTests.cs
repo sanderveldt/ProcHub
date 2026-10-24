@@ -21,6 +21,19 @@ public class PurchaseOrderReferencesTests
     }
 
     [Fact]
+    public void SetConfirmationReference_WhenNull_ClearProperty()
+    {
+        var purchaseOrder = DomainBuilder
+            .CreatePurchaseOrder();
+        string testRef = "Test";
+
+        purchaseOrder.SetConfirmationReference(testRef);
+        purchaseOrder.SetConfirmationReference(null);
+
+        Assert.Null(purchaseOrder.ConfirmationReference);
+    }
+
+    [Fact]
     public void SetConfirmationReference_WhenAtMaxLength_SetReference()
     {
         var purchaseOrder = DomainBuilder
@@ -63,6 +76,19 @@ public class PurchaseOrderReferencesTests
         Assert.Equal(
             testRef,
             purchaseOrder.InvoiceReference);
+    }
+
+    [Fact]
+    public void SetInvoiceReference_WhenNull_ClearProperty()
+    {
+        var purchaseOrder = DomainBuilder
+            .CreatePurchaseOrder();
+        string testRef = "Test";
+
+        purchaseOrder.SetInvoiceReference(testRef);
+        purchaseOrder.SetInvoiceReference(null);
+
+        Assert.Null(purchaseOrder.InvoiceReference);
     }
 
     [Fact]
@@ -111,6 +137,19 @@ public class PurchaseOrderReferencesTests
     }
 
     [Fact]
+    public void SetOrderNotes_WhenNull_ClearProperty()
+    {
+        var purchaseOrder = DomainBuilder
+            .CreatePurchaseOrder();
+        string testRef = "Test";
+
+        purchaseOrder.SetOrderNotes(testRef);
+        purchaseOrder.SetOrderNotes(null);
+
+        Assert.Null(purchaseOrder.OrderNotes);
+    }
+
+    [Fact]
     public void SetOrderNotes_WhenAtMaxLength_SetOrderNotes()
     {
         var purchaseOrder = DomainBuilder
@@ -156,6 +195,19 @@ public class PurchaseOrderReferencesTests
     }
 
     [Fact]
+    public void SetShipmentSize_WhenNull_ClearProperty()
+    {
+        var purchaseOrder = DomainBuilder
+            .CreatePurchaseOrder();
+        string testRef = "Test";
+
+        purchaseOrder.SetShipmentSize(testRef);
+        purchaseOrder.SetShipmentSize(null);
+
+        Assert.Null(purchaseOrder.ShipmentSize);
+    }
+
+    [Fact]
     public void SetShipmentSize_WhenAtMaxLength_SetShipmentSize()
     {
         var purchaseOrder = DomainBuilder
@@ -198,6 +250,19 @@ public class PurchaseOrderReferencesTests
         Assert.Equal(
             testRef,
             purchaseOrder.ShipmentReference);
+    }
+
+    [Fact]
+    public void SetShipmentReference_WhenNull_ClearProperty()
+    {
+        var purchaseOrder = DomainBuilder
+            .CreatePurchaseOrder();
+        string testRef = "Test";
+
+        purchaseOrder.SetShipmentReference(testRef);
+        purchaseOrder.SetShipmentReference(null);
+
+        Assert.Null(purchaseOrder.ShipmentReference);
     }
 
     [Fact]

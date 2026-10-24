@@ -398,7 +398,6 @@ public class PurchaseOrder
         InvoiceSent = isSent;
     }
     
-
     public void MarkInspectionDone(bool isDone)
     {
         OrderInspectionDone = isDone;

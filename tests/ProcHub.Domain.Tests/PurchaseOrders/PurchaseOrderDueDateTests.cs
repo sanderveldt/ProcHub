@@ -183,5 +183,5 @@ public class PurchaseOrderDueDateTests()
         Assert.Equal(
             testDate,
             purchaseOrder.BillOfLadingDate);
-    } 
+    }
 }
