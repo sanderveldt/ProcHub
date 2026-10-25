@@ -13,6 +13,7 @@ public static class PurchaseOrderEndpoints
         group.MapCreatePurchaseOrderEndpoint();
         group.MapGetPurchaseOrderEndpoint();
         group.MapListPurchaseOrdersEndpoint();
+        group.MapListPurchaseOrdersBySupplierEndpoint();
         
         group.MapDashboardListEndpoint();
         group.MapUpdatePurchaseOrderDatesEndpoint();

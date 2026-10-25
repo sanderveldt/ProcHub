@@ -50,6 +50,28 @@ public sealed class PurchaseOrdersApiClient(
             ?? [];
     }
 
+    public async Task<List<PurchaseOrderBySupplierListResponse>> GetListBySupplier(
+        string supplierCode,
+        CancellationToken cancellationToken = default)
+    {
+        var code = supplierCode.Trim();
+
+        var client = CreateClient();
+
+        using var response = await client
+            .GetAsync(
+                $"api/purchaseorders/{code}/OrdersBySupplier",
+                cancellationToken);
+        
+        var purchaseOrder = await response
+            .Content.ReadFromJsonAsync<
+            List<PurchaseOrderBySupplierListResponse>>(
+                cancellationToken);
+        
+        return purchaseOrder
+            ?? [];
+    }
+
     public async Task<PurchaseOrderResponse> GetByCodeAsync(
         string code,
         CancellationToken cancellationToken = default)
