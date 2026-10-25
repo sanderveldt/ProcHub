@@ -132,6 +132,9 @@ namespace ProcHub.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("RoleId");
 
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
@@ -443,6 +446,9 @@ namespace ProcHub.Infrastructure.Persistence.Migrations
                     b.Property<int?>("ProductionTimeDays")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("ResponsibleBuyerId")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("SampleLeadTimeDays")
                         .HasColumnType("integer");
 
@@ -478,6 +484,8 @@ namespace ProcHub.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("Name");
 
+                    b.HasIndex("ResponsibleBuyerId");
+
                     b.HasIndex("SamplePaymentTermId");
 
                     b.HasIndex("SampleShippingTermId");
@@ -505,11 +513,12 @@ namespace ProcHub.Infrastructure.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("DisplayName")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
@@ -521,12 +530,12 @@ namespace ProcHub.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("text");
@@ -544,12 +553,13 @@ namespace ProcHub.Infrastructure.Persistence.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
+                        .IsUnique()
                         .HasDatabaseName("EmailIndex");
 
                     b.HasIndex("NormalizedUserName")
@@ -650,6 +660,11 @@ namespace ProcHub.Infrastructure.Persistence.Migrations
                         .HasForeignKey("MainShippingTermId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("ProcHub.Infrastructure.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("ResponsibleBuyerId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ProcHub.Domain.PaymentTerms.PaymentTerm", "SamplePaymentTerm")
                         .WithMany()
