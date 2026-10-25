@@ -27,7 +27,7 @@ public sealed partial class SuppliersViewModel : PageViewModel
     
 
     [ObservableProperty]
-    public partial string Code { get; private set;}
+    public partial string Code { get; private set; } = string.Empty;
 
     // add Notify CanSave commands later
     [ObservableProperty]
@@ -37,7 +37,7 @@ public sealed partial class SuppliersViewModel : PageViewModel
     public partial int DefaultPaymentTermId { get; set; }
 
     [ObservableProperty]
-    public partial string DefaultPaymentTermDescription { get; set; }
+    public partial string DefaultPaymentTermDescription { get; set; } = string.Empty;
 
     [ObservableProperty]
     public partial string? FullName { get; set; } 
@@ -46,7 +46,7 @@ public sealed partial class SuppliersViewModel : PageViewModel
     public partial int MainShippingTermId { get; set; }
 
     [ObservableProperty]
-    public partial string MainShippingTermName { get; set; }
+    public partial string MainShippingTermName { get; set; } = string.Empty;
 
     [ObservableProperty]
     public partial int? SecondaryShippingTermId { get; set; }
@@ -82,10 +82,13 @@ public sealed partial class SuppliersViewModel : PageViewModel
     public partial int? SampleLeadTimeDays { get; set; }
 
     [ObservableProperty]
-    public partial string Status { get; set; }
+    public partial string Status { get; set; } = string.Empty;
 
     [ObservableProperty]
     public partial DateOnly? CreationDate { get; private set; }
+
+    [ObservableProperty]
+    public partial string? ResponsibleBuyerName { get; private set; }
 
     [ObservableProperty]
     public partial bool IsCreating { get; private set; }

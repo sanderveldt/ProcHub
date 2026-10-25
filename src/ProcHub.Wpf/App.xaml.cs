@@ -128,6 +128,7 @@ public partial class App : Application
 
         services.AddSingleton<ShippingTermsApiClient>();
         services.AddSingleton<PaymentTermsApiClient>();
+        services.AddSingleton<SuppliersApiClient>();
         services.AddSingleton<PurchaseOrdersApiClient>();
 
         services.AddHttpClient(
