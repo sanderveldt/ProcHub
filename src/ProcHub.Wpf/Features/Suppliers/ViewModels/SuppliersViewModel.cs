@@ -3,6 +3,8 @@ using System.Security;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ProcHub.Contracts.PaymentTerms.Responses;
+using ProcHub.Contracts.ShippingTerms.Responses;
 using ProcHub.Contracts.Suppliers.Enums;
 using ProcHub.Contracts.Suppliers.Requests;
 using ProcHub.Contracts.Suppliers.Responses;
@@ -14,18 +16,32 @@ namespace ProcHub.Wpf.Features.Suppliers.ViewModels;
 
 public sealed partial class SuppliersViewModel : PageViewModel
 {
-    private readonly SuppliersApiClient _apiClient;
+    private readonly SuppliersApiClient _suppliersApiClient;
+    private readonly PurchaseOrdersApiClient _purchaseOrdersApiClient;
+    private readonly PaymentTermsApiClient _paymentTermsApiClient;
+    private readonly ShippingTermsApiClient _shippingTermsApiClient;
     public SuppliersViewModel(
-        SuppliersApiClient apiClient)
+        SuppliersApiClient suppliersApiClient,
+        PurchaseOrdersApiClient purchaseOrdersApiClient,
+        PaymentTermsApiClient paymentTermsApiClient,
+        ShippingTermsApiClient shippingTermsApiClient)
         : base("Suppliers", "Maintain suppliers.")
     {
-        _apiClient = apiClient;
+        _suppliersApiClient = suppliersApiClient;
+        _purchaseOrdersApiClient = purchaseOrdersApiClient;
+        _paymentTermsApiClient = paymentTermsApiClient;
+        _shippingTermsApiClient = shippingTermsApiClient;
     }
 
     public ObservableCollection<SupplierListItemResponse> Suppliers
         { get; } = new();
-    
 
+    public ObservableCollection<PaymentTermListItemResponse> PaymentTerms
+        { get; } = new();
+
+    public ObservableCollection<ShippingTermResponse> ShippingTerms
+        { get; } = new();
+    
     [ObservableProperty]
     public partial string Code { get; private set; } = string.Empty;
 
@@ -109,7 +125,7 @@ public sealed partial class SuppliersViewModel : PageViewModel
             return;
         }
 
-        await LoadAsync(value.Code);
+        await LoadSupplierAsync(value.Code);
 
         IsCreating = false;
         IsEditing = false; 
@@ -129,14 +145,14 @@ public sealed partial class SuppliersViewModel : PageViewModel
 
 
 
-    public async Task LoadAllAsync(
+    public async Task LoadAllSuppliersAsync(
         CancellationToken cancellationToken = default)
     {
         ClearError();
 
         try
         {
-            var suppliers = await _apiClient
+            var suppliers = await _suppliersApiClient
                 .GetAllAsync(cancellationToken);
             
             Suppliers.Clear();
@@ -156,7 +172,7 @@ public sealed partial class SuppliersViewModel : PageViewModel
         }
     }
 
-    public async Task LoadAsync(
+    public async Task LoadSupplierAsync(
         string code,
         CancellationToken cancellationToken = default)
     {
@@ -164,7 +180,7 @@ public sealed partial class SuppliersViewModel : PageViewModel
 
         try
         {
-            var supplier = await _apiClient
+            var supplier = await _suppliersApiClient
                 .GetByCodeAsync(
                     code,
                     cancellationToken);
@@ -207,6 +223,84 @@ public sealed partial class SuppliersViewModel : PageViewModel
 
             Status = supplier.Status;
             CreationDate = supplier.CreationDate;
+        }
+        catch (OperationCanceledException)
+            when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        catch (ApiException ex)
+        {
+            ShowError(ex.Message);
+        }
+    }
+
+    private async Task CreateAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var request = new 
+            CreateSupplierRequest(
+                Code,
+                Name,
+                DefaultPaymentTermId,
+                MainShippingTermId)
+        {
+            FullName = FullName,
+            SecondaryShippingTermId = SecondaryShippingTermId,
+            SampleShippingTermId = SampleShippingTermId,
+            ShippingTimeDays = ShippingTimeDays,
+            ProductionTimeDays = ProductionTimeDays,
+            SecondaryPaymentTermId = SecondaryPaymentTermId,
+            MainLeadTimeDays = MainLeadTimeDays,
+            SecondaryLeadTimeDays = SecondaryLeadTimeDays,
+            SampleLeadTimeDays = SampleLeadTimeDays
+        };
+
+        var newSupplier = await _suppliersApiClient
+            .CreateAsync(
+                request,
+                cancellationToken);
+        
+        // Add newSupplier transfer to listoverview later
+    }
+    public async Task LoadPaymentTermsAsync(
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var paymentTerms = await _paymentTermsApiClient
+                .GetAllAsync(cancellationToken);
+            
+            PaymentTerms.Clear();
+
+            foreach (var paymentTerm in paymentTerms)
+            {
+                PaymentTerms.Add(paymentTerm);
+            }
+        }
+        catch (OperationCanceledException)
+            when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        catch (ApiException ex)
+        {
+            ShowError(ex.Message);
+        }
+    }
+
+    public async Task LoadShippingTermsAsync(
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var shippingTerms = await _shippingTermsApiClient
+                .GetAllAsync(cancellationToken);
+        
+            ShippingTerms.Clear();
+
+            foreach (var shippingTerm in shippingTerms)
+            {
+                ShippingTerms.Add(shippingTerm);
+            }
         }
         catch (OperationCanceledException)
             when (cancellationToken.IsCancellationRequested)
