@@ -1,5 +1,6 @@
 using ProcHub.Contracts.Users.Requests;
 using ProcHub.Contracts.Users.Responses;
+using ProcHub.Application.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using ProcHub.Application.Features.Users.Update;
 
@@ -11,7 +12,9 @@ public static class UpdateUserEndpoint
         this RouteGroupBuilder group)
     {
         group.MapPut("/{id:int}", HandleAsync)
-             .WithName("UpdateUser");
+             .WithName("UpdateUser")
+             .RequireAuthorization(
+                AppPolicies.AdminOnly);
         
         return group;
     }
