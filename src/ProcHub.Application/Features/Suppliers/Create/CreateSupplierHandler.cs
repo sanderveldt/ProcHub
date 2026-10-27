@@ -88,9 +88,21 @@ public sealed class CreateSupplierHandler(
                     [command.SecondaryPaymentTermId.Value],
                     cancellationToken)
                 ?? throw new NotFoundException(
-                    $"PaymentTerm Id {command.SecondaryPaymentTermId.Value} not found");
+                    $"Secondary PaymentTerm Id {command.SecondaryPaymentTermId.Value} not found");
             
             supplier.SetSecondaryPaymentTerm(secondaryPaymentTerm);
+        }
+
+        if (command.SamplePaymentTermId is not null)
+        {
+            var samplePaymentTerm = await dbContext.PaymentTerms
+                .FindAsync(
+                    [command.SamplePaymentTermId.Value],
+                    cancellationToken)
+                ?? throw new NotFoundException(
+                    $"Sample PaymentTerm Id {command.SamplePaymentTermId.Value} not found.");
+            
+            supplier.SetSecondaryPaymentTerm(samplePaymentTerm);
         }
 
         supplier.SetShippingTimeDays(command.ShippingTimeDays);
@@ -131,6 +143,8 @@ public sealed class CreateSupplierHandler(
             supplier.SampleShippingTerm?.Name,
             supplier.SecondaryPaymentTermId,
             supplier.SecondaryPaymentTerm?.Description,
+            supplier.SamplePaymentTermId,
+            supplier.SamplePaymentTerm?.Description,
             supplier.ShippingTimeDays,
             supplier.ProductionTimeDays,
             supplier.MainLeadTimeDays,

@@ -21,6 +21,9 @@ public sealed record SupplierResponse(
     int? SecondaryPaymentTermId,
     string? SecondaryPaymentTermDescription,
 
+    int? SamplePaymentTermId,
+    string? SamplePaymentTermDescription,
+
     int? ShippingTimeDays,
     int? ProductionTimeDays,
     int MainLeadTimeDays,

@@ -55,6 +55,10 @@ public sealed class CreateSupplierCommandValidator
         RuleFor(x => x.SecondaryPaymentTermId)
             .GreaterThan(0)
             .When(x => x.SecondaryPaymentTermId.HasValue);
+
+        RuleFor(x => x.SamplePaymentTermId)
+            .GreaterThan(0)
+            .When(x => x.SamplePaymentTermId.HasValue);
         
         RuleFor(x => x.MainLeadTimeDays)
             .GreaterThanOrEqualTo(0)

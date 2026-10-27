@@ -33,6 +33,7 @@ public static class UpdateSupplierEndpoint
             SampleShippingTermId = request.SampleShippingTermId,
 
             SecondaryPaymentTermId = request.SecondaryPaymentTermId,
+            SamplePaymentTermId = request.SamplePaymentTermId,
             
             ShippingTimeDays = request.ShippingTimeDays,
             ProductionTimeDays = request.ProductionTimeDays,
@@ -67,6 +68,9 @@ public static class UpdateSupplierEndpoint
 
             result.SecondaryPaymentTermId,
             result.SecondaryPaymentTermDescription,
+
+            result.SamplePaymentTermId,
+            result.SamplePaymentTermDescription,
 
             result.ShippingTimeDays,
             result.ProductionTimeDays,

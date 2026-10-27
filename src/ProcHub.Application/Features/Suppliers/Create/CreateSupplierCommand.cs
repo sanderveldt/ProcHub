@@ -14,6 +14,7 @@ public sealed record CreateSupplierCommand(
     public int? ProductionTimeDays { get; init; }
     
     public int? SecondaryPaymentTermId { get; init; }
+    public int? SamplePaymentTermId { get; init; }
 
     public int MainLeadTimeDays { get; init; } = 0;
     public int? SecondaryLeadTimeDays { get; init; }

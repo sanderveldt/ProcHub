@@ -40,6 +40,10 @@ public sealed class UpdateSupplierCommandValidator
             .GreaterThan(0)
             .When(x => x.SecondaryPaymentTermId.HasValue);
         
+        RuleFor(x => x.SamplePaymentTermId)
+            .GreaterThan(0)
+            .When(x => x.SamplePaymentTermId.HasValue);
+        
         RuleFor(x => x.ShippingTimeDays)
             .GreaterThanOrEqualTo(0)
             .When(x => x.ShippingTimeDays.HasValue)

@@ -10,6 +10,7 @@ public sealed record UpdateSupplierCommand(
     public int? SampleShippingTermId { get; init; }
 
     public int? SecondaryPaymentTermId { get; init; }
+    public int? SamplePaymentTermId { get; init; }
 
     public int? ShippingTimeDays { get; init; }
     public int? ProductionTimeDays { get; init; }

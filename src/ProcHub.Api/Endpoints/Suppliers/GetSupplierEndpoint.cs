@@ -48,6 +48,9 @@ public static class GetSupplierEndpoint
             result.SecondaryPaymentTermId,
             result.SecondaryPaymentTermDescription,
 
+            result.SamplePaymentTermId,
+            result.SamplePaymentTermDescription,
+
             result.ShippingTimeDays,
             result.ProductionTimeDays,
             result.MainLeadTimeDays,
