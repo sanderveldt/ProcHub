@@ -83,6 +83,12 @@ public sealed partial class SuppliersViewModel : PageViewModel
     public partial string? SecondaryPaymentTermDescription { get; set; }
 
     [ObservableProperty]
+    public partial int? SamplePaymentTermId { get; set; }
+
+    [ObservableProperty]
+    public partial string? SamplePaymentTermDescription { get; set; }
+
+    [ObservableProperty]
     public partial int? ShippingTimeDays { get; set; }
 
     [ObservableProperty]
@@ -107,12 +113,15 @@ public sealed partial class SuppliersViewModel : PageViewModel
     public partial string? ResponsibleBuyerName { get; private set; }
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanEditFields))]
     public partial bool IsCreating { get; private set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsEditorReadOnly))]
+    [NotifyPropertyChangedFor(nameof(CanEditFields))]
     public partial bool IsEditing { get; private set; }
     public bool IsEditorReadOnly => !IsEditing;
+    public bool CanEditFields => IsCreating || IsEditing;
 
     [ObservableProperty]
     public partial SupplierListItemResponse? SelectedSupplier { get; set; }
@@ -139,11 +148,28 @@ public sealed partial class SuppliersViewModel : PageViewModel
             && MainShippingTermId is >= 0;
     }
 
+    [RelayCommand]
+    private void OnNew()
+    {
+        SelectedSupplier = null;
+
+        Code = string.Empty;
+        Name = string.Empty;
+
+    }
 
 
 
+    public async Task LoadAllAsync(
+        CancellationToken cancellationToken = default)
+    {
+        ClearError();
 
-
+        await Task.WhenAll(
+            LoadAllSuppliersAsync(cancellationToken),
+            LoadPaymentTermsAsync(cancellationToken),
+            LoadShippingTermsAsync(cancellationToken));
+    }
 
     public async Task LoadAllSuppliersAsync(
         CancellationToken cancellationToken = default)

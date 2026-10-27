@@ -49,6 +49,11 @@ public sealed class GetSupplierHandler(
                     ? s.SecondaryPaymentTerm.Description
                     : null,
 
+                s.SamplePaymentTermId,
+                s.SamplePaymentTerm != null
+                    ? s.SamplePaymentTerm.Description
+                    : null,
+
                 s.ShippingTimeDays,
                 s.ProductionTimeDays,
                 s.MainLeadTimeDays,

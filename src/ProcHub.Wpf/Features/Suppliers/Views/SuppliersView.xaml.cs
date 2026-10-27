@@ -10,4 +10,14 @@ public partial class SuppliersView : UserControl
     {
         InitializeComponent();
     }
+
+    private async void SuppliersView_OnLoaded(
+        object sender,
+        RoutedEventArgs e)
+    {
+        if (DataContext is SuppliersViewModel viewModel)
+        {
+            await viewModel.LoadAllAsync();
+        }
+    }
 }
