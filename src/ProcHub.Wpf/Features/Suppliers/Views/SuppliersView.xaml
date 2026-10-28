@@ -59,7 +59,8 @@
 
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="150" />
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="175" />
+                            <ColumnDefinition Width="175" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
@@ -158,6 +159,7 @@
                             SelectedValue="{Binding DefaultPaymentTermId}"
                             IsEnabled="{Binding CanEditFields}" />
 
+                        
                         <TextBlock
                             Grid.Row="6"
                             Grid.Column="0"
@@ -179,6 +181,7 @@
                             SelectedValue="{Binding SecondaryPaymentTermId}"
                             IsEnabled="{Binding CanEditFields}" />
 
+                        
                         <TextBlock
                             Grid.Row="8"
                             Grid.Column="0"
@@ -211,6 +214,87 @@
                             TextWrapping="Wrap"
                             Foreground="OrangeRed"
                             Margin="0,0,4,8"  />
+                        
+                        <!-- Second Row  -->
+
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="2"
+                            HorizontalAlignment="Left"
+                            Text="Status"
+                            FontWeight="SemiBold"
+                            Margin="0,0,0,0" />
+
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="3"
+                            HorizontalAlignment="Left"
+                            Text="Creation Date"
+                            FontWeight="SemiBold"
+                            Margin="0,0,0,0" />
+
+
+                        <TextBox
+                            Grid.Row="1"
+                            Grid.Column="2"
+                            HorizontalAlignment="Left"
+                            Width="150"
+                            Text="{Binding Status}"
+                            FontWeight="DemiBold"
+                            IsReadOnly="True"
+                            Margin="0,0,8,20" />
+
+                        <TextBox
+                            Grid.Row="1"
+                            Grid.Column="3"
+                            HorizontalAlignment="Left"
+                            Width="150"
+                            Text="{Binding CreationDate, Mode=OneWay, 
+                                           StringFormat=dd-MM-yyyy}"
+                            FontWeight="DemiBold"
+                            IsReadOnly="True"
+                            Margin="0,0,8,20" />
+
+
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="2"
+                            Text="Responsible Buyer"
+                            FontWeight="SemiBold"
+                            Margin="0,0,8,4" />
+
+                        <TextBox
+                            Grid.Row="3"
+                            Grid.Column="2"
+                            HorizontalAlignment="Left"
+                            Width="150"
+                            Text="{Binding ResponsibleBuyerName, Mode=OneWay}"
+                            FontWeight="DemiBold"
+                            IsReadOnly="True"
+                            Margin="0,0,8,20" />
+
+
+                        <TextBlock
+                            Grid.Row="4"
+                            Grid.Column="2"
+                            Text="Default Shipping Term"
+                            FontWeight="SemiBold"
+                            Margin="0,0,8,4" />
+
+                        <ComboBox
+                            Grid.Row="5"
+                            Grid.Column="2"
+                            Grid.ColumnSpan="2"
+                            HorizontalAlignment="Left"
+                            Width="150"
+                            Margin="0,0,0,16"
+                            ItemsSource="{Binding ShippingTerms}"
+                            DisplayMemberPath="Name"
+                            SelectedValuePath="Id"
+                            SelectedValue="{Binding MainShippingTermId}"
+                            IsEnabled="{Binding CanEditFields}" />
+
+
 
                     </Grid>
 

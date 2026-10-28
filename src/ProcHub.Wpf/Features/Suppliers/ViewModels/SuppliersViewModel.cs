@@ -41,6 +41,9 @@ public sealed partial class SuppliersViewModel : PageViewModel
 
     public ObservableCollection<ShippingTermResponse> ShippingTerms
         { get; } = new();
+
+    public IReadOnlyList<SupplierStatus> SupplierStatuses
+        { get; } = Enum.GetValues<SupplierStatus>();
     
     [ObservableProperty]
     public partial string Code { get; private set; } = string.Empty;
@@ -50,7 +53,7 @@ public sealed partial class SuppliersViewModel : PageViewModel
     public partial string Name { get; set; } = string.Empty;
     
     [ObservableProperty]
-    public partial int DefaultPaymentTermId { get; set; }
+    public partial int? DefaultPaymentTermId { get; set; }
 
     [ObservableProperty]
     public partial string DefaultPaymentTermDescription { get; set; } = string.Empty;
@@ -59,10 +62,10 @@ public sealed partial class SuppliersViewModel : PageViewModel
     public partial string? FullName { get; set; } 
 
     [ObservableProperty]
-    public partial int MainShippingTermId { get; set; }
+    public partial int? MainShippingTermId { get; set; }
 
     [ObservableProperty]
-    public partial string MainShippingTermName { get; set; } = string.Empty;
+    public partial string? MainShippingTermName { get; set; } = string.Empty;
 
     [ObservableProperty]
     public partial int? SecondaryShippingTermId { get; set; }
@@ -95,7 +98,7 @@ public sealed partial class SuppliersViewModel : PageViewModel
     public partial int? ProductionTimeDays { get; set; }
 
     [ObservableProperty]
-    public partial int MainLeadTimeDays { get; set; }
+    public partial int? MainLeadTimeDays { get; set; }
 
     [ObservableProperty]
     public partial int? SecondaryLeadTimeDays { get; set; }
@@ -104,7 +107,7 @@ public sealed partial class SuppliersViewModel : PageViewModel
     public partial int? SampleLeadTimeDays { get; set; }
 
     [ObservableProperty]
-    public partial string Status { get; set; } = string.Empty;
+    public partial SupplierStatus? Status { get; set; } 
 
     [ObservableProperty]
     public partial DateOnly? CreationDate { get; private set; }
@@ -155,7 +158,29 @@ public sealed partial class SuppliersViewModel : PageViewModel
 
         Code = string.Empty;
         Name = string.Empty;
+        DefaultPaymentTermId = null;
+        DefaultPaymentTermDescription = string.Empty;
+        FullName = string.Empty;
+        MainShippingTermId = null;
+        MainShippingTermName = string.Empty;
+        SecondaryShippingTermId = null;
+        SecondaryShippingTermName = string.Empty;
+        SampleShippingTermId = null;
+        SampleShippingTermName = string.Empty;
+        SecondaryPaymentTermId = null;
+        SecondaryPaymentTermDescription = string.Empty;
+        SamplePaymentTermId = null;
+        SamplePaymentTermDescription = string.Empty;
+        ShippingTimeDays = null;
+        ProductionTimeDays = null;
+        MainLeadTimeDays = null;
+        SecondaryLeadTimeDays = null;
+        SampleLeadTimeDays = null;
+        Status = null;
+        CreationDate = null;
+        ResponsibleBuyerName = string.Empty;
 
+        ClearError();
     }
 
 
