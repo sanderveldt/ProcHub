@@ -46,7 +46,7 @@ public sealed partial class SuppliersViewModel : PageViewModel
         { get; } = Enum.GetValues<SupplierStatus>();
     
     [ObservableProperty]
-    public partial string Code { get; private set; } = string.Empty;
+    public partial string Code { get; set; } = string.Empty;
 
     // add Notify CanSave commands later
     [ObservableProperty]
@@ -117,12 +117,16 @@ public sealed partial class SuppliersViewModel : PageViewModel
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanEditFields))]
+    [NotifyPropertyChangedFor(nameof(IsEditorReadOnly))]
+    [NotifyPropertyChangedFor(nameof(IsCodeReadOnly))]
     public partial bool IsCreating { get; private set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsEditorReadOnly))]
     [NotifyPropertyChangedFor(nameof(CanEditFields))]
     public partial bool IsEditing { get; private set; }
+
+    public bool IsCodeReadOnly => !IsCreating;
     public bool IsEditorReadOnly => !IsEditing;
     public bool CanEditFields => IsCreating || IsEditing;
 
@@ -146,9 +150,11 @@ public sealed partial class SuppliersViewModel : PageViewModel
 
     private bool FieldsCheck()
     {
-        return !string.IsNullOrWhiteSpace(Name)
+        return !string.IsNullOrWhiteSpace(Code)
+            && !string.IsNullOrWhiteSpace(Name)
             && DefaultPaymentTermId is >= 0
-            && MainShippingTermId is >= 0;
+            && MainShippingTermId is >= 0
+            && MainLeadTimeDays is >= 0;
     }
 
     [RelayCommand]
@@ -288,12 +294,17 @@ public sealed partial class SuppliersViewModel : PageViewModel
     private async Task CreateAsync(
         CancellationToken cancellationToken = default)
     {
+        if (!FieldsCheck())
+        {
+            return;
+        }
+
         var request = new 
             CreateSupplierRequest(
                 Code,
                 Name,
-                DefaultPaymentTermId,
-                MainShippingTermId)
+                DefaultPaymentTermId!.Value,
+                MainShippingTermId!.Value)
         {
             FullName = FullName,
             SecondaryShippingTermId = SecondaryShippingTermId,
@@ -301,7 +312,7 @@ public sealed partial class SuppliersViewModel : PageViewModel
             ShippingTimeDays = ShippingTimeDays,
             ProductionTimeDays = ProductionTimeDays,
             SecondaryPaymentTermId = SecondaryPaymentTermId,
-            MainLeadTimeDays = MainLeadTimeDays,
+            MainLeadTimeDays = MainLeadTimeDays!.Value,
             SecondaryLeadTimeDays = SecondaryLeadTimeDays,
             SampleLeadTimeDays = SampleLeadTimeDays
         };

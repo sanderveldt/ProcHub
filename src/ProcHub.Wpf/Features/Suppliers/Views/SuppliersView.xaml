@@ -66,6 +66,8 @@
 
                         <Grid.RowDefinitions>
 
+                            <RowDefinition Height="25" />
+
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
 
@@ -86,32 +88,31 @@
                         </Grid.RowDefinitions>
 
                         <TextBlock
-                            Grid.Row="0"
+                            Grid.Row="1"
                             Grid.Column="0"
                             Text="Code"
                             FontWeight="SemiBold"
                             Margin="0,0,0,4" />
 
                         <TextBlock
-                            Grid.Row="0"
+                            Grid.Row="1"
                             Grid.Column="1"
                             Text="Name"
                             FontWeight="SemiBold"
                             Margin="0,0,0,4" />
 
                         <TextBox
-                            Grid.Row="1"
+                            Grid.Row="2"
                             Grid.Column="0"
                             Text="{Binding Code, Mode=OneWay}"
                             FontWeight="DemiBold"
-                            IsReadOnly="False"    
+                            IsReadOnly="{Binding IsCodeReadOnly}"    
                             HorizontalAlignment="Left"
                             Width="125"
                             Margin="0,0,8,20" />
-                        <!-- should bind IsCreating bool to IsReadOnly later -->
 
                         <TextBox
-                            Grid.Row="1"
+                            Grid.Row="2"
                             Grid.Column="1"
                             Text="{Binding Name}"
                             HorizontalAlignment="Left"
@@ -120,13 +121,13 @@
 
 
                         <TextBlock
-                            Grid.Row="2"
+                            Grid.Row="3"
                             Text="Full Name"
                             FontWeight="SemiBold"
                             Margin="0,0,8,4" />
 
                         <TextBox
-                            Grid.Row="3"
+                            Grid.Row="4"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             Text="{Binding FullName}"
@@ -136,7 +137,7 @@
 
 
                         <TextBlock
-                            Grid.Row="4"
+                            Grid.Row="5"
                             Text="Default Payment Term"
                             FontWeight="SemiBold"
                             Margin="0,0,8,4" />
@@ -147,7 +148,7 @@
                              preload api calls in IsEditing and IsCreating methods, -client side cache? 
                          -->
                         <ComboBox
-                            Grid.Row="5"
+                            Grid.Row="6"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             HorizontalAlignment="Left"
@@ -161,7 +162,7 @@
 
                         
                         <TextBlock
-                            Grid.Row="6"
+                            Grid.Row="7"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             Text="Secondary Payment Term"
@@ -169,7 +170,7 @@
                             Margin="0,0,8,4" />
 
                         <ComboBox
-                            Grid.Row="7"
+                            Grid.Row="8"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             HorizontalAlignment="Left"
@@ -183,7 +184,7 @@
 
                         
                         <TextBlock
-                            Grid.Row="8"
+                            Grid.Row="9"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             Text="Sample Payment Term"
@@ -191,7 +192,7 @@
                             Margin="0,0,8,4" />
 
                         <ComboBox
-                            Grid.Row="9"
+                            Grid.Row="10"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             HorizontalAlignment="Left"
@@ -204,7 +205,7 @@
                             IsEnabled="{Binding CanEditFields}" />
 
                         <TextBlock
-                            Grid.Row="10"
+                            Grid.Row="11"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             HorizontalAlignment="Left"
@@ -215,27 +216,18 @@
                             Foreground="OrangeRed"
                             Margin="0,0,4,8"  />
                         
-                        <!-- Second Row  -->
+                        <!-- Second Column  -->
 
                         <TextBlock
-                            Grid.Row="0"
+                            Grid.Row="1"
                             Grid.Column="2"
                             HorizontalAlignment="Left"
                             Text="Status"
                             FontWeight="SemiBold"
                             Margin="0,0,0,0" />
 
-                        <TextBlock
-                            Grid.Row="0"
-                            Grid.Column="3"
-                            HorizontalAlignment="Left"
-                            Text="Creation Date"
-                            FontWeight="SemiBold"
-                            Margin="0,0,0,0" />
-
-
                         <TextBox
-                            Grid.Row="1"
+                            Grid.Row="2"
                             Grid.Column="2"
                             HorizontalAlignment="Left"
                             Width="150"
@@ -243,28 +235,16 @@
                             FontWeight="DemiBold"
                             IsReadOnly="True"
                             Margin="0,0,8,20" />
-
-                        <TextBox
-                            Grid.Row="1"
-                            Grid.Column="3"
-                            HorizontalAlignment="Left"
-                            Width="150"
-                            Text="{Binding CreationDate, Mode=OneWay, 
-                                           StringFormat=dd-MM-yyyy}"
-                            FontWeight="DemiBold"
-                            IsReadOnly="True"
-                            Margin="0,0,8,20" />
-
-
+                        
                         <TextBlock
-                            Grid.Row="2"
+                            Grid.Row="3"
                             Grid.Column="2"
                             Text="Responsible Buyer"
                             FontWeight="SemiBold"
                             Margin="0,0,8,4" />
 
                         <TextBox
-                            Grid.Row="3"
+                            Grid.Row="4"
                             Grid.Column="2"
                             HorizontalAlignment="Left"
                             Width="150"
@@ -275,14 +255,14 @@
 
 
                         <TextBlock
-                            Grid.Row="4"
+                            Grid.Row="5"
                             Grid.Column="2"
                             Text="Default Shipping Term"
                             FontWeight="SemiBold"
                             Margin="0,0,8,4" />
 
                         <ComboBox
-                            Grid.Row="5"
+                            Grid.Row="6"
                             Grid.Column="2"
                             Grid.ColumnSpan="2"
                             HorizontalAlignment="Left"
@@ -293,6 +273,208 @@
                             SelectedValuePath="Id"
                             SelectedValue="{Binding MainShippingTermId}"
                             IsEnabled="{Binding CanEditFields}" />
+
+                        <TextBlock 
+                            Grid.Row="7"
+                            Grid.Column="2"
+                            Text="Secondary Shipping Term"
+                            FontWeight="SemiBold"
+                            Margin="0,0,8,4" />
+
+                        <ComboBox 
+                            Grid.Row="8"
+                            Grid.Column="2"
+                            Grid.ColumnSpan="2"
+                            HorizontalAlignment="Left"
+                            Width="150"
+                            Margin="0,0,0,16"
+                            ItemsSource="{Binding ShippingTerms}"
+                            DisplayMemberPath="Name"
+                            SelectedValuePath="Id"
+                            SelectedValue="{Binding SecondaryShippingTermId}"
+                            IsEnabled="{Binding CanEditFields}" />
+
+                        <TextBlock 
+                            Grid.Row="9"
+                            Grid.Column="2"
+                            Text="Sample Shipping Term"
+                            FontWeight="SemiBold"
+                            Margin="0,0,8,4" />
+
+                        <ComboBox 
+                            Grid.Row="10"
+                            Grid.Column="2"
+                            Grid.ColumnSpan="2"
+                            HorizontalAlignment="Left"
+                            Width="150"
+                            Margin="0,0,0,16"
+                            ItemsSource="{Binding ShippingTerms}"
+                            DisplayMemberPath="Name"
+                            SelectedValuePath="Id"
+                            SelectedValue="{Binding SampleShippingTermId}"
+                            IsEnabled="{Binding CanEditFields}" />
+                        
+                        <!-- Third Column -->
+
+                        <TextBlock 
+                            Grid.Row="0"
+                            Grid.Column="3"
+                            Text="Lead Times"
+                            FontSize="16"
+                            FontWeight="Black"
+                            Margin="0,0,8,4"
+                            
+                            />
+
+                        <TextBlock 
+                            Grid.Row="1"
+                            Grid.Column="3"
+                            Text="Default"
+                            FontWeight="SemiBold"
+                            Margin="0,0,8,4" />
+
+                        <Grid
+                            Grid.Row="2"
+                            Grid.Column="3"
+                            Width="100"
+                            HorizontalAlignment="Left"
+                            Margin="0,0,8,20">
+
+                            <TextBox
+                                Text="{Binding MainLeadTimeDays, 
+                                               UpdateSourceTrigger=PropertyChanged}"
+                                FontWeight="DemiBold"
+                                IsReadOnly="{Binding IsEditorReadOnly}" />
+
+                            <TextBlock
+                                Text="days"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Margin="0,0,8,0"
+                                Foreground="DarkGray"
+                                IsHitTestVisible="False" />
+                        </Grid>
+
+
+                        <TextBlock 
+                            Grid.Row="3"
+                            Grid.Column="3"
+                            Text="Secondary"
+                            FontWeight="SemiBold"
+                            Margin="0,0,8,4" />
+
+                        <Grid
+                            Grid.Row="4"
+                            Grid.Column="3"
+                            Width="100"
+                            HorizontalAlignment="Left"
+                            Margin="0,0,8,20">
+
+                            <TextBox
+                                Text="{Binding SecondaryLeadTimeDays, 
+                                               UpdateSourceTrigger=PropertyChanged}"
+                                FontWeight="DemiBold"
+                                IsReadOnly="{Binding IsEditorReadOnly}" />
+
+                            <TextBlock
+                                Text="days"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Margin="0,0,8,0"
+                                Foreground="DarkGray"
+                                IsHitTestVisible="False" />
+                        </Grid>
+
+
+                        <TextBlock 
+                            Grid.Row="5"
+                            Grid.Column="3"
+                            Text="Sample"
+                            FontWeight="SemiBold"
+                            Margin="0,0,8,4" />
+
+                        <Grid
+                            Grid.Row="6"
+                            Grid.Column="3"
+                            Width="100"
+                            HorizontalAlignment="Left"
+                            Margin="0,0,8,20">
+
+                            <TextBox
+                                Text="{Binding SampleLeadTimeDays, 
+                                                UpdateSourceTrigger=PropertyChanged}"
+                                FontWeight="DemiBold"
+                                IsReadOnly="{Binding IsEditorReadOnly}" />
+
+                           <TextBlock
+                                Text="days"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Margin="0,0,8,0"
+                                Foreground="DarkGray"
+                                IsHitTestVisible="False" />
+                        </Grid>
+
+                        
+                        <TextBlock 
+                            Grid.Row="7"
+                            Grid.Column="3"
+                            Text="Production"
+                            FontWeight="SemiBold"
+                            Margin="0,0,8,4" />
+
+                        <Grid
+                            Grid.Row="8"
+                            Grid.Column="3"
+                            Width="100"
+                            HorizontalAlignment="Left"
+                            Margin="0,0,8,20">
+
+                            <TextBox
+                                Text="{Binding ProductionTimeDays, 
+                                               UpdateSourceTrigger=PropertyChanged}"
+                                FontWeight="DemiBold"
+                                IsReadOnly="{Binding IsEditorReadOnly}" />
+
+                            <TextBlock
+                                Text="days"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Margin="0,0,8,0"
+                                Foreground="DarkGray"
+                                IsHitTestVisible="False" />
+                        </Grid>
+
+
+                        <TextBlock 
+                            Grid.Row="9"
+                            Grid.Column="3"
+                            Text="Shipping"
+                            FontWeight="SemiBold"
+                            Margin="0,0,8,4" />
+
+                        <Grid
+                            Grid.Row="10"
+                            Grid.Column="3"
+                            Width="100"
+                            HorizontalAlignment="Left"
+                            Margin="0,0,8,20">
+
+                            <TextBox
+                                Text="{Binding ShippingTimeDays, 
+                                               UpdateSourceTrigger=PropertyChanged}"
+                                FontWeight="DemiBold"
+                                IsReadOnly="{Binding IsEditorReadOnly}" />
+
+                            <TextBlock
+                                Text="days"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Margin="0,0,8,0"
+                                Foreground="DarkGray"
+                                IsHitTestVisible="False" />
+                        </Grid>
+
 
 
 
