@@ -1,6 +1,6 @@
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Http.HttpResults;
 using ProcHub.Contracts.Suppliers.Responses;
+using ProcHub.Contracts.Suppliers.Enums;
 using ProcHub.Application.Features.Suppliers.Get;
 
 namespace ProcHub.Api.Endpoints.Suppliers;
@@ -60,7 +60,7 @@ public static class GetSupplierEndpoint
             result.ResponsibleBuyerId,
             result.BuyerName,
 
-            result.Status.ToString(),
+            (SupplierStatus)result.Status,
             result.CreationDate);
         
         return TypedResults.Ok(response);

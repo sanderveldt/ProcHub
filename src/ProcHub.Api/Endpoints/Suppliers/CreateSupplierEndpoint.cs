@@ -3,6 +3,7 @@ using ProcHub.Contracts.Suppliers.Requests;
 using ProcHub.Application.Features.Suppliers.Create;
 
 using Microsoft.AspNetCore.Http.HttpResults;
+using ProcHub.Contracts.Suppliers.Enums;
 
 namespace ProcHub.Api.Endpoints.Suppliers;
 
@@ -81,7 +82,7 @@ public static class CreateSupplierEndpoint
             result.ResponsibleBuyerId,
             result.BuyerName,
 
-            result.Status.ToString(),
+            (SupplierStatus)result.Status,
             result.CreationDate);
 
         return TypedResults.Created(

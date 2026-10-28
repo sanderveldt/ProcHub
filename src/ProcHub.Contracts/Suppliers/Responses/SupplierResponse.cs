@@ -1,3 +1,5 @@
+using ProcHub.Contracts.Suppliers.Enums;
+
 namespace ProcHub.Contracts.Suppliers.Responses;
 
 public sealed record SupplierResponse(
@@ -33,5 +35,5 @@ public sealed record SupplierResponse(
     int? ResponsibleBuyerId,
     string? BuyerName,
 
-    string Status,
+    SupplierStatus Status,
     DateOnly CreationDate);
