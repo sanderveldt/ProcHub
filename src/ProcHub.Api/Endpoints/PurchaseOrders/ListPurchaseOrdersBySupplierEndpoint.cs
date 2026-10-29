@@ -10,7 +10,7 @@ public static class ListPurchaseOrdersBySupplierEndpoint
     public static RouteGroupBuilder MapListPurchaseOrdersBySupplierEndpoint(
         this RouteGroupBuilder group)
     {
-        group.MapGet("/{code}/OrdersBySupplier", HandleAsync)
+        group.MapGet("/{supplierCode}/OrdersBySupplier", HandleAsync)
              .WithName("ListPurchaseOrdersBySupplier");
 
         return group;
