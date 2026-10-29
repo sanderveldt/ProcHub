@@ -1,9 +1,8 @@
 using System.Collections.ObjectModel;
-using System.Security;
-using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ProcHub.Contracts.PaymentTerms.Responses;
+using ProcHub.Contracts.PurchaseOrders.Responses;
 using ProcHub.Contracts.ShippingTerms.Responses;
 using ProcHub.Contracts.Suppliers.Enums;
 using ProcHub.Contracts.Suppliers.Requests;
@@ -40,6 +39,9 @@ public sealed partial class SuppliersViewModel : PageViewModel
         { get; } = new();
 
     public ObservableCollection<ShippingTermResponse> ShippingTerms
+        { get; } = new();
+
+    public ObservableCollection<PurchaseOrderBySupplierListResponse> PurchaseOrders
         { get; } = new();
 
     public IReadOnlyList<SupplierStatus> SupplierStatuses
@@ -141,7 +143,9 @@ public sealed partial class SuppliersViewModel : PageViewModel
             return;
         }
 
-        await LoadSupplierAsync(value.Code);
+        await Task.WhenAll(
+            LoadSupplierAsync(value.Code),
+            LoadPurchaseOrdersAsync(value.Code));
 
         IsCreating = false;
         IsEditing = false; 
@@ -324,6 +328,35 @@ public sealed partial class SuppliersViewModel : PageViewModel
         
         // Add newSupplier transfer to listoverview later
     }
+
+    public async Task LoadPurchaseOrdersAsync(
+        string code,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var purchaseOrders = await _purchaseOrdersApiClient
+                .GetListBySupplier(
+                    code, 
+                    cancellationToken);
+
+            PurchaseOrders.Clear();
+
+            foreach (var purchaseOrder in purchaseOrders)
+            {
+                PurchaseOrders.Add(purchaseOrder);
+            }
+        }
+        catch (OperationCanceledException)
+            when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        catch (ApiException ex)
+        {
+            ShowError(ex.Message);
+        }
+    }
+
     public async Task LoadPaymentTermsAsync(
         CancellationToken cancellationToken = default)
     {
