@@ -102,7 +102,7 @@ public sealed class CreateSupplierHandler(
                 ?? throw new NotFoundException(
                     $"Sample PaymentTerm Id {command.SamplePaymentTermId.Value} not found.");
             
-            supplier.SetSecondaryPaymentTerm(samplePaymentTerm);
+            supplier.SetSamplePaymentTerm(samplePaymentTerm);
         }
 
         supplier.SetShippingTimeDays(command.ShippingTimeDays);
