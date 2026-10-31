@@ -119,7 +119,7 @@ public sealed class UserIdentityService(
         
         if (roles.Count != 1)
         {
-            throw new InvalidStateException(
+            throw new InvalidOperationException(
                 $"A user should have 1 role.");
         }
 
@@ -151,7 +151,7 @@ public sealed class UserIdentityService(
 
             if (roles.Count != 1)
             {
-                throw new InvalidStateException(
+                throw new InvalidOperationException(
                     $"User {user.Id} must have 1 role.");
             }
 

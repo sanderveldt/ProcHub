@@ -1,4 +1,5 @@
 using FluentValidation;
+using Microsoft.Extensions.Logging;
 using ProcHub.Application.Abstractions;
 using ProcHub.Application.Exceptions;
 
@@ -6,7 +7,8 @@ namespace ProcHub.Application.Features.Users.Create;
 
 public sealed class CreateUserHandler(
     IUserIdentityService identityService,
-    IValidator<CreateUserCommand> validator)
+    IValidator<CreateUserCommand> validator,
+    ILogger<CreateUserHandler> logger)
 {
     public async Task<UserResult> HandleAsync(
         CreateUserCommand command,
@@ -26,12 +28,19 @@ public sealed class CreateUserHandler(
                 $"A user with email '{email}' already exists.");
         }
 
-        return await identityService.CreateAsync(
+        var newUser = await identityService.CreateAsync(
             email,
             command.Password,
             command.Role,
             command.DisplayName?.Trim(),
             cancellationToken);
+        
+        logger.LogInformation(
+            "User {UserId} with role {Role} created.",
+            newUser.Id,
+            newUser.Role);
+        
+        return newUser;
     }
 }
 

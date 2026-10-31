@@ -1,11 +1,13 @@
 using FluentValidation;
+using Microsoft.Extensions.Logging;
 using ProcHub.Application.Abstractions;
 
 namespace ProcHub.Application.Features.Users.Update;
 
 public sealed class UpdateUserHandler(
     IUserIdentityService identityService,
-    IValidator<UpdateUserCommand> validator)
+    IValidator<UpdateUserCommand> validator,
+    ILogger<UpdateUserHandler> logger)
 {
     public async Task<UserResult> HandleAsync(
         int id,
@@ -21,12 +23,31 @@ public sealed class UpdateUserHandler(
         await validator.ValidateAndThrowAsync(
             command,
             cancellationToken);
+
+        var existingUser = await identityService.GetByIdAsync(
+                id,
+                cancellationToken);
         
-        return await identityService.EditAsync(
+        var updatedUser = await identityService.EditAsync(
             id,
             command.UserName,
             command.Role,
             command.DisplayName,
             cancellationToken);
+
+        logger.LogInformation(
+            "User {UserId} updated.",
+            updatedUser.Id);
+        
+        if (existingUser.Role != updatedUser.Role)
+        {
+            logger.LogWarning(
+                "User {UserId} role changed from {OldRule} to {NewRole}.",
+                updatedUser.Id,
+                existingUser.Role,
+                updatedUser.Role);
+        }
+
+        return updatedUser;
     }
 }

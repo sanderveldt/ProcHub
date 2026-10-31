@@ -1,6 +1,5 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProcHub.Application.Exceptions;
 using ProcHub.Domain.Exceptions;
@@ -16,44 +15,65 @@ public sealed class GlobalExceptionHandler(
         Exception exception,
         CancellationToken cancellationToken)
     {
-        (int statusCode, string title) = exception switch
+        (int statusCode, string title, LogLevel level) = exception switch
         {
             ValidationException => 
                 (StatusCodes.Status400BadRequest, 
-                    "Validation Failed."),
+                    "Validation Failed.",
+                    LogLevel.Debug),
             
             NotFoundException =>
                 (StatusCodes.Status404NotFound, 
-                    "Resource not found."),
+                    "Resource not found.",
+                    LogLevel.Information),
 
             DuplicateResourceException =>
                 (StatusCodes.Status409Conflict, 
-                    "Resource already exists."),
+                    "Resource already exists.",
+                    LogLevel.Information),
             
             ResourceInUseException =>
                 (StatusCodes.Status409Conflict,
-                    "Resource in use."),
+                    "Resource in use.",
+                    LogLevel.Information),
+
+            InvalidStateException =>
+                (StatusCodes.Status409Conflict,
+                    "Resource in an invalid state",
+                    LogLevel.Information),
             
             DomainException =>
                 (StatusCodes.Status400BadRequest, 
-                    "Business rule violation."),
+                    "Business rule violation.",
+                    LogLevel.Information),
             
             ArgumentException =>
                 (StatusCodes.Status400BadRequest,
-                    "Invalid input."),
+                    "Invalid input.",
+                    LogLevel.Information),
             
             _ =>
                 (StatusCodes.Status500InternalServerError,
-                    "An unexpected error occured.")
+                    "An unexpected error occured.",
+                    LogLevel.Error)
         };
 
-        if (statusCode == StatusCodes.Status500InternalServerError)
+        if (level == LogLevel.Error)
         {
-            logger.LogError(
-                exception,
-                "Unhandled exception occurred while processing {Method} {Path}",
+            logger.Log(level, exception,
+                "Unhandled exception while processing {Method} {Path}",
                 httpContext.Request.Method,
-                httpContext.Request.Path);      
+                httpContext.Request.Path);
+        }
+        else
+        {
+            logger.Log(level,
+                "{Method} {Path} returned {StatusCode} ({ExceptionType}): {Message}",
+                httpContext.Request.Method,
+                httpContext.Request.Path,
+                statusCode,
+                exception.GetType().Name,
+                exception.Message);
         }
 
         var problemDetails = new ProblemDetails
