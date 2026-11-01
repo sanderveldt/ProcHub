@@ -97,6 +97,21 @@ public sealed class SuppliersApiClient(
                 "Supplier response is empty.");
     }
 
+    public async Task DeleteAsync(
+        string code,
+        CancellationToken cancellationToken = default)
+    {
+        var trimmedCode = code.Trim();
+
+        var client = CreateClient();
+
+        using var response = await client
+            .DeleteAsync(
+                $"api/suppliers/{trimmedCode}",
+                cancellationToken);
+            
+    }
+
     public async Task<ChangeSupplierStatusResponse> ChangeStatusAsync(
         string code,
         ChangeSupplierStatusRequest request,

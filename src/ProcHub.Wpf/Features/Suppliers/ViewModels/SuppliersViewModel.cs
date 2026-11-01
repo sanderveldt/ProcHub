@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ProcHub.Contracts.PaymentTerms.Responses;
@@ -48,67 +49,87 @@ public sealed partial class SuppliersViewModel : PageViewModel
         { get; } = Enum.GetValues<SupplierStatus>();
     
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     public partial string Code { get; set; } = string.Empty;
 
-    // add Notify CanSave commands later
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     public partial string Name { get; set; } = string.Empty;
     
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     public partial int? DefaultPaymentTermId { get; set; }
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     public partial string DefaultPaymentTermDescription { get; set; } = string.Empty;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     public partial string? FullName { get; set; } 
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     public partial int? MainShippingTermId { get; set; }
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     public partial string? MainShippingTermName { get; set; } = string.Empty;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     public partial int? SecondaryShippingTermId { get; set; }
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     public partial string? SecondaryShippingTermName { get; set; } 
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     public partial int? SampleShippingTermId { get; set; }
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     public partial string? SampleShippingTermName { get; set; }
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     public partial int? SecondaryPaymentTermId { get; set; }
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     public partial string? SecondaryPaymentTermDescription { get; set; }
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     public partial int? SamplePaymentTermId { get; set; }
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     public partial string? SamplePaymentTermDescription { get; set; }
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     public partial int? ShippingTimeDays { get; set; }
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     public partial int? ProductionTimeDays { get; set; }
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     public partial int? MainLeadTimeDays { get; set; }
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     public partial int? SecondaryLeadTimeDays { get; set; }
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     public partial int? SampleLeadTimeDays { get; set; }
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     public partial SupplierStatus? Status { get; set; } 
 
     [ObservableProperty]
@@ -118,21 +139,27 @@ public sealed partial class SuppliersViewModel : PageViewModel
     public partial string? ResponsibleBuyerName { get; private set; }
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     [NotifyPropertyChangedFor(nameof(CanEditFields))]
     [NotifyPropertyChangedFor(nameof(IsEditorReadOnly))]
     [NotifyPropertyChangedFor(nameof(IsCodeReadOnly))]
     public partial bool IsCreating { get; private set; }
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
+    [NotifyCanExecuteChangedFor(nameof(EditCommand))]
     [NotifyPropertyChangedFor(nameof(IsEditorReadOnly))]
     [NotifyPropertyChangedFor(nameof(CanEditFields))]
     public partial bool IsEditing { get; private set; }
 
     public bool IsCodeReadOnly => !IsCreating;
-    public bool IsEditorReadOnly => !IsEditing;
+    public bool IsEditorReadOnly => !CanEditFields;
     public bool CanEditFields => IsCreating || IsEditing;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
+    [NotifyCanExecuteChangedFor(nameof(EditCommand))]
+    [NotifyCanExecuteChangedFor(nameof(DeleteCommand))]
     public partial SupplierListItemResponse? SelectedSupplier { get; set; }
 
     async partial void OnSelectedSupplierChanged(
@@ -196,9 +223,22 @@ public sealed partial class SuppliersViewModel : PageViewModel
         ClearError();
     }
 
+    private bool CanEdit()
+    {
+        return SelectedSupplier is not null
+            && !IsEditing;
+    }
+
+    [RelayCommand(CanExecute = nameof(CanEdit))]
+    private void Edit()
+    {
+        IsEditing = true;
+        ClearError();
+    }
+
     private bool CanSave()
     {
-        return IsCreating 
+        return IsEditing 
             && FieldsCheck()
             && (IsCreating 
                 || SelectedSupplier is not null);
@@ -238,23 +278,6 @@ public sealed partial class SuppliersViewModel : PageViewModel
             ShowError(ex.Message);
         }
     }
-
-    private bool CanEdit()
-    {
-        return SelectedSupplier is not null
-            && !IsEditing;
-    }
-
-    [RelayCommand(CanExecute = nameof(CanEdit))]
-    private void Edit()
-    {
-        IsEditing = true;
-        ClearError();
-    }
-
-
-
-
 
     public async Task LoadAllAsync(
         CancellationToken cancellationToken = default)
@@ -445,6 +468,56 @@ public sealed partial class SuppliersViewModel : PageViewModel
         }
 
         SelectedSupplier = updatedSupplierListItem;
+    }
+
+    private bool CanDelete()
+    {
+        return !IsCreating
+            && !IsEditing
+            && SelectedSupplier is not null;
+    }
+
+    [RelayCommand(CanExecute = nameof(CanDelete))]
+    private async Task DeleteAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var selectedSupplier = SelectedSupplier;
+
+        if (selectedSupplier is null)
+        {
+            return;
+        }
+
+        var result = MessageBox.Show(
+            $"Are you sure you want to delete supplier '{selectedSupplier.Name}'?",
+            "Delete Supplier",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+
+        if (result != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        try
+        {
+            await _suppliersApiClient
+                .DeleteAsync(
+                    selectedSupplier.Code,
+                    cancellationToken);
+
+            Suppliers.Remove(selectedSupplier);
+
+            SelectedSupplier = null;
+        }
+        catch (OperationCanceledException)
+            when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        catch (ApiException ex)
+        {
+            ShowError(ex.Message);
+        }
     }
 
     public async Task LoadPurchaseOrdersAsync(
