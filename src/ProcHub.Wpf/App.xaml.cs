@@ -57,8 +57,8 @@ public partial class App : Application
             var authentication = _host
                 .Services.GetRequiredService<AuthenticationService>();
         
-            const string devEmail = "admin@ProcHub.local";
-            const string devPassword = "StrongPassword123!";
+            const string devEmail = "admin32@prochub.local";
+            const string devPassword = "DEV_stronger_password32";
 
             await authentication.LoginAsync(
                     devEmail,

@@ -190,8 +190,69 @@ public sealed partial class SuppliersViewModel : PageViewModel
         CreationDate = null;
         ResponsibleBuyerName = string.Empty;
 
+        IsCreating = true;
+        IsEditing = true;
+
         ClearError();
     }
+
+    private bool CanSave()
+    {
+        return IsCreating 
+            && FieldsCheck()
+            && (IsCreating 
+                || SelectedSupplier is not null);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanSave))]
+    private async Task SaveAsync(
+        CancellationToken cancellationToken)
+    {
+        if (!IsCreating && !IsEditing)
+        {
+            return;
+        }
+
+        ClearError();
+
+        try
+        {
+            if (IsCreating)
+            {
+                await CreateAsync(cancellationToken);
+            }
+            else
+            {
+                await UpdateAsync(cancellationToken);
+            }
+
+            IsCreating = false;
+            IsEditing = false;
+        }
+        catch (OperationCanceledException)
+            when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        catch (ApiException ex)
+        {
+            ShowError(ex.Message);
+        }
+    }
+
+    private bool CanEdit()
+    {
+        return SelectedSupplier is not null
+            && !IsEditing;
+    }
+
+    [RelayCommand(CanExecute = nameof(CanEdit))]
+    private void Edit()
+    {
+        IsEditing = true;
+        ClearError();
+    }
+
+
 
 
 
@@ -295,20 +356,14 @@ public sealed partial class SuppliersViewModel : PageViewModel
         }
     }
 
-    private async Task CreateAsync(
+    public async Task CreateAsync(
         CancellationToken cancellationToken = default)
     {
-        if (!FieldsCheck())
-        {
-            return;
-        }
-
-        var request = new 
-            CreateSupplierRequest(
-                Code,
-                Name,
-                DefaultPaymentTermId!.Value,
-                MainShippingTermId!.Value)
+        var request = new CreateSupplierRequest(
+            Code,
+            Name,
+            DefaultPaymentTermId!.Value,
+            MainShippingTermId!.Value)
         {
             FullName = FullName,
             SecondaryShippingTermId = SecondaryShippingTermId,
@@ -326,7 +381,70 @@ public sealed partial class SuppliersViewModel : PageViewModel
                 request,
                 cancellationToken);
         
-        // Add newSupplier transfer to listoverview later
+        var supplierListItem = new SupplierListItemResponse(
+            newSupplier.Code,
+            newSupplier.Name,
+            newSupplier.FullName,
+            newSupplier.DefaultPaymentTermDescription);
+
+        Suppliers.Add(supplierListItem);
+
+        SelectedSupplier = supplierListItem;        
+    }
+
+    private async Task UpdateAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var selectedSupplier = SelectedSupplier;
+
+        if (selectedSupplier is null)
+        {
+            return;
+        }
+
+        if (!FieldsCheck())
+        {
+            return;
+        }
+
+        var request = new UpdateSupplierRequest(
+            Name,
+            DefaultPaymentTermId!.Value,
+            MainShippingTermId!.Value)
+        {
+            FullName = FullName,
+            SecondaryShippingTermId = SecondaryShippingTermId,
+            SampleShippingTermId = SampleShippingTermId,
+            ShippingTimeDays = ShippingTimeDays,
+            ProductionTimeDays = ProductionTimeDays,
+            SecondaryPaymentTermId = SecondaryPaymentTermId,
+            MainLeadTimeDays = MainLeadTimeDays!.Value,
+            SecondaryLeadTimeDays = SecondaryLeadTimeDays,
+            SampleLeadTimeDays = SampleLeadTimeDays
+        };
+
+        var updatedSupplier = await _suppliersApiClient
+            .UpdateAsync(
+                selectedSupplier.Code,
+                request,
+                cancellationToken);
+        
+        var updatedSupplierListItem = new SupplierListItemResponse(
+            updatedSupplier.Code,
+            updatedSupplier.Name,
+            updatedSupplier.FullName,
+            updatedSupplier.DefaultPaymentTermDescription);
+
+        var existingSupplierListItem = Suppliers.FirstOrDefault(
+            s => s.Code == updatedSupplierListItem.Code);
+
+        if (existingSupplierListItem is not null)
+        {
+            Suppliers.Remove(existingSupplierListItem);
+            Suppliers.Add(updatedSupplierListItem);
+        }
+
+        SelectedSupplier = updatedSupplierListItem;
     }
 
     public async Task LoadPurchaseOrdersAsync(
