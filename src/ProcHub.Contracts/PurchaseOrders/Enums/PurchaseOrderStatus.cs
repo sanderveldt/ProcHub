@@ -1,4 +1,4 @@
-using ProcHub.Contracts.PurchaseOrders.Enums;
+namespace ProcHub.Contracts.PurchaseOrders.Enums;
 
 public enum PurchaseOrderStatus
 {
