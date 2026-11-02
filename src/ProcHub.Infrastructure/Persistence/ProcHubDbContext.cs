@@ -7,6 +7,9 @@ using ProcHub.Domain.PaymentTerms;
 using ProcHub.Domain.ShippingTerms;
 using ProcHub.Application.Abstractions;
 using ProcHub.Domain.PurchaseOrders;
+using ProcHub.Domain.Articles;
+using ProcHub.Domain.Articles.ArticleGroups;
+using ProcHub.Domain.Countries;
 
 namespace ProcHub.Infrastructure.Persistence;
 
@@ -22,6 +25,9 @@ public class ProcHubContext(
     public DbSet<PaymentTerm> PaymentTerms => Set<PaymentTerm>();
     public DbSet<ShippingTerm> ShippingTerms => Set<ShippingTerm>();
     public DbSet<PurchaseOrder> PurchaseOrders => Set<PurchaseOrder>();
+    public DbSet<Article> Articles => Set<Article>();
+    public DbSet<ArticleGroup> ArticleGroups => Set<ArticleGroup>();
+    public DbSet<Country> Countries => Set<Country>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
