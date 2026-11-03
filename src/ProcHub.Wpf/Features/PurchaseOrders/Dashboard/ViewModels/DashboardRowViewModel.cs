@@ -12,6 +12,7 @@ public sealed partial class DashboardRowViewModel : ObservableObject
 {
     private readonly PurchaseOrdersApiClient _apiClient;
     private bool _suppressChanges;
+    private uint _version;
 
     public DashboardRowViewModel(
         PurchaseOrderResponse order,
@@ -19,6 +20,8 @@ public sealed partial class DashboardRowViewModel : ObservableObject
     {
         _apiClient = apiClient;
         _suppressChanges = true;
+
+        _version = order.Version;
 
         Code = order.Code;
         OrderDate = order.OrderDate;
@@ -423,10 +426,11 @@ public sealed partial class DashboardRowViewModel : ObservableObject
                 BillOfLadingDate = BillOfLadingDate,
                 ArrivalDate = ArrivalDate,
                 ExpectedDeliveryDate = ExpectedDeliveryDate,
-                DeliveryDate = DeliveryDate
+                DeliveryDate = DeliveryDate,
+                Version = _version
             };
 
-        await _apiClient.UpdateDatesAsync(
+        _version = await _apiClient.UpdateDatesAsync(
             Code,
             request,
             cancellationToken);
@@ -444,10 +448,11 @@ public sealed partial class DashboardRowViewModel : ObservableObject
                 InvoiceReference = InvoiceReference,
                 OrderNotes = OrderNotes,
                 ShipmentSize = ShipmentSize,
-                ShipmentReference = ShipmentReference
+                ShipmentReference = ShipmentReference,
+                Version = _version
             };
         
-        await _apiClient.UpdateReferencesAsync(
+        _version = await _apiClient.UpdateReferencesAsync(
             Code,
             request,
             cancellationToken);
@@ -465,10 +470,11 @@ public sealed partial class DashboardRowViewModel : ObservableObject
                 DepositPaid = DepositPaid,
                 DepositPaidDate = DepositPaidDate,
                 OrderPaid = OrderPaid,
-                BalancePaidDate = BalancePaidDate
+                BalancePaidDate = BalancePaidDate,
+                Version = _version
             };
 
-        await _apiClient.UpdatePaymentsAsync(
+        _version = await _apiClient.UpdatePaymentsAsync(
             Code,
             request,
             cancellationToken);

@@ -15,7 +15,7 @@ public static class UpdatePurchaseOrderReferencesEndpoint
         return group;
     }
     
-    private static async Task<NoContent> HandleAsync(
+    private static async Task<Ok<uint>> HandleAsync(
         string code,
         UpdatePurchaseOrderReferencesRequest request,
         UpdatePurchaseOrderReferencesHandler handler,
@@ -27,13 +27,14 @@ public static class UpdatePurchaseOrderReferencesEndpoint
             InvoiceReference = request.InvoiceReference,
             OrderNotes = request.OrderNotes,
             ShipmentSize = request.ShipmentSize,
-            ShipmentReference = request.ShipmentReference
+            ShipmentReference = request.ShipmentReference,
+            Version = request.Version
         };
 
-        await handler.HandleAsync(
+        var version = await handler.HandleAsync(
             command,
             cancellationToken);
         
-        return TypedResults.NoContent();
+        return TypedResults.Ok(version);
     }
 }

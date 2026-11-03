@@ -57,4 +57,6 @@ public sealed record PurchaseOrderResponse
     public bool InvoiceSent { get; init; }
     public bool InspectionDone { get; init; }
     public bool CertificateOfOriginSaved { get; init; }
+
+    public uint Version { get; init; }
 }

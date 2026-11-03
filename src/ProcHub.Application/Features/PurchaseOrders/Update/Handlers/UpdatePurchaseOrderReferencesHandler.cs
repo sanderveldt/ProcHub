@@ -9,7 +9,7 @@ public sealed class UpdatePurchaseOrderReferencesHandler(
     IProcHubDbContext dbContext,
     IValidator<UpdatePurchaseOrderReferencesCommand> validator)
 {
-    public async Task HandleAsync(
+    public async Task<uint> HandleAsync(
         UpdatePurchaseOrderReferencesCommand command,
         CancellationToken cancellationToken = default)
     {
@@ -56,5 +56,7 @@ public sealed class UpdatePurchaseOrderReferencesHandler(
         }
 
         await dbContext.SaveChangesAsync(cancellationToken);
+
+        return purchaseOrder.Version;
     }
 }

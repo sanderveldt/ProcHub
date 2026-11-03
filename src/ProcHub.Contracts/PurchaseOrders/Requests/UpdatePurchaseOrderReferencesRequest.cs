@@ -7,4 +7,5 @@ public sealed record UpdatePurchaseOrderReferencesRequest
     public string? OrderNotes { get; init; }
     public string? ShipmentSize { get; init; }
     public string? ShipmentReference { get; init; }
+    public uint Version { get; init; }
 }

@@ -15,7 +15,7 @@ public static class UpdatePurchaseOrderPaymentEndpoint
         return group;
     }
 
-    private static async Task<NoContent> HandleAsync(
+    private static async Task<Ok<uint>> HandleAsync(
         string code,
         UpdatePurchaseOrderPaymentRequest request,
         UpdatePurchaseOrderPaymentHandler handler,
@@ -29,14 +29,14 @@ public static class UpdatePurchaseOrderPaymentEndpoint
             DepositPaidDate = request.DepositPaidDate,
 
             OrderPaid = request.OrderPaid,
-            BalancePaidDate = request.BalancePaidDate
+            BalancePaidDate = request.BalancePaidDate,
+            Version = request.Version
         };
 
-        await handler.HandleAsync(
+        var version = await handler.HandleAsync(
             command,
             cancellationToken);
         
-        return TypedResults.NoContent();
-    }
-    
+        return TypedResults.Ok(version);
+    } 
 }

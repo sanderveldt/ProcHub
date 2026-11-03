@@ -15,7 +15,7 @@ public static class UpdatePurchaseOrderDatesEndpoint
         return group;
     }
 
-    private static async Task<NoContent> HandleAsync(
+    private static async Task<Ok<uint>> HandleAsync(
         string code,
         UpdatePurchaseOrderDatesRequest request,
         UpdatePurchaseOrderDatesHandler handler,
@@ -31,13 +31,14 @@ public static class UpdatePurchaseOrderDatesEndpoint
             BillOfLadingDate = request.BillOfLadingDate,
             ArrivalDate = request.ArrivalDate,
             ExpectedDeliveryDate = request.ExpectedDeliveryDate,
-            DeliveryDate = request.DeliveryDate
+            DeliveryDate = request.DeliveryDate,
+            Version = request.Version
         };
 
-        await handler.HandleAsync(
+        var version = await handler.HandleAsync(
             command,
             cancellationToken);
 
-        return TypedResults.NoContent();
+        return TypedResults.Ok(version);
     }
 }

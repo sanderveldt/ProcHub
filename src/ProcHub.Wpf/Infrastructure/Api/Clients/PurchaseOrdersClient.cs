@@ -117,7 +117,7 @@ public sealed class PurchaseOrdersApiClient(
                 "PurchaseOrder response is empty.");
     }
 
-    public async Task UpdateDatesAsync(
+    public async Task<uint> UpdateDatesAsync(
         string code,
         UpdatePurchaseOrderDatesRequest request,
         CancellationToken cancellationToken = default)
@@ -129,9 +129,12 @@ public sealed class PurchaseOrdersApiClient(
                 $"api/purchaseorders/{code}/dates",
                 request,
                 cancellationToken);
+        
+        return await response.Content
+            .ReadFromJsonAsync<uint>(cancellationToken);
     }
 
-    public async Task UpdateReferencesAsync(
+    public async Task<uint> UpdateReferencesAsync(
         string code,
         UpdatePurchaseOrderReferencesRequest request,
         CancellationToken cancellationToken = default)
@@ -143,9 +146,12 @@ public sealed class PurchaseOrdersApiClient(
                 $"api/purchaseorders/{code}/references",
                 request,
                 cancellationToken);
+        
+        return await response.Content
+            .ReadFromJsonAsync<uint>(cancellationToken);
     }
 
-    public async Task UpdatePaymentsAsync(
+    public async Task<uint> UpdatePaymentsAsync(
         string code,
         UpdatePurchaseOrderPaymentRequest request,
         CancellationToken cancellationToken = default)
@@ -157,6 +163,9 @@ public sealed class PurchaseOrdersApiClient(
                 $"api/purchaseorders/{code}/payments",
                 request,
                 cancellationToken);
+        
+        return await response.Content
+            .ReadFromJsonAsync<uint>(cancellationToken);
     }
 
     public async Task DeleteAsync(

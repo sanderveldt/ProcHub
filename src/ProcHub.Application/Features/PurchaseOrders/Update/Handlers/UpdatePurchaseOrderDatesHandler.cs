@@ -10,7 +10,7 @@ public sealed class UpdatePurchaseOrderDatesHandler(
     IProcHubDbContext dbContext,
     IValidator<UpdatePurchaseOrderDatesCommand> validator)
 {
-    public async Task HandleAsync(
+    public async Task<uint> HandleAsync(
         UpdatePurchaseOrderDatesCommand command,
         CancellationToken cancellationToken = default)
     {
@@ -42,5 +42,7 @@ public sealed class UpdatePurchaseOrderDatesHandler(
         purchaseOrder.SetDeliveryDate(command.DeliveryDate);
 
         await dbContext.SaveChangesAsync(cancellationToken);
+
+        return purchaseOrder.Version;
     }
 }
