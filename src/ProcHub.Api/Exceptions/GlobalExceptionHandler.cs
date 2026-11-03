@@ -1,4 +1,5 @@
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using ProcHub.Application.Exceptions;
@@ -41,6 +42,19 @@ public sealed class GlobalExceptionHandler(
                 (StatusCodes.Status409Conflict,
                     "Resource in an invalid state",
                     LogLevel.Information),
+            
+            ConcurrencyException => 
+                (StatusCodes.Status409Conflict,
+                "Concurrency conflict",
+                LogLevel.Information),
+            
+            // EF core exception, fallback for small race condition
+            // between application version check and SaveChangesAsync
+            // Above Concurrency exception should be thrown for most stale updates
+            DbUpdateConcurrencyException =>
+                (StatusCodes.Status409Conflict,
+                "Concurrency conflict.",
+                LogLevel.Information),
             
             DomainException =>
                 (StatusCodes.Status400BadRequest, 

@@ -33,7 +33,6 @@ public sealed class SupplierConfiguration
         builder.Property(s => s.FullName)
             .HasMaxLength(SupplierConstants.FullNameMaxLength);
 
-
         builder.HasOne(x => x.MainShippingTerm)
             .WithMany()
             .HasForeignKey(x => x.MainShippingTermId)
@@ -49,7 +48,6 @@ public sealed class SupplierConfiguration
             .HasForeignKey(x => x.SampleShippingTermId)
             .OnDelete(DeleteBehavior.Restrict);
 
-
         builder.HasOne(x => x.DefaultPaymentTerm)
             .WithMany()
             .HasForeignKey(x => x.DefaultPaymentTermId)
@@ -60,10 +58,22 @@ public sealed class SupplierConfiguration
             .HasForeignKey(x => x.SecondaryPaymentTermId)
             .OnDelete(DeleteBehavior.Restrict);
         
+        builder.HasOne(x => x.SamplePaymentTerm)
+            .WithMany()
+            .HasForeignKey(x => x.SamplePaymentTermId)
+            .OnDelete(DeleteBehavior.Restrict);
+        
         builder.HasOne<ApplicationUser>()
             .WithMany()
             .HasForeignKey(s => s.ResponsibleBuyerId)
             .OnDelete(DeleteBehavior.Restrict);
+        
+        builder.HasOne(x => x.Country)
+            .WithMany()
+            .HasForeignKey(x => x.CountryId)
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        builder.Property(po => po.Version)
+            .IsRowVersion();
     }
 }
-

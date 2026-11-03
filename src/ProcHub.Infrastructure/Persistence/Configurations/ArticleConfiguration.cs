@@ -45,5 +45,8 @@ public sealed class ArticleConfiguration
             .HasForeignKey(a => a.SupplierId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
+        
+        builder.Property(po => po.Version)
+            .IsRowVersion();
     }
 }

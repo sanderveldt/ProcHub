@@ -21,6 +21,7 @@ public class Article
 
     public int SupplierId { get; private set; }
     public Supplier Supplier { get; private set; } = null!;
+    public uint Version { get; private set; }
 
     private Article()
     {

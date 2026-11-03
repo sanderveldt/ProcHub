@@ -1,4 +1,5 @@
 using System.Net.WebSockets;
+using ProcHub.Domain.Countries;
 using ProcHub.Domain.Exceptions;
 using ProcHub.Domain.PaymentTerms;
 using ProcHub.Domain.PurchaseOrders.Enums;
@@ -38,6 +39,11 @@ public class Supplier
     public int? ResponsibleBuyerId { get; private set; }
 
     public SupplierStatus Status { get; private set; } = SupplierStatus.Active;
+
+    public int? CountryId { get; private set; }
+    public Country? Country { get; private set; }
+
+    public uint Version { get; private set; }
 
     private Supplier()
     {
@@ -217,6 +223,10 @@ public class Supplier
         Status = SupplierStatus.Inactive;
     }
 
+    public void SetCountry(Country? country)
+    {
+        Country = country;
+    }
 
     public SupplierTerms GetTerms(PurchaseOrderType orderType)
     {

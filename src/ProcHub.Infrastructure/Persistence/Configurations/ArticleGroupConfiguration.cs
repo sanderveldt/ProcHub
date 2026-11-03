@@ -28,7 +28,5 @@ public sealed class ArticleGroupConfiguration
 
         builder.Property(ag => ag.Description)
             .HasMaxLength(ArticleGroupConstants.DescriptionMaxLength);
-
-       
     }
 }
