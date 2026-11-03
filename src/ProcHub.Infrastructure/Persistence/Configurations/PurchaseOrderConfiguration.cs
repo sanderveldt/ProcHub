@@ -113,5 +113,8 @@ public sealed class PurchaseOrderConfiguration
 
         builder.Property(po => po.BalanceAmount)
             .HasPrecision(18, 2);
+
+        builder.Property(po => po.Version)
+            .IsRowVersion();
     }
 }

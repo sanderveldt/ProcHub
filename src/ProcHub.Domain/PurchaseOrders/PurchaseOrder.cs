@@ -70,6 +70,8 @@ public class PurchaseOrder
     public bool OrderInspectionDone { get; private set; } = false;
     public bool CertificateOfOriginSaved { get; private set; } = false;
 
+    public uint Version { get; private set; }
+
     private PurchaseOrder()
     {
     }

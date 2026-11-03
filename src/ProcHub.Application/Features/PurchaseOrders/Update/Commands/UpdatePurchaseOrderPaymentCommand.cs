@@ -10,4 +10,5 @@ public sealed record UpdatePurchaseOrderPaymentCommand(
     
     public bool OrderPaid { get; init; }
     public DateOnly? BalancePaidDate { get; init; }
+    public uint Version { get; init; }
 }

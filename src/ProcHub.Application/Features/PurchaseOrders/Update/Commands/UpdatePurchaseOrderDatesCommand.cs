@@ -12,4 +12,5 @@ public sealed record UpdatePurchaseOrderDatesCommand(
     public DateOnly? ArrivalDate { get; init; }
     public DateOnly? ExpectedDeliveryDate { get; init; }
     public DateOnly? DeliveryDate { get; init; }
+    public uint Version { get; init; }
 }

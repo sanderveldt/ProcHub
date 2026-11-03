@@ -24,6 +24,12 @@ public sealed class UpdatePurchaseOrderReferencesHandler(
             ?? throw new NotFoundException(
                 $"PurchaseOrder with code {command.Code} not found.");
 
+        if (purchaseOrder.Version != command.Version)
+        {
+            throw new ConcurrencyException(
+                $"PurchaseOrder '{purchaseOrder.Code}' was changed by another user.");
+        }
+
         if (command.ConfirmationReference is not null)
         {
             purchaseOrder.SetConfirmationReference(command.ConfirmationReference);

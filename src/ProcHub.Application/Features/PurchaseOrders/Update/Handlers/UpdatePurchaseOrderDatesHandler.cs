@@ -25,6 +25,12 @@ public sealed class UpdatePurchaseOrderDatesHandler(
             ?? throw new NotFoundException(
                 $"PurchaseOrder with code {command.Code} not found.");
 
+        if (purchaseOrder.Version != command.Version)
+        {
+            throw new ConcurrencyException(
+                $"PurchaseOrder '{purchaseOrder.Code}' was changed by another user.");
+        }
+
         purchaseOrder.SetOrderConfirmationDate(command.OrderConfirmationDate);
         purchaseOrder.SetRequestedProductionDate(command.RequestedProductionDate);
         purchaseOrder.SetProductionDoneDate(command.ProductionDoneDate);
