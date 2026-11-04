@@ -25,5 +25,8 @@ public sealed class CountryConfiguration
 
         builder.HasIndex(c => c.Code)
             .IsUnique();
+        
+        builder.HasIndex(c => c.Name)
+            .IsUnique();
     }
 }
