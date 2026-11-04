@@ -16,6 +16,9 @@ public class Article
     public string Description { get; private set; } = null!;
     public decimal PurchasePrice { get; private set; }
 
+    public string? OrderCode { get; private set; }
+    public string? EanCode { get; private set; }
+
     public int ArticleGroupId { get; private set; }
     public ArticleGroup ArticleGroup { get; private set; } = null!;
 
@@ -114,8 +117,46 @@ public class Article
         Supplier = supplier;
     }
 
+    public void SetOrderCode(string? orderCode)
+    {
+        if (string.IsNullOrWhiteSpace(orderCode))
+        {
+            OrderCode = null;
+            return;
+        }
 
+        if (orderCode.Length > ArticleConstants.OrderCodeMaxLength)
+        {
+            throw new DomainException(
+                "Order code cannot exceed " + 
+                $"{ArticleConstants.OrderCodeMaxLength} characters.");
+        }
 
+        OrderCode = orderCode.Trim();
+    }
 
+    public void SetEanCode(string? eanCode)
+    {
+        if (string.IsNullOrWhiteSpace(eanCode))
+        {
+            EanCode = null;
+            return;
+        }
+
+        if (eanCode.Length != ArticleConstants.EanCodeMaxLength)
+        {
+            throw new DomainException(
+                "EAN code must be exactly " + 
+                $"{ArticleConstants.EanCodeMaxLength} digits long.");
+        }
+
+        if (!eanCode.All(char.IsDigit))
+        {
+            throw new DomainException(
+                "EAN code must contain only digits.");
+        }
+
+        EanCode = eanCode;
+    }
     
 }

@@ -33,6 +33,12 @@ public sealed class ArticleConfiguration
         builder.Property(a => a.PurchasePrice)
             .HasPrecision(18, 2)
             .IsRequired();
+
+        builder.Property(a => a.OrderCode)
+            .HasMaxLength(ArticleConstants.OrderCodeMaxLength);
+        
+        builder.Property(a => a.EanCode)
+            .HasMaxLength(ArticleConstants.EanCodeMaxLength);
         
         builder.HasOne(a => a.ArticleGroup)
             .WithMany(ag => ag.Articles)
