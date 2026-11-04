@@ -7,7 +7,7 @@ using ProcHub.Api.Endpoints.Authentication;
 using ProcHub.Api.Endpoints.PaymentTerms;
 using ProcHub.Api.Endpoints.ShippingTerms;
 using ProcHub.Api.Endpoints.PurchaseOrders;
-using ProcHub.Infrastructure.Persistence.Seeding;
+using ProcHub.Api.Endpoints.Countries;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +40,7 @@ app.MapSupplierEndpoints();
 app.MapPaymentTermEndpoints();
 app.MapShippingTermEndpoints();
 app.MapPurchaseOrderEndpoints();
+app.MapCountryEndpoints();
 
 app.Run();
 

@@ -20,6 +20,9 @@ using ProcHub.Application.Features.Users.Create;
 using ProcHub.Application.Features.Users.Delete;
 using ProcHub.Application.Features.Users.Get;
 using ProcHub.Application.Features.Users.Update;
+using ProcHub.Application.Features.Countries.Create;
+using ProcHub.Application.Features.Countries.Get;
+using ProcHub.Application.Features.Countries.Delete;
 
 namespace ProcHub.Application;
 
@@ -61,6 +64,11 @@ public static class DependencyInjection
         services.AddScoped<ListUsersHandler>();
         services.AddScoped<UpdateUserHandler>();
         services.AddScoped<DeleteUserHandler>();
+
+        services.AddScoped<CreateCountryHandler>();
+        services.AddScoped<GetCountryHandler>();
+        services.AddScoped<ListCountriesHandler>();
+        services.AddScoped<DeleteCountryHandler>();
 
         services.AddValidatorsFromAssembly(
             typeof(DependencyInjection).Assembly);
