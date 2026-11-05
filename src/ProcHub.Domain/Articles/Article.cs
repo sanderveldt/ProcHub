@@ -158,5 +158,16 @@ public class Article
 
         EanCode = eanCode;
     }
+
+    public void SetStatus(ArticleStatus status)
+    {
+        if (!Enum.IsDefined(status))
+        {
+            throw new DomainException(
+                $"'{status}' is not a valid article status.");
+        }
+
+        Status = status;
+    }
     
 }
