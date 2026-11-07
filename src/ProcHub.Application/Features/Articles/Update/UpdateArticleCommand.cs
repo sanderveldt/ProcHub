@@ -1,5 +1,3 @@
-using ProcHub.Domain.Articles;
-
 namespace ProcHub.Application.Features.Articles.Update;
 
 public sealed record UpdateArticleCommand
@@ -10,7 +8,7 @@ public sealed record UpdateArticleCommand
     public string? EanCode { get; init; }
     public required int ArticleGroupId { get; init; }
     public required int SupplierId { get; init; }
-    public required ArticleStatus Status { get; init; }
+    public int Status { get; init; }
 
     public required uint Version { get; init; }
 }

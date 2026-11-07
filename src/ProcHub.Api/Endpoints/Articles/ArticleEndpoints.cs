@@ -11,6 +11,10 @@ public static class ArticleEndpoints
             .RequireAuthorization();
 
         group.MapCreateArticleEndpoint();
+        group.MapUpdateArticleEndpoint();
+        group.MapGetArticleEndpoint();
+        group.MapListArticlesEndpoint();
+        group.MapDeleteArticleEndpoint();
         
         return endpoints;
     }

@@ -1,6 +1,7 @@
 using FluentValidation;
 using ProcHub.Application.Abstractions;
 using ProcHub.Application.Exceptions;
+using ProcHub.Domain.Articles;
 
 namespace ProcHub.Application.Features.Articles.Update;
 
@@ -37,7 +38,7 @@ public sealed class UpdateArticleHandler(
         article.SetPurchasePrice(command.PurchasePrice);
         article.SetOrderCode(command.OrderCode);
         article.SetEanCode(command.EanCode);
-        article.SetStatus(command.Status);
+        article.SetStatus((ArticleStatus)command.Status);
         
         if (article.ArticleGroupId != command.ArticleGroupId)
         {
