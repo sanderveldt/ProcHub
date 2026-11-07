@@ -46,7 +46,7 @@ public class Country
                 "Country name is required.");
         }
 
-        if (name.Length > CountryConstants.CodeMaxLength)
+        if (name.Length > CountryConstants.NameMaxLength)
         {
             throw new DomainException(
                 "Country name cannot exceed " + 

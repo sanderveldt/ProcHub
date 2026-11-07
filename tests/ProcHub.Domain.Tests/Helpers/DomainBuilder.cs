@@ -3,6 +3,7 @@ using ProcHub.Domain.PaymentTerms;
 using ProcHub.Domain.ShippingTerms;
 using ProcHub.Domain.PurchaseOrders;
 using ProcHub.Domain.PurchaseOrders.Enums;
+using ProcHub.Domain.Countries;
 
 namespace ProcHub.Domain.Tests.Helpers;
 
@@ -53,5 +54,12 @@ public class DomainBuilder
     {
         return DateOnly
             .FromDateTime(DateTime.Today);
+    }
+
+    public static Country CreateCountry()
+    {
+        return new Country(
+            "TEST",
+            "Test Country");
     }
 }

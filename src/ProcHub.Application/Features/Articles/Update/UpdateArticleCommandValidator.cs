@@ -41,10 +41,10 @@ public sealed class UpdateArticleCommandValidator
             .WithMessage("Supplier is required.")
             .GreaterThan(0); 
 
-        RuleFor(x => x.ArticleStatus)
-            .Must(value => Enum.IsDefined(
+        RuleFor(x => x.Status)
+            .Must(status => Enum.IsDefined(
                 typeof(ArticleStatus),
-                value))
+                status))
             .WithMessage("Invalid article status value");
     }
 }
