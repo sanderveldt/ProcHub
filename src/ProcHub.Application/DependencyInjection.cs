@@ -23,6 +23,10 @@ using ProcHub.Application.Features.Users.Update;
 using ProcHub.Application.Features.Countries.Create;
 using ProcHub.Application.Features.Countries.Get;
 using ProcHub.Application.Features.Countries.Delete;
+using ProcHub.Application.Features.Articles.ArticleGroups.Create;
+using ProcHub.Application.Features.Articles.ArticleGroups.Get;
+using ProcHub.Application.Features.Articles.ArticleGroups.Update;
+using ProcHub.Application.Features.Articles.ArticleGroups.Delete;
 using ProcHub.Application.Features.Articles.Create;
 using ProcHub.Application.Features.Articles.Get;
 using ProcHub.Application.Features.Articles.Update;
@@ -74,6 +78,12 @@ public static class DependencyInjection
         services.AddScoped<GetCountryHandler>();
         services.AddScoped<ListCountriesHandler>();
         services.AddScoped<DeleteCountryHandler>();
+
+        services.AddScoped<CreateArticleGroupHandler>();
+        services.AddScoped<GetArticleGroupHandler>();
+        services.AddScoped<ListArticleGroupsHandler>();
+        services.AddScoped<UpdateArticleGroupHandler>();
+        services.AddScoped<DeleteArticleGroupHandler>();
 
         services.AddScoped<CreateArticleHandler>();
         services.AddScoped<GetArticleHandler>();

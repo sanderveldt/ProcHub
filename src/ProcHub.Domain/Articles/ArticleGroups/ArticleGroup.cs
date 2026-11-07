@@ -41,7 +41,7 @@ public class ArticleGroup
         Code = code.Trim();
     }
 
-    private void SetName(string name)
+    public void SetName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -60,6 +60,12 @@ public class ArticleGroup
 
     public void SetDescription(string? description)
     {
+        if (string.IsNullOrWhiteSpace(description))
+        {
+            Description = null;
+            return;
+        }
+
         if (description?.Length > ArticleGroupConstants.DescriptionMaxLength)
         {
             throw new DomainException(
