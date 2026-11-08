@@ -1,9 +1,8 @@
-using System.Runtime.InteropServices;
 using ProcHub.Domain.Articles.ArticleGroups;
 using ProcHub.Domain.Exceptions;
 using ProcHub.Domain.Tests.Helpers;
 
-namespace ProcHub.Domain.Articles.ArticleGroups;
+namespace ProcHub.Domain.Tests.Articles.ArticleGroups;
 
 public class ArticleGroupTests
 {

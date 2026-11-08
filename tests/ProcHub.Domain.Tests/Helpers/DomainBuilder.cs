@@ -5,6 +5,7 @@ using ProcHub.Domain.PurchaseOrders;
 using ProcHub.Domain.PurchaseOrders.Enums;
 using ProcHub.Domain.Countries;
 using ProcHub.Domain.Articles.ArticleGroups;
+using ProcHub.Domain.Articles;
 
 namespace ProcHub.Domain.Tests.Helpers;
 
@@ -69,5 +70,19 @@ public class DomainBuilder
         return new ArticleGroup(
             "32",
             "TEST");
+    }
+
+    public static Article CreateArticle(
+        string? code = null,
+        decimal? purchasePrice = null,
+        ArticleGroup? group = null,
+        Supplier? supplier = null)
+    {
+        return new Article(
+            code ?? "032",
+            "TestDescription",
+            purchasePrice ?? 32.32m,
+            group ?? CreateArticleGroup(),
+            supplier ?? CreateSupplier());
     }
 }
