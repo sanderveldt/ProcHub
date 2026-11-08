@@ -4,6 +4,7 @@ using ProcHub.Domain.ShippingTerms;
 using ProcHub.Domain.PurchaseOrders;
 using ProcHub.Domain.PurchaseOrders.Enums;
 using ProcHub.Domain.Countries;
+using ProcHub.Domain.Articles.ArticleGroups;
 
 namespace ProcHub.Domain.Tests.Helpers;
 
@@ -61,5 +62,12 @@ public class DomainBuilder
         return new Country(
             "TEST",
             "Test Country");
+    }
+
+    public static ArticleGroup CreateArticleGroup()
+    {
+        return new ArticleGroup(
+            "32",
+            "TEST");
     }
 }
