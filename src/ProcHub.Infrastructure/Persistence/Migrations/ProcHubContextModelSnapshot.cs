@@ -157,6 +157,127 @@ namespace ProcHub.Infrastructure.Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ProcHub.Domain.Articles.Article", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ArticleGroupId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<DateOnly>("CreationDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("EanCode")
+                        .HasMaxLength(13)
+                        .HasColumnType("character varying(13)");
+
+                    b.Property<string>("OrderCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<decimal>("PurchasePrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<int>("SupplierId")
+                        .HasColumnType("integer");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArticleGroupId");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.HasIndex("SupplierId");
+
+                    b.ToTable("Articles", (string)null);
+                });
+
+            modelBuilder.Entity("ProcHub.Domain.Articles.ArticleGroups.ArticleGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("ArticleGroups", (string)null);
+                });
+
+            modelBuilder.Entity("ProcHub.Domain.Countries.Country", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("character varying(3)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Countries", (string)null);
+                });
+
             modelBuilder.Entity("ProcHub.Domain.PaymentTerms.PaymentTerm", b =>
                 {
                     b.Property<int>("Id")
@@ -369,6 +490,12 @@ namespace ProcHub.Infrastructure.Persistence.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("character varying(25)");
 
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Code")
@@ -422,6 +549,9 @@ namespace ProcHub.Infrastructure.Persistence.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("character varying(10)");
 
+                    b.Property<int?>("CountryId")
+                        .HasColumnType("integer");
+
                     b.Property<DateOnly>("CreationDate")
                         .HasColumnType("date");
 
@@ -473,10 +603,18 @@ namespace ProcHub.Infrastructure.Persistence.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Code")
                         .IsUnique();
+
+                    b.HasIndex("CountryId");
 
                     b.HasIndex("DefaultPaymentTermId");
 
@@ -620,6 +758,25 @@ namespace ProcHub.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ProcHub.Domain.Articles.Article", b =>
+                {
+                    b.HasOne("ProcHub.Domain.Articles.ArticleGroups.ArticleGroup", "ArticleGroup")
+                        .WithMany("Articles")
+                        .HasForeignKey("ArticleGroupId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ProcHub.Domain.Suppliers.Supplier", "Supplier")
+                        .WithMany()
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ArticleGroup");
+
+                    b.Navigation("Supplier");
+                });
+
             modelBuilder.Entity("ProcHub.Domain.PurchaseOrders.PurchaseOrder", b =>
                 {
                     b.HasOne("ProcHub.Domain.PaymentTerms.PaymentTerm", "PaymentTerm")
@@ -649,6 +806,11 @@ namespace ProcHub.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("ProcHub.Domain.Suppliers.Supplier", b =>
                 {
+                    b.HasOne("ProcHub.Domain.Countries.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("ProcHub.Domain.PaymentTerms.PaymentTerm", "DefaultPaymentTerm")
                         .WithMany()
                         .HasForeignKey("DefaultPaymentTermId")
@@ -668,7 +830,8 @@ namespace ProcHub.Infrastructure.Persistence.Migrations
 
                     b.HasOne("ProcHub.Domain.PaymentTerms.PaymentTerm", "SamplePaymentTerm")
                         .WithMany()
-                        .HasForeignKey("SamplePaymentTermId");
+                        .HasForeignKey("SamplePaymentTermId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ProcHub.Domain.ShippingTerms.ShippingTerm", "SampleShippingTerm")
                         .WithMany()
@@ -685,6 +848,8 @@ namespace ProcHub.Infrastructure.Persistence.Migrations
                         .HasForeignKey("SecondaryShippingTermId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.Navigation("Country");
+
                     b.Navigation("DefaultPaymentTerm");
 
                     b.Navigation("MainShippingTerm");
@@ -696,6 +861,11 @@ namespace ProcHub.Infrastructure.Persistence.Migrations
                     b.Navigation("SecondaryPaymentTerm");
 
                     b.Navigation("SecondaryShippingTerm");
+                });
+
+            modelBuilder.Entity("ProcHub.Domain.Articles.ArticleGroups.ArticleGroup", b =>
+                {
+                    b.Navigation("Articles");
                 });
 #pragma warning restore 612, 618
         }
