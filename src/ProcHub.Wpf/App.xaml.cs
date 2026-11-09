@@ -22,6 +22,8 @@ using ProcHub.Wpf.Infrastructure.Services;
 using OpenOrdersDashboardViewModel = 
     ProcHub.Wpf.Features.PurchaseOrders.Dashboard.ViewModels.DashboardViewModel;
 using System.Net.Sockets;
+using ProcHub.Wpf.Features.Authentication.ViewModels;
+using ProcHub.Wpf.Features.Authentication.Views;
 
 namespace ProcHub.Wpf;
 public partial class App : Application
@@ -47,22 +49,26 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
+        ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
         try{
 
         
             await _host.StartAsync();
 
+            var loginWindow = _host
+                .Services.GetRequiredService<LoginWindow>();
+
+            bool? loginResult = loginWindow.ShowDialog();
         
-            // Temporary Development authlogin, remove later
             var authentication = _host
                 .Services.GetRequiredService<AuthenticationService>();
         
-            const string devEmail = "admin32@prochub.local";
-            const string devPassword = "DEV_stronger_password32";
-
-            await authentication.LoginAsync(
-                    devEmail,
-                    devPassword);
+            if (loginResult != true || !authentication.IsAuthenticated)
+            {
+                Shutdown();
+                return;
+            }
             
 
             var navigation = _host
@@ -152,7 +158,9 @@ public partial class App : Application
             })
             .AddHttpMessageHandler<BearerTokenHandler>()
             .AddHttpMessageHandler<ApiErrorHandler>();
-            
+
+        services.AddTransient<LoginViewModel>();
+        services.AddTransient<LoginWindow>();
 
         services.AddSingleton<AuthenticationService>();
         services.AddSingleton<INavigationService, NavigationService>();
