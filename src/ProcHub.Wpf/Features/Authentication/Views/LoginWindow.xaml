@@ -85,6 +85,18 @@
                     HorizontalAlignment="Center"
                     Margin="0,0,0,8"          
                     />
+
+                <TextBlock
+                    Grid.Row="4"
+                    Width="250"
+                    HorizontalAlignment="Center"
+                    Text="{Binding ErrorMessage}"
+                    FontSize="14"
+                    FontWeight="Bold"
+                    TextWrapping="Wrap"
+                    Foreground="OrangeRed"
+                    Margin="0,0,4,8"     
+                    />
                 
                 <!-- Grid.Row 4 , added error textblock here -->
 
@@ -99,6 +111,7 @@
             VerticalAlignment="Stretch"
             Margin="8,4,8,8"
             Content="Log In"
+            Command="{Binding LoginCommand}"
             FontWeight="DemiBold"
             />
 
