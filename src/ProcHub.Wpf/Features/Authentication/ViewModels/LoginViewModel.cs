@@ -49,10 +49,9 @@ public partial class LoginViewModel : ObservableObject
 
             LoginSucceeded?.Invoke(this, EventArgs.Empty);
         }
-        catch (ApiException)
+        catch (ApiException ex)
         {
-            ErrorMessage =
-                "Login failed. Check your credentials or API connection.";
+            ErrorMessage = ex.Message;
         }
         catch (Exception)
         {

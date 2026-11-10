@@ -28,6 +28,7 @@
             Grid.Row="1"
             Grid.Column="0"
             Text="Please log in"
+            FontSize="16"
             FontWeight="DemiBold"
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom"
@@ -59,7 +60,7 @@
                     Text="Email"
                     FontSize="16"
                     FontWeight="DemiBold"
-                     />
+                    />
 
                 <TextBox 
                     Grid.Row="1"
@@ -67,6 +68,7 @@
                     HorizontalAlignment="Center"
                     Margin="0,4,0,8"
                     FontWeight="DemiBold"
+                    Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
                     />
 
                 <TextBlock
@@ -88,14 +90,13 @@
 
                 <TextBlock
                     Grid.Row="4"
-                    Width="250"
                     HorizontalAlignment="Center"
                     Text="{Binding ErrorMessage}"
-                    FontSize="14"
+                    TextAlignment="Center"
                     FontWeight="Bold"
                     TextWrapping="Wrap"
                     Foreground="OrangeRed"
-                    Margin="0,0,4,8"     
+                    Margin="12,4,12,8"     
                     />
                 
                 <!-- Grid.Row 4 , added error textblock here -->
@@ -111,9 +112,20 @@
             VerticalAlignment="Stretch"
             Margin="8,4,8,8"
             Content="Log In"
-            Command="{Binding LoginCommand}"
+            
             FontWeight="DemiBold"
-            />
+            Click="OnLoginClick">
+            <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsBusy}" Value="True">
+                            <Setter Property="IsEnabled" Value="False" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+            
 
 
     </Grid>
