@@ -6,6 +6,7 @@
     xmlns:homeViews="clr-namespace:ProcHub.Wpf.Features.Home.Views"
     xmlns:settingsVm="clr-namespace:ProcHub.Wpf.Features.Settings.ViewModels"
     xmlns:usersVm="clr-namespace:ProcHub.Wpf.Features.Users.ViewModels"
+    xmlns:usersViews="clr-namespace:ProcHub.Wpf.Features.Users.Views"
     xmlns:purchaseOrdersDashboardVm="clr-namespace:ProcHub.Wpf.Features.PurchaseOrders.Dashboard.ViewModels"
     xmlns:purchaseOrdersDashboardViews="clr-namespace:ProcHub.Wpf.Features.PurchaseOrders.Dashboard.Views"
     xmlns:suppliersVm="clr-namespace:ProcHub.Wpf.Features.Suppliers.ViewModels"
@@ -36,7 +37,7 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type usersVm:UsersViewModel}">
-        <shellViews:PlaceholderView />
+        <usersViews:UsersView />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type settingsVm:SettingsViewModel}">
