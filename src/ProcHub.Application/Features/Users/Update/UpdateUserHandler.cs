@@ -33,11 +33,19 @@ public sealed class UpdateUserHandler(
             command.UserName,
             command.Role,
             command.DisplayName,
+            command.NewPassword,
             cancellationToken);
 
         logger.LogInformation(
             "User {UserId} updated.",
             updatedUser.Id);
+
+        if (command.NewPassword is not null)
+        {
+            logger.LogInformation(
+                "Password for user {UserId} reset.",
+                updatedUser.Id);
+        }
         
         if (existingUser.Role != updatedUser.Role)
         {

@@ -5,4 +5,5 @@ public sealed record UpdateUserCommand(
     string Role)
 {
     public string? DisplayName { get; init; }
+    public string? NewPassword { get; init; }
 }

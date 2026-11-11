@@ -29,5 +29,10 @@ public sealed class UpdateUserCommandValidator
             .WithMessage(
                 "Display name cannot exceed " +
                 $"{UserConstants.DisplayNameMaxLength} characters.");
+
+        RuleFor(u => u.NewPassword)
+            .NotEmpty()
+            .WithMessage("New password cannot be empty.")
+            .When(u => u.NewPassword is not null);
     }
 }

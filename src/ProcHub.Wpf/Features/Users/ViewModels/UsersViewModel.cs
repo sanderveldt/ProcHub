@@ -132,6 +132,7 @@ public sealed partial class UsersViewModel : PageViewModel
             Role!)
         {
             DisplayName = DisplayName
+
         };
 
         var newUser = await _usersApiClient
@@ -204,5 +205,4 @@ public sealed partial class UsersViewModel : PageViewModel
             ShowError(ex.Message);
         }
     }
-}
-       
+}    

@@ -27,6 +27,7 @@ public interface IUserIdentityService
         string userName,
         string role,
         string? displayName,
+        string? newPassword,
         CancellationToken cancellationToken = default);
 
     Task DeleteAsync(

@@ -173,6 +173,7 @@ public sealed class UserIdentityService(
         string userName,
         string role,
         string? displayName,
+        string? newPassword,
         CancellationToken cancellationToken = default)
     {   
         if (!AppRoles.IsValid(role))
@@ -198,7 +199,7 @@ public sealed class UserIdentityService(
         if (isAdmin)
         {
             var admins = await userManager
-                .GetUsersInRoleAsync("Admin");
+                .GetUsersInRoleAsync(AppRoles.Admin);
             
             bool isOnlyAdmin = admins.Count == 1;
 
@@ -252,6 +253,24 @@ public sealed class UserIdentityService(
         {
             EnsureSucceeded(await userManager
                 .AddToRoleAsync(user, role));
+        }
+
+        if (newPassword is not null)
+        {
+            if (string.IsNullOrWhiteSpace(newPassword))
+            {
+                throw new InvalidStateException(
+                    "New password cannot be empty.");
+            }
+
+            var token = await userManager
+                .GeneratePasswordResetTokenAsync(user);
+
+            EnsureSucceeded(await userManager
+                .ResetPasswordAsync(
+                    user,
+                    token,
+                    newPassword));
         }
 
         await transaction.CommitAsync(cancellationToken);

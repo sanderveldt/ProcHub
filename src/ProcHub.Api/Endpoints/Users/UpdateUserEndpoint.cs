@@ -29,7 +29,8 @@ public static class UpdateUserEndpoint
             request.UserName,
             request.Role)
         {
-            DisplayName = request.DisplayName   
+            DisplayName = request.DisplayName,
+            NewPassword = request.NewPassword
         };
 
         var result = await handler.HandleAsync(
