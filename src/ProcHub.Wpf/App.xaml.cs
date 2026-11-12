@@ -132,6 +132,7 @@ public partial class App : Application
         services.AddTransient<BearerTokenHandler>();
         services.AddTransient<ApiErrorHandler>();
 
+        services.AddSingleton<UsersApiClient>();
         services.AddSingleton<ShippingTermsApiClient>();
         services.AddSingleton<PaymentTermsApiClient>();
         services.AddSingleton<SuppliersApiClient>();

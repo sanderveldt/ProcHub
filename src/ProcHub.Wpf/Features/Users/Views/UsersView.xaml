@@ -16,38 +16,91 @@
 
                 <Button 
                     Content="New"
+                    Command="{Binding NewCommand}"
                     Width="75"
                     Margin="2,0,0,0"
                     />
 
                 <Button 
                     Content="Save"
+                    Click="Save_Click"
                     Width="75"
                     Margin="4,0,0,0"
                     />
 
                 <Button 
                     Content="Edit"
+                    Command="{Binding EditCommand}"
                     Width="75"
                     Margin="4,0,0,0"
                     />
 
                 <Button 
                     Content="Delete"
+                    Command="{Binding DeleteCommand}"
                     Width="75"
                     Margin="4,0,0,0"
                     />
 
-
-
-
-
-
-
             </StackPanel>
 
+            <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="2" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="0,0,2,8"
+                    Background="{DynamicResource ControlFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8" >
+
+                    <Grid Margin="16" >
+
+                        <Grid.ColumnDefinitions>
+                            
+                            <ColumnDefinition Width="150" />
+                            
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            
+                        </Grid.RowDefinitions>
 
 
+
+                        <PasswordBox
+                            x:Name="NewPasswordBox"
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            Margin="0,5,0,10" />    
+
+
+
+
+                    </Grid>
+                                      
+                </Border>
+                
+                
+            </Grid>
+            
         </DockPanel>
 
     </ScrollViewer>
