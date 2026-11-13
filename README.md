@@ -119,7 +119,7 @@ Migrations live in `src/ProcHub.Infrastructure/Persistence/Migrations` and run a
 
 ```bash
 dotnet tool restore
-dotnet ef migrations add <MigrationName> --project src/ProcHub.Infrastructure --startup-project src/ProcHub.Api
+dotnet ef migrations add <MigrationName> --project src/ProcHub.Infrastructure/ProcHub.Infrastructure.csproj --startup-project src/ProcHub.Api/ProcHub.Api.csproj
 ```
 
 ## Project structure
