@@ -97,8 +97,29 @@
                     </Grid>
                                       
                 </Border>
-                
-                
+
+                <GridSplitter
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Width="8"
+                    Margin="0,0,0,8"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    ResizeDirection="Columns"
+                    ResizeBehavior="PreviousAndNext"
+                    Background="Transparent"
+                    Cursor="SizeWE"
+                    FocusVisualStyle="{x:Null}">
+
+                    <GridSplitter.Template>
+                        <ControlTemplate TargetType="GridSplitter">
+                            <Border Background="Transparent" />
+                        </ControlTemplate>
+                    </GridSplitter.Template>
+
+                </GridSplitter>
+
+
             </Grid>
             
         </DockPanel>
