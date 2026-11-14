@@ -27,7 +27,7 @@ public sealed partial class UsersViewModel : PageViewModel
     }
 
     public ObservableCollection<UserResponse> Users
-    { get; } = new();
+        { get; } = new();
 
     public IReadOnlyList<string> Roles => AppRoles.All;
 

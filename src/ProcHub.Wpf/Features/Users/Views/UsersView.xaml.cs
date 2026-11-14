@@ -12,6 +12,16 @@ public partial class UsersView : UserControl
         InitializeComponent();
     }
 
+    private async void UsersView_OnLoaded(
+        object sender,
+        RoutedEventArgs e)
+    {
+        if (DataContext is UsersViewModel vm)
+        {
+            await vm.LoadAllUsersAsync();
+        }
+    }
+
     private async void Save_Click(
     object sender,
     RoutedEventArgs e)
