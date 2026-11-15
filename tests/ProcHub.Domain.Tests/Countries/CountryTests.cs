@@ -26,7 +26,7 @@ public class CountryTests
     }
 
     [Fact]
-    public void Constructor_WhenWhiteSpace_TrimsCodeAndName()
+    public void Constructor_WhenOutsideWhiteSpace_TrimsCodeAndName()
     {
         string testCode = " X ";
         string trimmedCode = "X";

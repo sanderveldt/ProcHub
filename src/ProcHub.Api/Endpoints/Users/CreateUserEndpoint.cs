@@ -13,7 +13,7 @@ public static class CreateUserEndpoint
     {
         group.MapPost("/", HandleAsync)
              .RequireAuthorization(
-                AppPolicies.AdminOnly);
+                AppPolicies.SuperUserOrAdmin);
 
         return group;
     }

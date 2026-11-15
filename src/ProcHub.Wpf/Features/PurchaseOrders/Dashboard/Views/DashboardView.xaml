@@ -7,6 +7,8 @@
 
     <UserControl.Resources>
 
+        <datevalidation:DashboardDateOnlyConverter x:Key="DashboardDateOnlyConverter" />
+
         <Style x:Key="DetailsSectionHeaderStyle"
                TargetType="{x:Type TextBlock}">
 
@@ -67,7 +69,6 @@
         </Style>
 
 
-        <!-- Compact category buttons, with a visible active state. -->
         <Style x:Key="DashboardDetailsCategoryButtonStyle"
                TargetType="{x:Type Button}">
             <Setter Property="FontSize" Value="11" />
@@ -111,7 +112,6 @@
             </Style.Triggers>
         </Style>
 
-        <!-- The fields from the former long row-details panel, separated by category. -->
         <DataTemplate x:Key="PaymentDetailsSectionTemplate">
             <StackPanel>
                 <!-- PAYMENT -->
@@ -208,7 +208,7 @@
                                 <Binding Path="DepositPaidDate"
                                          Mode="TwoWay"
                                          UpdateSourceTrigger="LostFocus"
-                                         StringFormat="{}{0:dd-MM-yyyy}"
+                                         Converter="{StaticResource DashboardDateOnlyConverter}"
                                          ValidatesOnExceptions="True">
 
                                     <Binding.ValidationRules>
@@ -285,7 +285,7 @@
                                 <Binding Path="BalancePaidDate"
                                          Mode="TwoWay"
                                          UpdateSourceTrigger="LostFocus"
-                                         StringFormat="{}{0:dd-MM-yyyy}"
+                                         Converter="{StaticResource DashboardDateOnlyConverter}"
                                          ValidatesOnExceptions="True">
 
                                     <Binding.ValidationRules>
@@ -308,7 +308,7 @@
         </DataTemplate>
 
 
-        <!-- The fields from the former long row-details panel, separated by category. -->
+        
         <DataTemplate x:Key="LogisticsDetailsSectionTemplate">
             <StackPanel>
                 <!-- LOGISTICS -->
@@ -369,7 +369,6 @@
             </StackPanel>
         </DataTemplate>
 
-        <!-- Only one category is shown in the expanded row at a time. -->
         <DataTemplate x:Key="PurchaseOrderDetailsTemplate">
             <Border Margin="8,2,8,8"
                     Padding="8"
@@ -379,7 +378,7 @@
                     BorderThickness="1">
 
                 <StackPanel>
-                    <!-- Keep tall categories compact, with internal scrolling if needed. -->
+                    
                     <ScrollViewer MaxHeight="225"
                                   HorizontalScrollBarVisibility="Disabled"
                                   VerticalScrollBarVisibility="Auto">
@@ -401,7 +400,6 @@
                         </ContentControl>
                     </ScrollViewer>
 
-                    <!-- Save errors remain visible regardless of selected category. -->
                     <!-- SAVE ERROR -->
 
                     <TextBlock Margin="0,8,0,0"
@@ -484,9 +482,6 @@
                   FrozenColumnCount="2">
 
             <DataGrid.Columns>
-
-                <!-- Compact main row: Pay, Flags and Ship now have independent narrow cells
-                     near their related fields. All overlay editors and bindings are retained. -->
 
 
                 <!-- Purchase order -->
@@ -666,7 +661,7 @@
                                                 <TextBox.Text>
                                                     <Binding Path="InvoiceDate" Mode="TwoWay"
                                                              UpdateSourceTrigger="LostFocus"
-                                                             StringFormat="{}{0:dd-MM-yyyy}"
+                                                             Converter="{StaticResource DashboardDateOnlyConverter}"
                                                              ValidatesOnExceptions="True">
                                                         <Binding.ValidationRules>
                                                             <datevalidation:DateOnlyValidationRule DateFormat="dd-MM-yyyy" />
@@ -829,7 +824,7 @@
                                 <TextBox.Text>
                                     <Binding Path="ConfirmationDate" Mode="TwoWay"
                                              UpdateSourceTrigger="LostFocus"
-                                             StringFormat="{}{0:dd-MM-yyyy}"
+                                             Converter="{StaticResource DashboardDateOnlyConverter}"
                                              ValidatesOnExceptions="True">
                                         <Binding.ValidationRules>
                                             <datevalidation:DateOnlyValidationRule DateFormat="dd-MM-yyyy" />
@@ -856,7 +851,7 @@
                                     <TextBox.Text>
                                         <Binding Path="ProductionDoneDate" Mode="TwoWay"
                                                  UpdateSourceTrigger="LostFocus"
-                                                 StringFormat="{}{0:dd-MM-yyyy}"
+                                                 Converter="{StaticResource DashboardDateOnlyConverter}"
                                                  ValidatesOnExceptions="True">
                                             <Binding.ValidationRules>
                                                 <datevalidation:DateOnlyValidationRule DateFormat="dd-MM-yyyy" />
@@ -882,7 +877,7 @@
                                                 <TextBox.Text>
                                                     <Binding Path="RequestedProductionDate" Mode="TwoWay"
                                                              UpdateSourceTrigger="LostFocus"
-                                                             StringFormat="{}{0:dd-MM-yyyy}"
+                                                             Converter="{StaticResource DashboardDateOnlyConverter}"
                                                              ValidatesOnExceptions="True">
                                                         <Binding.ValidationRules>
                                                             <datevalidation:DateOnlyValidationRule DateFormat="dd-MM-yyyy" />
@@ -898,7 +893,6 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <!-- Primary date is editable in the row; secondary dates float below it. -->
                 <DataGridTemplateColumn Header="Shipped" Width="106"
                                         SortMemberPath="ShippingDate"
                                         CellStyle="{StaticResource DashboardEditorCellStyle}">
@@ -913,7 +907,7 @@
                                     <TextBox.Text>
                                         <Binding Path="ShippingDate" Mode="TwoWay"
                                                  UpdateSourceTrigger="LostFocus"
-                                                 StringFormat="{}{0:dd-MM-yyyy}"
+                                                 Converter="{StaticResource DashboardDateOnlyConverter}"
                                                  ValidatesOnExceptions="True">
                                             <Binding.ValidationRules>
                                                 <datevalidation:DateOnlyValidationRule DateFormat="dd-MM-yyyy" />
@@ -939,7 +933,7 @@
                                                 <TextBox.Text>
                                                     <Binding Path="BillOfLadingDate" Mode="TwoWay"
                                                              UpdateSourceTrigger="LostFocus"
-                                                             StringFormat="{}{0:dd-MM-yyyy}"
+                                                             Converter="{StaticResource DashboardDateOnlyConverter}"
                                                              ValidatesOnExceptions="True">
                                                         <Binding.ValidationRules>
                                                             <datevalidation:DateOnlyValidationRule DateFormat="dd-MM-yyyy" />
@@ -953,7 +947,7 @@
                                                 <TextBox.Text>
                                                     <Binding Path="ArrivalDate" Mode="TwoWay"
                                                              UpdateSourceTrigger="LostFocus"
-                                                             StringFormat="{}{0:dd-MM-yyyy}"
+                                                             Converter="{StaticResource DashboardDateOnlyConverter}"
                                                              ValidatesOnExceptions="True">
                                                         <Binding.ValidationRules>
                                                             <datevalidation:DateOnlyValidationRule DateFormat="dd-MM-yyyy" />
@@ -984,7 +978,7 @@
                                     <TextBox.Text>
                                         <Binding Path="DeliveryDate" Mode="TwoWay"
                                                  UpdateSourceTrigger="LostFocus"
-                                                 StringFormat="{}{0:dd-MM-yyyy}"
+                                                 Converter="{StaticResource DashboardDateOnlyConverter}"
                                                  ValidatesOnExceptions="True">
                                             <Binding.ValidationRules>
                                                 <datevalidation:DateOnlyValidationRule DateFormat="dd-MM-yyyy" />
@@ -1010,7 +1004,7 @@
                                                 <TextBox.Text>
                                                     <Binding Path="ExpectedDeliveryDate" Mode="TwoWay"
                                                              UpdateSourceTrigger="LostFocus"
-                                                             StringFormat="{}{0:dd-MM-yyyy}"
+                                                             Converter="{StaticResource DashboardDateOnlyConverter}"
                                                              ValidatesOnExceptions="True">
                                                         <Binding.ValidationRules>
                                                             <datevalidation:DateOnlyValidationRule DateFormat="dd-MM-yyyy" />
