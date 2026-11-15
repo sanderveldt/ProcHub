@@ -34,9 +34,16 @@ public sealed class CreatePurchaseOrderHandler(
                 $"A PurchaseOrder with code {code} already exists.");
         }
 
+        // Includes are necessary for loading supplier terms correctly.
         var supplier = await dbContext.Suppliers
-            .FindAsync(
-                [command.SupplierId],
+            .Include(s => s.DefaultPaymentTerm)
+            .Include(s => s.SecondaryPaymentTerm)
+            .Include(s => s.SamplePaymentTerm)
+            .Include(s => s.MainShippingTerm)
+            .Include(s => s.SecondaryShippingTerm)
+            .Include(s => s.SampleShippingTerm)
+            .SingleOrDefaultAsync(
+                s => s.Id == command.SupplierId,
                 cancellationToken)
             ?? throw new NotFoundException(
                 $"SupplierId {command.SupplierId} not found.");
