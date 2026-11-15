@@ -254,15 +254,17 @@
                             FontWeight="SemiBold"
                             Margin="0,0,8,4" />
 
-                        <TextBox
+                        <ComboBox
                             Grid.Row="4"
                             Grid.Column="2"
-                            HorizontalAlignment="Left"
                             Width="150"
-                            Text="{Binding ResponsibleBuyerName, Mode=OneWay}"
-                            FontWeight="DemiBold"
-                            IsReadOnly="True"
-                            Margin="0,0,8,20" />
+                            Margin="0,0,0,16"
+                            HorizontalAlignment="Left"
+                            ItemsSource="{Binding Buyers}"
+                            DisplayMemberPath="DisplayName"
+                            SelectedValuePath="Id"
+                            SelectedValue="{Binding ResponsibleBuyerId, Mode=TwoWay}"
+                            IsEnabled="{Binding CanEditFields}" />
 
 
                         <TextBlock

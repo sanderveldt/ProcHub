@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Linq.Expressions;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -8,6 +9,7 @@ using ProcHub.Contracts.ShippingTerms.Responses;
 using ProcHub.Contracts.Suppliers.Enums;
 using ProcHub.Contracts.Suppliers.Requests;
 using ProcHub.Contracts.Suppliers.Responses;
+using ProcHub.Contracts.Users.Responses;
 using ProcHub.Wpf.Infrastructure.Api;
 using ProcHub.Wpf.Infrastructure.Api.Clients;
 using ProcHub.Wpf.Infrastructure.Navigation;
@@ -20,17 +22,20 @@ public sealed partial class SuppliersViewModel : PageViewModel
     private readonly PurchaseOrdersApiClient _purchaseOrdersApiClient;
     private readonly PaymentTermsApiClient _paymentTermsApiClient;
     private readonly ShippingTermsApiClient _shippingTermsApiClient;
+    private readonly UsersApiClient _usersApiClient;
     public SuppliersViewModel(
         SuppliersApiClient suppliersApiClient,
         PurchaseOrdersApiClient purchaseOrdersApiClient,
         PaymentTermsApiClient paymentTermsApiClient,
-        ShippingTermsApiClient shippingTermsApiClient)
+        ShippingTermsApiClient shippingTermsApiClient,
+        UsersApiClient usersApiClient)
         : base("Suppliers", "Maintain suppliers.")
     {
         _suppliersApiClient = suppliersApiClient;
         _purchaseOrdersApiClient = purchaseOrdersApiClient;
         _paymentTermsApiClient = paymentTermsApiClient;
         _shippingTermsApiClient = shippingTermsApiClient;
+        _usersApiClient = usersApiClient;
     }
 
     public ObservableCollection<SupplierListItemResponse> Suppliers
@@ -43,6 +48,9 @@ public sealed partial class SuppliersViewModel : PageViewModel
         { get; } = new();
 
     public ObservableCollection<PurchaseOrderBySupplierListResponse> PurchaseOrders
+        { get; } = new();
+
+    public ObservableCollection<UserResponse> Buyers
         { get; } = new();
 
     public IReadOnlyList<SupplierStatus> SupplierStatuses
@@ -136,6 +144,10 @@ public sealed partial class SuppliersViewModel : PageViewModel
     public partial DateOnly? CreationDate { get; private set; }
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
+    public partial int? ResponsibleBuyerId { get; set; }
+
+    [ObservableProperty]
     public partial string? ResponsibleBuyerName { get; private set; }
 
     [ObservableProperty]
@@ -215,6 +227,8 @@ public sealed partial class SuppliersViewModel : PageViewModel
         SampleLeadTimeDays = null;
         Status = null;
         CreationDate = null;
+
+        ResponsibleBuyerId = null;
         ResponsibleBuyerName = string.Empty;
 
         IsCreating = true;
@@ -287,7 +301,8 @@ public sealed partial class SuppliersViewModel : PageViewModel
         await Task.WhenAll(
             LoadAllSuppliersAsync(cancellationToken),
             LoadPaymentTermsAsync(cancellationToken),
-            LoadShippingTermsAsync(cancellationToken));
+            LoadShippingTermsAsync(cancellationToken),
+            LoadBuyersAsync(cancellationToken));
     }
 
     public async Task LoadAllSuppliersAsync(
@@ -366,6 +381,9 @@ public sealed partial class SuppliersViewModel : PageViewModel
             SecondaryLeadTimeDays = supplier.SecondaryLeadTimeDays;
             SampleLeadTimeDays = supplier.SampleLeadTimeDays;
 
+            ResponsibleBuyerId = supplier.ResponsibleBuyerId;
+            ResponsibleBuyerName = supplier.BuyerName;
+
             Status = supplier.Status;
             CreationDate = supplier.CreationDate;
         }
@@ -396,7 +414,8 @@ public sealed partial class SuppliersViewModel : PageViewModel
             SecondaryPaymentTermId = SecondaryPaymentTermId,
             MainLeadTimeDays = MainLeadTimeDays!.Value,
             SecondaryLeadTimeDays = SecondaryLeadTimeDays,
-            SampleLeadTimeDays = SampleLeadTimeDays
+            SampleLeadTimeDays = SampleLeadTimeDays,
+            ResponsibleBuyerId = ResponsibleBuyerId
         };
 
         var newSupplier = await _suppliersApiClient
@@ -443,7 +462,8 @@ public sealed partial class SuppliersViewModel : PageViewModel
             SecondaryPaymentTermId = SecondaryPaymentTermId,
             MainLeadTimeDays = MainLeadTimeDays!.Value,
             SecondaryLeadTimeDays = SecondaryLeadTimeDays,
-            SampleLeadTimeDays = SampleLeadTimeDays
+            SampleLeadTimeDays = SampleLeadTimeDays,
+            ResponsibleBuyerId = ResponsibleBuyerId
         };
 
         var updatedSupplier = await _suppliersApiClient
@@ -598,4 +618,28 @@ public sealed partial class SuppliersViewModel : PageViewModel
         }
     }
 
+    public async Task LoadBuyersAsync(
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var users = await _usersApiClient
+                .GetAllAsync(cancellationToken);
+
+            Buyers.Clear();
+
+            foreach (var user in users)
+            {
+                Buyers.Add(user);
+            }
+        }
+        catch (OperationCanceledException)
+            when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        catch (ApiException ex)
+        {
+            ShowError(ex.Message);
+        }
+    }
 }
