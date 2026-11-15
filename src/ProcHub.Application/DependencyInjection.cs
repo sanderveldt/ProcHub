@@ -63,6 +63,7 @@ public static class DependencyInjection
         services.AddScoped<ListPurchaseOrdersHandler>();
         services.AddScoped<ListPurchaseOrdersBySupplierHandler>();
         services.AddScoped<DashboardListHandler>();
+        services.AddScoped<UpdatePurchaseOrderBooleansHandler>();
         services.AddScoped<UpdatePurchaseOrderDatesHandler>();
         services.AddScoped<UpdatePurchaseOrderReferencesHandler>();
         services.AddScoped<UpdatePurchaseOrderPaymentHandler>();
