@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Testcontainers.PostgreSql;
 
 namespace ProcHub.IntegrationTests.Fixtures;
@@ -28,7 +29,11 @@ public sealed class ProcHubApiFactory
         IWebHostBuilder builder)
     {
         builder.UseEnvironment("Production");
-        builder.ConfigureAppConfiguration((_, config) =>
+    }
+
+    protected override IHost CreateHost(IHostBuilder builder)
+    {
+        builder.ConfigureHostConfiguration(config =>
         {
             config.AddInMemoryCollection(
                 new Dictionary<string, string?>
@@ -41,6 +46,8 @@ public sealed class ProcHubApiFactory
                     AdminPassword
             });
         });
+
+        return base.CreateHost(builder);
     }
 
     async Task IAsyncLifetime.DisposeAsync()
