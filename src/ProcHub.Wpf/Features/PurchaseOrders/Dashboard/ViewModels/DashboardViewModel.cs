@@ -121,17 +121,28 @@ public sealed partial class DashboardViewModel : PageViewModel
     private async Task RefreshAsync(
         CancellationToken cancellationToken)
     {
-        await SavePendingChangesAsync(
-            cancellationToken);
-        
-        await LoadAsync(cancellationToken);
+        ClearError();
+
+        try
+        {
+            await SavePendingChangesAsync(cancellationToken);
+            await LoadAsync(cancellationToken);
+        }
+        catch (OperationCanceledException)
+            when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        catch (Exception ex)
+        {
+            ShowError($"Unable to save changes: {ex.Message}");
+        }
     }
 
     public async Task SavePendingChangesAsync(
         CancellationToken cancellationToken = default)
     {
         var dirtyRows = PurchaseOrders
-            .Where(x => x.IsDirty)
+            .Where(x => x.IsDirty || x.IsSaving)
             .ToArray();
         
         foreach (var row in dirtyRows)

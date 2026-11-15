@@ -160,7 +160,7 @@ public sealed class PurchaseOrdersApiClient(
         
         using var response = await client
             .PutAsJsonAsync(
-                $"api/purchaseorders/{code}/payments",
+                $"api/purchaseorders/{code}/payment",
                 request,
                 cancellationToken);
         

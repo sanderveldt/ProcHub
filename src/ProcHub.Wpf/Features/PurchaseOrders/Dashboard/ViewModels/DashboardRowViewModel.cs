@@ -13,6 +13,10 @@ public sealed partial class DashboardRowViewModel : ObservableObject
     private readonly PurchaseOrdersApiClient _apiClient;
     private bool _suppressChanges;
     private uint _version;
+    private Task? _saveTask;
+    private long _datesRevision;
+    private long _referencesRevision;
+    private long _paymentsRevision;
 
     public DashboardRowViewModel(
         PurchaseOrderResponse order,
@@ -338,6 +342,7 @@ public sealed partial class DashboardRowViewModel : ObservableObject
             return;
         }
 
+        _datesRevision++;
         IsDatesDirty = true;
         SaveError = null;
     }
@@ -349,6 +354,7 @@ public sealed partial class DashboardRowViewModel : ObservableObject
             return;
         }
 
+        _referencesRevision++;
         IsReferencesDirty = true;
         SaveError = null;
     }
@@ -360,50 +366,67 @@ public sealed partial class DashboardRowViewModel : ObservableObject
             return;
         }
 
+        _paymentsRevision++;
         IsPaymentsDirty = true;
         SaveError = null;
     }
 
     // SAVE CHANGES
     // Saves when user moves from the row
-    public async Task SaveChangesAsync(
+    public Task SaveChangesAsync(
         CancellationToken cancellationToken = default)
     {
-        if (!IsDirty || IsSaving)
+        if (_saveTask is { IsCompleted: false })
         {
-            return;
+            return _saveTask.WaitAsync(cancellationToken);
         }
 
+        if (!IsDirty)
+        {
+            return Task.CompletedTask;
+        }
+
+        _saveTask = SaveChangesCoreAsync(cancellationToken);
+        return _saveTask;
+    }
+
+    private async Task SaveChangesCoreAsync(
+        CancellationToken cancellationToken)
+    {
         try
         {
             IsSaving = true;
             SaveError = null;
 
-            if (IsDatesDirty)
+            while (IsDirty)
             {
-                await SaveDatesAsync(
-                    cancellationToken);
-            }
+                cancellationToken.ThrowIfCancellationRequested();
 
-            if (IsReferencesDirty)
-            {
-                await SaveReferencesAsync(
-                    cancellationToken);
-            }
+                if (IsDatesDirty)
+                {
+                    await SaveDatesAsync(cancellationToken);
+                }
 
-            if (IsPaymentsDirty)
-            {
-                await SavePaymentsAsync(
-                    cancellationToken);
+                if (IsReferencesDirty)
+                {
+                    await SaveReferencesAsync(cancellationToken);
+                }
+
+                if (IsPaymentsDirty)
+                {
+                    await SavePaymentsAsync(cancellationToken);
+                }
             }
         }
         catch (OperationCanceledException)
             when (cancellationToken.IsCancellationRequested)
         {
+            throw;
         }
-        catch (ApiException ex)
+        catch (Exception ex)
         {
             SaveError = ex.Message;
+            throw;
         }
         finally
         {
@@ -415,6 +438,7 @@ public sealed partial class DashboardRowViewModel : ObservableObject
     private async Task SaveDatesAsync(
         CancellationToken cancellationToken)
     {
+        var revision = _datesRevision;
         var request = 
             new UpdatePurchaseOrderDatesRequest
             {
@@ -435,12 +459,16 @@ public sealed partial class DashboardRowViewModel : ObservableObject
             request,
             cancellationToken);
 
-        IsDatesDirty = false;
+        if (_datesRevision == revision)
+        {
+            IsDatesDirty = false;
+        }
     }
 
     private async Task SaveReferencesAsync(
         CancellationToken cancellationToken)
     {
+        var revision = _referencesRevision;
         var request =
             new UpdatePurchaseOrderReferencesRequest
             {
@@ -457,12 +485,16 @@ public sealed partial class DashboardRowViewModel : ObservableObject
             request,
             cancellationToken);
 
-        IsReferencesDirty = false;
+        if (_referencesRevision == revision)
+        {
+            IsReferencesDirty = false;
+        }
     }
 
     private async Task SavePaymentsAsync(
         CancellationToken cancellationToken)
     {
+        var revision = _paymentsRevision;
         var request =
             new UpdatePurchaseOrderPaymentRequest
             {
@@ -479,7 +511,10 @@ public sealed partial class DashboardRowViewModel : ObservableObject
             request,
             cancellationToken);
         
-        IsPaymentsDirty = false;
+        if (_paymentsRevision == revision)
+        {
+            IsPaymentsDirty = false;
+        }
     }
 
 }

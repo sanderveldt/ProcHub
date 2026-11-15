@@ -76,7 +76,8 @@ public static class DashboardListEndpoint
                 ConfirmationSent = po.ConfirmationSent,
                 InvoiceSent = po.InvoiceSent,
                 InspectionDone = po.InspectionDone,
-                CertificateOfOriginSaved = po.CertificateOfOriginSaved
+                CertificateOfOriginSaved = po.CertificateOfOriginSaved,
+                Version = po.Version
             })
             .ToList();
 
