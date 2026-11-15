@@ -1,4 +1,5 @@
 using System.Drawing.Text;
+using System.Linq.Expressions;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Windows.Annotations;
@@ -161,6 +162,23 @@ public sealed class PurchaseOrdersApiClient(
         using var response = await client
             .PutAsJsonAsync(
                 $"api/purchaseorders/{code}/payment",
+                request,
+                cancellationToken);
+        
+        return await response.Content
+            .ReadFromJsonAsync<uint>(cancellationToken);
+    }
+
+    public async Task<uint> UpdateBooleansAsync(
+        string code,
+        UpdatePurchaseOrderBooleansRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var client = CreateClient();
+
+        using var response = await client
+            .PutAsJsonAsync(
+                $"api/purchaseorders/{code}/booleans",
                 request,
                 cancellationToken);
         

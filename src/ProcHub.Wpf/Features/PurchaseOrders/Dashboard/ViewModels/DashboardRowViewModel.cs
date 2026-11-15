@@ -17,6 +17,7 @@ public sealed partial class DashboardRowViewModel : ObservableObject
     private long _datesRevision;
     private long _referencesRevision;
     private long _paymentsRevision;
+    private long _booleansRevision;
 
     public DashboardRowViewModel(
         PurchaseOrderResponse order,
@@ -174,7 +175,7 @@ public sealed partial class DashboardRowViewModel : ObservableObject
     public int? ShippingTimeDays { get; }
     public int? LeadTimeDays { get; }
 
-    // Status flags, add dirty markings and update api call later
+    // Status flags
     [ObservableProperty]
     public partial bool ConfirmationSent { get; set; }
 
@@ -231,10 +232,16 @@ public sealed partial class DashboardRowViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(IsDirty))]
     public partial bool IsPaymentsDirty { get; private set; }
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsDirty))]
+    public partial bool IsBooleansDirty { get; private set; }
+
+
     public bool IsDirty => 
         IsDatesDirty || 
         IsReferencesDirty || 
-        IsPaymentsDirty;
+        IsPaymentsDirty ||
+        IsBooleansDirty;
 
     // DATE CHANGES
     partial void OnConfirmationDateChanged(DateOnly? value)
@@ -334,6 +341,27 @@ public sealed partial class DashboardRowViewModel : ObservableObject
         MarkPaymentsDirty();
     }
 
+    // BOOLEAN CHANGES
+    partial void OnConfirmationSentChanged(bool value)
+    {
+        MarkBooleansDirty();
+    }
+
+    partial void OnInvoiceSentChanged(bool value)
+    {
+        MarkBooleansDirty();
+    }
+
+    partial void OnInspectionDoneChanged(bool value)
+    {
+        MarkBooleansDirty();
+    }
+
+    partial void OnCertificateOfOriginSavedChanged(bool value)
+    {
+        MarkBooleansDirty();
+    }
+
     // MARK DIRTY STATES
     private void MarkDatesDirty()
     {
@@ -368,6 +396,18 @@ public sealed partial class DashboardRowViewModel : ObservableObject
 
         _paymentsRevision++;
         IsPaymentsDirty = true;
+        SaveError = null;
+    }
+
+    private void MarkBooleansDirty()
+    {
+        if (_suppressChanges)
+        {
+            return;
+        }
+
+        _booleansRevision++;
+        IsBooleansDirty = true;
         SaveError = null;
     }
 
@@ -415,6 +455,11 @@ public sealed partial class DashboardRowViewModel : ObservableObject
                 if (IsPaymentsDirty)
                 {
                     await SavePaymentsAsync(cancellationToken);
+                }
+
+                if (IsBooleansDirty)
+                {
+                    await SaveBooleansAsync(cancellationToken);
                 }
             }
         }
@@ -517,4 +562,28 @@ public sealed partial class DashboardRowViewModel : ObservableObject
         }
     }
 
+    private async Task SaveBooleansAsync(
+        CancellationToken cancellationToken)
+    {
+        var revision = _booleansRevision;
+        var request =
+            new UpdatePurchaseOrderBooleansRequest
+            {
+                OrderConfirmationSent = ConfirmationSent,
+                InvoiceSent = InvoiceSent,
+                OrderInspectionDone = InspectionDone,
+                CertificateOfOriginSaved = CertificateOfOriginSaved,
+                Version = _version
+            };
+
+        _version = await _apiClient.UpdateBooleansAsync(
+            Code,
+            request,
+            cancellationToken);
+        
+        if (_booleansRevision == revision)
+        {
+            IsBooleansDirty = false;
+        }
+    }
 }
