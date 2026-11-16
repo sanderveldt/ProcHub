@@ -3,7 +3,6 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualBasic;
 using ProcHub.Contracts.Authentication.Requests;
 using ProcHub.Contracts.Authentication.Responses;
 using ProcHub.Domain.PaymentTerms;

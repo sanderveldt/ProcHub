@@ -17,7 +17,7 @@ public sealed class CreatePurchaseOrderTests(ProcHubApiFactory factory)
     [Fact]
     public async Task RegularOrder_UsesSupplierTerms_AndIsPersisted()
     {
-        // Arrange: look up seeded terms by their stable values, not database IDs.
+        // Arrange: look up seeded terms
         var (paymentTermId, shippingTermId) = await factory.InDbAsync(async db =>
         {
             var paymentTermId = await db.PaymentTerms
@@ -34,8 +34,8 @@ public sealed class CreatePurchaseOrderTests(ProcHubApiFactory factory)
         });
 
         using var client = await factory.LoginAsync();
-        var supplierCode = ApiTestHelpers.NewCode("SUP");
-        var orderCode = ApiTestHelpers.NewCode("PO");
+        var supplierCode = ApiTestHelpers.NewCode("SUP32");
+        var orderCode = ApiTestHelpers.NewCode("PO32");
 
         var supplierRequest = new CreateSupplierRequest(
             supplierCode,
@@ -43,20 +43,28 @@ public sealed class CreatePurchaseOrderTests(ProcHubApiFactory factory)
             paymentTermId,
             shippingTermId)
         {
-            MainLeadTimeDays = 42,
+            MainLeadTimeDays = 32,
             ProductionTimeDays = 30,
             ShippingTimeDays = 12
         };
 
-        // Act: create the supplier through the API.
-        var supplierResponse = await client.PostAsJsonAsync(
-            "/api/suppliers/", supplierRequest);
-        Assert.Equal(HttpStatusCode.Created, supplierResponse.StatusCode);
+        // Act: create supplier through the API.
+        var supplierResponse = await client
+            .PostAsJsonAsync(
+                "/api/suppliers/", 
+                supplierRequest);
+
+        Assert.Equal(
+            HttpStatusCode.Created, 
+            supplierResponse.StatusCode);
 
         var supplier = await supplierResponse.Content
             .ReadFromJsonAsync<SupplierResponse>();
+
         Assert.NotNull(supplier);
-        Assert.Equal(supplierCode, supplier.Code);
+        Assert.Equal(
+            supplierCode, 
+            supplier.Code);
 
         // The supplier response has no ID, so read it from the test database.
         var supplierId = await factory.InDbAsync(db => db.Suppliers
@@ -83,7 +91,7 @@ public sealed class CreatePurchaseOrderTests(ProcHubApiFactory factory)
         Assert.Equal("EXW", createdOrder.ShippingTermName);
         Assert.Equal(42, createdOrder.LeadTimeDays);
 
-        // Assert: a separate GET request sees the saved order.
+        // Assert: a GET request to check the created order
         var getResponse = await client.GetAsync(
             $"/api/purchaseorders/{orderCode}");
         Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
@@ -91,19 +99,38 @@ public sealed class CreatePurchaseOrderTests(ProcHubApiFactory factory)
         var fetchedOrder = await getResponse.Content
             .ReadFromJsonAsync<PurchaseOrderResponse>();
         Assert.NotNull(fetchedOrder);
-        Assert.Equal(orderCode, fetchedOrder.Code);
-        Assert.Equal(supplierCode, fetchedOrder.SupplierCode);
-        Assert.Equal(paymentTermId, fetchedOrder.PaymentTermId);
-        Assert.Equal(shippingTermId, fetchedOrder.ShippingTermId);
-        Assert.Equal(30, fetchedOrder.BalanceDueDays);
-        Assert.Equal(42, fetchedOrder.LeadTimeDays);
+        Assert.Equal(
+            orderCode, 
+            fetchedOrder.Code);
+        Assert.Equal(
+            supplierCode, 
+            fetchedOrder.SupplierCode);
+        Assert.Equal(
+            paymentTermId, 
+            fetchedOrder.PaymentTermId);
+        Assert.Equal(
+            shippingTermId, 
+            fetchedOrder.ShippingTermId);
+        Assert.Equal(
+            30, 
+            fetchedOrder.BalanceDueDays);
+        Assert.Equal(
+            42, 
+            fetchedOrder.LeadTimeDays);
 
-        // Check the stored snapshot too, independently of the GET mapping.
+        // Check stored snapshot
         var savedOrder = await factory.ReadOrderAsync(orderCode);
-        Assert.Equal(supplierCode, savedOrder.SupplierCode);
-        Assert.Equal("30 days after invoice.",
+        Assert.Equal(
+            supplierCode, 
+            savedOrder.SupplierCode);
+        Assert.Equal(
+            "30 days after invoice.",
             savedOrder.PaymentTermDescription);
-        Assert.Equal("EXW", savedOrder.ShippingTermName);
-        Assert.Equal(42, savedOrder.LeadTimeDays);
+        Assert.Equal(
+            "EXW", 
+            savedOrder.ShippingTermName);
+        Assert.Equal(
+            42, 
+            savedOrder.LeadTimeDays);
     }
 }
