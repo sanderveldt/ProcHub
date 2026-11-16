@@ -81,7 +81,8 @@ public static class GetPurchaseOrderEndpoint
                 ConfirmationSent = result.ConfirmationSent,
                 InvoiceSent = result.InvoiceSent,
                 InspectionDone = result.InspectionDone,
-                CertificateOfOriginSaved = result.CertificateOfOriginSaved
+                CertificateOfOriginSaved = result.CertificateOfOriginSaved,
+                Version = result.Version
             };
         
         return TypedResults.Ok(response);

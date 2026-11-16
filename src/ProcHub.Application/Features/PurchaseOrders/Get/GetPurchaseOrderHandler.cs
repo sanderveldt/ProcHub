@@ -74,7 +74,8 @@ public sealed class GetPurchaseOrderHandler(IProcHubDbContext dbContext)
                 ConfirmationSent = po.OrderConfirmationSent,
                 InvoiceSent = po.InvoiceSent,
                 InspectionDone = po.OrderInspectionDone,
-                CertificateOfOriginSaved = po.CertificateOfOriginSaved
+                CertificateOfOriginSaved = po.CertificateOfOriginSaved,
+                Version = po.Version
                 })
             .FirstOrDefaultAsync(cancellationToken)
             ?? throw new NotFoundException(
