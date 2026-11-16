@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ProcHub.Contracts.Authentication.Requests;
 using ProcHub.Contracts.Authentication.Responses;
-using ProcHub.Domain.PaymentTerms;
+using ProcHub.Contracts.PurchaseOrders.Requests;
+using ProcHub.Contracts.Suppliers.Requests;
+using ProcHub.Contracts.PurchaseOrders.Enums;
 using ProcHub.Domain.PurchaseOrders;
-using ProcHub.Domain.PurchaseOrders.Enums;
-using ProcHub.Domain.Suppliers;
 using ProcHub.Infrastructure.Persistence;
 using ProcHub.IntegrationTests.Fixtures;
 
@@ -102,7 +102,73 @@ public static class ApiTestHelpers
                 .SingleAsync(po => po.Code == code));
     }
 
+    public static async Task<int> CreateTestSupplierAsync(
+        this ProcHubApiFactory factory,
+        HttpClient httpClient)
+    {
+        var (paymentTermId, shippingTermId) =
+            await factory.InDbAsync(async db =>
+            {
+                var paymentId = await db.PaymentTerms
+                    .Where(term => term.Description == "30 days after invoice.")
+                    .Select(term => term.Id)
+                    .SingleAsync();
+                
+                var shippingId = await db.ShippingTerms
+                    .Where(term => term.Name == "EXW")
+                    .Select(term => term.Id)
+                    .SingleAsync();
+                
+                return (paymentId, shippingId);
+            });
+        
+        var code = NewCode("S32");
 
+        using var response = await httpClient
+            .PostAsJsonAsync(
+                "/api/suppliers/",
+                new CreateSupplierRequest(
+                    code,
+                    "Test Supplier",
+                    paymentTermId,
+                    shippingTermId)
+                {
+                    MainLeadTimeDays = 32,
+                    ProductionTimeDays = 30,
+                    ShippingTimeDays = 15
+                });
+        
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
-    
+        var testSupplierId = await factory
+            .InDbAsync(db => db.Suppliers
+                .Where(supplier => supplier.Code == code)
+                .Select(supplier => supplier.Id)
+                .SingleAsync());
+        
+        return testSupplierId;
+    } 
+
+    public static async Task<string> CreateTestPurchaseOrderAsync(
+        this ProcHubApiFactory factory,
+        HttpClient httpClient)
+    {
+        var supplierId = await factory
+            .CreateTestSupplierAsync(httpClient);
+        var orderCode = NewCode("P32");
+
+        var orderRequest = new CreatePurchaseOrderRequest(
+            orderCode,
+            PurchaseOrderType.Regular,
+            supplierId);
+        
+        using var response = await httpClient
+            .PostAsJsonAsync(
+                "/api/purchaseorders/",
+                orderRequest);
+        
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+
+        return orderCode;
+    }
 }
