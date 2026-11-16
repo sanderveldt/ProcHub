@@ -34,8 +34,8 @@ public sealed class CreatePurchaseOrderTests(ProcHubApiFactory factory)
         });
 
         using var client = await factory.LoginAsync();
-        var supplierCode = ApiTestHelpers.NewCode("SUP32");
-        var orderCode = ApiTestHelpers.NewCode("PO32");
+        var supplierCode = ApiTestHelpers.NewCode("SUP");
+        var orderCode = ApiTestHelpers.NewCode("PO3");
 
         var supplierRequest = new CreateSupplierRequest(
             supplierCode,
@@ -89,7 +89,7 @@ public sealed class CreatePurchaseOrderTests(ProcHubApiFactory factory)
         Assert.Equal("30 days after invoice.",
             createdOrder.PaymentTermDescription);
         Assert.Equal("EXW", createdOrder.ShippingTermName);
-        Assert.Equal(42, createdOrder.LeadTimeDays);
+        Assert.Equal(32, createdOrder.LeadTimeDays);
 
         // Assert: a GET request to check the created order
         var getResponse = await client.GetAsync(
@@ -115,7 +115,7 @@ public sealed class CreatePurchaseOrderTests(ProcHubApiFactory factory)
             30, 
             fetchedOrder.BalanceDueDays);
         Assert.Equal(
-            42, 
+            32, 
             fetchedOrder.LeadTimeDays);
 
         // Check stored snapshot
@@ -130,7 +130,7 @@ public sealed class CreatePurchaseOrderTests(ProcHubApiFactory factory)
             "EXW", 
             savedOrder.ShippingTermName);
         Assert.Equal(
-            42, 
+            32, 
             savedOrder.LeadTimeDays);
     }
 }
