@@ -171,4 +171,10 @@ public static class ApiTestHelpers
 
         return orderCode;
     }
+
+    public static DateOnly CreateTestDate()
+    {
+        return DateOnly
+            .FromDateTime(DateTime.Today);
+    }
 }

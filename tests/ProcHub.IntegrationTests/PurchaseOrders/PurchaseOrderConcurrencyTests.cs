@@ -12,35 +12,43 @@ public sealed class PurchaseOrderConcurrencyTests(
     ProcHubApiFactory factory)
     : IClassFixture<ProcHubApiFactory>
 {
+    private async Task<(string Url, uint Version)> CreateSharedOrderAsync(
+        HttpClient firstClient,
+        HttpClient secondClient)
+{
+    var orderCode = await factory.CreateTestPurchaseOrderAsync(firstClient);
+    var url = $"/api/purchaseorders/{orderCode}";
+
+    var firstOrder = await firstClient
+        .GetFromJsonAsync<PurchaseOrderResponse>(url);
+    var secondOrder = await secondClient
+        .GetFromJsonAsync<PurchaseOrderResponse>(url);
+
+    Assert.NotNull(firstOrder);
+    Assert.NotNull(secondOrder);
+    Assert.Equal(firstOrder.Version, secondOrder.Version);
+
+    return (url, firstOrder.Version);
+}
+
     [Fact]
     public async Task UpdateBooleans_RejectsOutdatedVersion()
     {
         using var firstClient = await factory.LoginAsync();
         using var secondClient = await factory.LoginAsync();
 
-        var orderCode = await factory
-            .CreateTestPurchaseOrderAsync(firstClient);
-        var url = $"/api/purchaseorders/{orderCode}";
-
-        var firstClientOrder = await firstClient
-            .GetFromJsonAsync<PurchaseOrderResponse>(url);
-        var secondClientOrder = await secondClient
-            .GetFromJsonAsync<PurchaseOrderResponse>(url);
-
-        Assert.NotNull(firstClientOrder);
-        Assert.NotNull(secondClientOrder);
-        Assert.Equal(
-            firstClientOrder.Version,
-            secondClientOrder.Version);
+        var (url, version) = await 
+            CreateSharedOrderAsync(
+                firstClient, 
+                secondClient);
         
-
         using var firstClientUpdate = await firstClient
             .PutAsJsonAsync(
                 $"{url}/booleans",
                 new UpdatePurchaseOrderBooleansRequest
                 {
                     InvoiceSent = true,
-                    Version = firstClientOrder.Version
+                    Version = version
                 });
 
         Assert.Equal(
@@ -51,7 +59,7 @@ public sealed class PurchaseOrderConcurrencyTests(
             .Content.ReadFromJsonAsync<uint>();
 
         Assert.NotEqual(
-            firstClientOrder.Version,
+            version,
             updatedVersion);
         
         // Second client is still on old version
@@ -61,7 +69,7 @@ public sealed class PurchaseOrderConcurrencyTests(
                 new UpdatePurchaseOrderBooleansRequest
                 {
                     OrderInspectionDone = true,
-                    Version = secondClientOrder.Version
+                    Version = version
                 });
         
         // Global exception handler returns Conflict for ConcurrencyExceptions
@@ -77,15 +85,67 @@ public sealed class PurchaseOrderConcurrencyTests(
         Assert.True(updatedOrder.InvoiceSent);
         Assert.False(updatedOrder.InspectionDone);
         Assert.Equal(updatedVersion, updatedOrder.Version);
-        
-
-        
-        
-        
-        
-
-
-        
-
     }
+
+    [Fact]
+    public async Task UpdateDates_RejectsOutdatedVersion()
+    {
+        using var firstClient = await factory.LoginAsync();
+        using var secondClient = await factory.LoginAsync();
+
+        var (url, version) = await
+            CreateSharedOrderAsync(
+                firstClient,
+                secondClient);
+        
+        var prodDoneDate = ApiTestHelpers.CreateTestDate();
+        
+        using var firstClientUpdate = await firstClient
+            .PutAsJsonAsync(
+                $"{url}/dates",
+                new UpdatePurchaseOrderDatesRequest
+                {
+                    ProductionDoneDate = prodDoneDate,
+                    Version = version
+                });
+            
+        Assert.Equal(
+            HttpStatusCode.OK, 
+            firstClientUpdate.StatusCode);
+        
+        var updatedVersion = await firstClientUpdate
+            .Content.ReadFromJsonAsync<uint>();
+        
+        Assert.NotEqual(
+            version,
+            updatedVersion);
+        
+        using var outdatedUpdate = await secondClient
+            .PutAsJsonAsync(
+                $"{url}/dates",
+                new UpdatePurchaseOrderDatesRequest
+                {
+                    ShippingDate = ApiTestHelpers
+                        .CreateTestDate(),
+                    
+                    Version = version
+                });
+        
+        Assert.Equal(
+            HttpStatusCode.Conflict,
+            outdatedUpdate.StatusCode);
+        
+        var updatedOrder = await firstClient
+            .GetFromJsonAsync<PurchaseOrderResponse>(url);
+        
+        Assert.NotNull(updatedOrder);
+        Assert.NotNull(updatedOrder.ProductionDoneDate);
+        Assert.Null(updatedOrder.ShippingDate);
+        Assert.Equal(updatedVersion, updatedOrder.Version);
+        Assert.Equal(
+            prodDoneDate, 
+            updatedOrder.ProductionDoneDate);
+    }
+
+
 }
