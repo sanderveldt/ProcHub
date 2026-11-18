@@ -142,10 +142,81 @@ public sealed class PurchaseOrderConcurrencyTests(
         Assert.NotNull(updatedOrder.ProductionDoneDate);
         Assert.Null(updatedOrder.ShippingDate);
         Assert.Equal(updatedVersion, updatedOrder.Version);
-        Assert.Equal(
-            prodDoneDate, 
-            updatedOrder.ProductionDoneDate);
+        Assert.Equal(prodDoneDate, updatedOrder.ProductionDoneDate);
     }
+
+    [Fact]
+    public async Task UpdatePayment_RejectsOutdatedVersion()
+    {
+        using var firstClient = await factory.LoginAsync();
+        using var secondClient = await factory.LoginAsync();
+
+        var (url, version) = await 
+            CreateSharedOrderAsync(
+                firstClient, 
+                secondClient);
+        
+        decimal testPrice = 3232.32m;
+        var testDate = ApiTestHelpers
+            .CreateTestDate();
+        
+        using var firstClientUpdate = await firstClient
+            .PutAsJsonAsync(
+                $"{url}/payment",
+                new UpdatePurchaseOrderPaymentRequest
+                {
+                    OrderAmount = testPrice,
+                    DepositPaid = true,
+                    DepositPaidDate = testDate,
+                    Version = version
+                });
+        
+        Assert.Equal(
+            HttpStatusCode.OK,
+            firstClientUpdate.StatusCode);
+        
+        var updatedVersion = await firstClientUpdate
+            .Content.ReadFromJsonAsync<uint>();
+
+        Assert.NotEqual(
+            version,
+            updatedVersion);
+        
+        using var outdatedUpdate = await secondClient
+            .PutAsJsonAsync(
+                $"{url}/payment",
+                new UpdatePurchaseOrderPaymentRequest
+                {
+                    OrderAmount = 1000.32m,
+                    OrderPaid = true,
+                    BalancePaidDate = testDate.AddDays(32),
+                    Version = version
+                });
+        
+        Assert.Equal(
+            HttpStatusCode.Conflict,
+            outdatedUpdate.StatusCode);
+        
+        var updatedOrder = await firstClient
+            .GetFromJsonAsync<PurchaseOrderResponse>(url);
+        
+        Assert.NotNull(updatedOrder);
+        Assert.Equal(
+            testPrice, 
+            updatedOrder.OrderAmount);
+        Assert.True(updatedOrder.DepositPaid);
+        Assert.Equal(
+            testDate,
+            updatedOrder.DepositPaidDate);
+        Assert.Equal(
+            updatedVersion, 
+            updatedOrder.Version);
+        
+        Assert.False(updatedOrder.OrderPaid);
+        Assert.Null(updatedOrder.BalancePaidDate);
+    }
+
+
 
 
 }

@@ -41,12 +41,14 @@ public sealed class GetPurchaseOrderHandler(IProcHubDbContext dbContext)
                 BalanceDueDate = po.BalanceDueDate,
 
                 DepositPercentage = po.DepositPercentage,
+                DepositPaid = po.DepositPaid,
                 DepositPaidDate = po.DepositPaidDate,
 
                 OrderAmount = po.OrderAmount,   
                 DepositAmount = po.DepositAmount,
                 BalanceAmount = po.BalanceAmount,
                 BalancePaidDate = po.BalancePaidDate,
+                OrderPaid = po.OrderPaid,
 
                 ShippingTermId = po.ShippingTermId,
                 ShippingTermName = po.ShippingTerm.Name,

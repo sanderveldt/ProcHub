@@ -110,7 +110,7 @@ public static class ApiTestHelpers
             await factory.InDbAsync(async db =>
             {
                 var paymentId = await db.PaymentTerms
-                    .Where(term => term.Description == "30 days after invoice.")
+                    .Where(term => term.Description == "10% deposit, 30 days after invoice.")
                     .Select(term => term.Id)
                     .SingleAsync();
                 
