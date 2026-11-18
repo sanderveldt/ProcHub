@@ -216,7 +216,116 @@ public sealed class PurchaseOrderConcurrencyTests(
         Assert.Null(updatedOrder.BalancePaidDate);
     }
 
+    [Fact]
+    public async Task UpdateReferences_RejectsOutdatedVersion()
+    {
+        using var firstClient = await factory.LoginAsync();
+        using var secondClient = await factory.LoginAsync();
 
+        var (url, version) = await
+            CreateSharedOrderAsync(
+                firstClient,
+                secondClient);
 
+        string testRef = "TestRef.";
 
+        using var firstClientUpdate = await firstClient
+            .PutAsJsonAsync(
+                $"{url}/references",
+                new UpdatePurchaseOrderReferencesRequest
+                {
+                    InvoiceReference = testRef,
+                    Version = version
+                });
+        
+        Assert.Equal(
+            HttpStatusCode.OK,
+            firstClientUpdate.StatusCode);
+        
+        var updatedVersion = await firstClientUpdate
+            .Content.ReadFromJsonAsync<uint>();
+        
+        Assert.NotEqual(
+            version,
+            updatedVersion);
+        
+        using var outdatedUpdate = await secondClient
+            .PutAsJsonAsync(
+                $"{url}/references",
+                new UpdatePurchaseOrderReferencesRequest
+                {
+                    ShipmentReference = "ShipRef.",
+                    Version = version
+                });
+        
+        Assert.Equal(
+            HttpStatusCode.Conflict,
+            outdatedUpdate.StatusCode);
+        
+        var updatedOrder = await firstClient
+            .GetFromJsonAsync<PurchaseOrderResponse>(url);
+        
+        Assert.NotNull(updatedOrder);
+        Assert.Null(updatedOrder.ShipmentReference);
+        Assert.Equal(
+            testRef,
+            updatedOrder.InvoiceReference);
+        Assert.Equal(
+            updatedVersion, 
+            updatedOrder.Version);
+    }
+
+    [Fact]
+    public async Task UpdateMultipleEndpoints_RejectsOutdatedVersion()
+    {
+        using var firstClient = await factory.LoginAsync();
+        using var secondClient = await factory.LoginAsync();
+
+        var (url, version) = await
+            CreateSharedOrderAsync(
+                firstClient,
+                secondClient);
+        
+        using var firstClientUpdate = await firstClient
+            .PutAsJsonAsync(
+                $"{url}/booleans",
+                new UpdatePurchaseOrderBooleansRequest
+                {
+                    InvoiceSent = true,
+                    Version = version
+                });
+        
+        Assert.Equal(
+            HttpStatusCode.OK,
+            firstClientUpdate.StatusCode);
+        
+        var updatedVersion = await firstClientUpdate
+            .Content.ReadFromJsonAsync<uint>();
+
+        Assert.NotEqual(
+            version,
+            updatedVersion);
+        
+        using var outdatedUpdate = await secondClient
+            .PutAsJsonAsync(
+                $"{url}/references",
+                new UpdatePurchaseOrderReferencesRequest
+                {
+                    InvoiceReference = "TestRef.",
+                    Version = version
+                });
+        
+        Assert.Equal(
+            HttpStatusCode.Conflict,
+            outdatedUpdate.StatusCode);
+        
+        var updatedOrder = await firstClient
+            .GetFromJsonAsync<PurchaseOrderResponse>(url);
+        
+        Assert.NotNull(updatedOrder);
+        Assert.True(updatedOrder.InvoiceSent);
+        Assert.Null(updatedOrder.InvoiceReference);
+        Assert.Equal(updatedVersion, updatedOrder.Version);
+
+    }
 }
