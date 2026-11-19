@@ -1,6 +1,5 @@
 using System.Net;
 using System.Net.Http.Json;
-using Microsoft.EntityFrameworkCore;
 using ProcHub.Contracts.PurchaseOrders.Requests;
 using ProcHub.Contracts.PurchaseOrders.Responses;
 using ProcHub.IntegrationTests.Fixtures;
@@ -326,6 +325,5 @@ public sealed class PurchaseOrderConcurrencyTests(
         Assert.True(updatedOrder.InvoiceSent);
         Assert.Null(updatedOrder.InvoiceReference);
         Assert.Equal(updatedVersion, updatedOrder.Version);
-
     }
 }

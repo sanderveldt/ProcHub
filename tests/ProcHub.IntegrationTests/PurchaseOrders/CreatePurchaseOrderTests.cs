@@ -133,4 +133,34 @@ public sealed class CreatePurchaseOrderTests(ProcHubApiFactory factory)
             32, 
             savedOrder.LeadTimeDays);
     }
+
+    [Fact]
+    public async Task CreatePurchaseOrder_WithExistingCode_ReturnsConflict()
+    {
+        using var client = await factory.LoginAsync();
+
+        var orderCode = await factory
+            .CreateTestPurchaseOrderAsync(client);
+        var testOrder = await factory
+            .ReadOrderAsync(orderCode);
+        
+        using var duplicateOrder = await client
+            .PostAsJsonAsync(
+                "api/purchaseorders/",
+                new CreatePurchaseOrderRequest(
+                    testOrder.Code,
+                    PurchaseOrderType.Regular,
+                    testOrder.SupplierId));
+        
+        Assert.Equal(
+            HttpStatusCode.Conflict, 
+            duplicateOrder.StatusCode);
+        
+        var orderCodeCount = await factory
+            .InDbAsync(db => db.PurchaseOrders
+                .CountAsync(
+                    po => po.Code == testOrder.Code));
+        
+        Assert.Equal(1, orderCodeCount);   
+    }
 }
