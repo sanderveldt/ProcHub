@@ -12,6 +12,7 @@ public static class SupplierEndpoints
         
         group.MapGetSupplierEndpoint();
         group.MapListSuppliersEndpoint();
+        group.MapListSuppliersByBuyerEndpoint();
         group.MapCreateSupplierEndpoint();
         group.MapUpdateSupplierEndpoint();
         group.MapDeleteSupplierEndpoint();

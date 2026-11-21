@@ -54,6 +54,7 @@ public static class DependencyInjection
         services.AddScoped<CreateSupplierHandler>();
         services.AddScoped<GetSupplierHandler>();
         services.AddScoped<ListSuppliersHandler>();
+        services.AddScoped<ListSuppliersByBuyerHandler>();
         services.AddScoped<UpdateSupplierHandler>();
         services.AddScoped<ChangeSupplierStatusHandler>();
         services.AddScoped<DeleteSupplierHandler>();
