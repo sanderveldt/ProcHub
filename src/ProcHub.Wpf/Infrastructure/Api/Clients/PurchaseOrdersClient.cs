@@ -33,14 +33,17 @@ public sealed class PurchaseOrdersApiClient(
     }
 
     public async Task<List<PurchaseOrderResponse>> GetDashboardListAsync(
+        int? responsibleBuyerId = null,
         CancellationToken cancellationToken = default)
     {
+        var url = responsibleBuyerId is int id
+            ? $"api/purchaseorders/dashboard?responsibleBuyerId={id}"
+            : "api/purchaseorders/dashboard";
+
         var client = CreateClient();
 
         using var response = await client
-            .GetAsync(
-                "api/purchaseorders/dashboard",
-                cancellationToken);
+            .GetAsync(url, cancellationToken);
         
         var purchaseOrder = await response
             .Content.ReadFromJsonAsync<

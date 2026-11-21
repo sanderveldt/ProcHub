@@ -7,6 +7,7 @@ namespace ProcHub.Application.Features.PurchaseOrders.Get;
 public sealed class DashboardListHandler(IProcHubDbContext dbContext)
 {
     public async Task<List<PurchaseOrderResult>> HandleAsync(
+        int? responsibleBuyerId,
         CancellationToken cancellationToken)
     {
         return await dbContext.PurchaseOrders
@@ -16,6 +17,9 @@ public sealed class DashboardListHandler(IProcHubDbContext dbContext)
                 po.OrderStatus != PurchaseOrderStatus.OrderClosed)
             .Where(po => 
                 po.OrderStatus != PurchaseOrderStatus.Cancelled)
+
+            .Where(po => !responsibleBuyerId.HasValue ||
+                po.Supplier.ResponsibleBuyerId == responsibleBuyerId.Value)
 
             .OrderBy(po => po.OrderDate)
             .Select(po => new PurchaseOrderResult

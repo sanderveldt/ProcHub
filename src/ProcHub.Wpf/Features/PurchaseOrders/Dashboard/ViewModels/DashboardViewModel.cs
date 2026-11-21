@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Security;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -7,6 +8,7 @@ using ProcHub.Contracts.PurchaseOrders.Requests;
 using ProcHub.Contracts.PurchaseOrders.Responses;
 using ProcHub.Wpf.Infrastructure.Api;
 using ProcHub.Wpf.Infrastructure.Api.Clients;
+using ProcHub.Wpf.Infrastructure.Authentication;
 using ProcHub.Wpf.Infrastructure.Navigation;
 
 namespace ProcHub.Wpf.Features.PurchaseOrders.Dashboard.ViewModels;
@@ -14,16 +16,21 @@ namespace ProcHub.Wpf.Features.PurchaseOrders.Dashboard.ViewModels;
 public sealed partial class DashboardViewModel : PageViewModel
 {
     private readonly PurchaseOrdersApiClient _apiClient;
+    private readonly AuthSession _authSession;
     private bool _suppressSave;
     
     public DashboardViewModel(
-        PurchaseOrdersApiClient apiClient)
+        PurchaseOrdersApiClient apiClient,
+        AuthSession authSession)
         : base(
             "Open Purchase Orders",
             "Open Purchase Orders dashboard overview.")
     {
         _apiClient = apiClient;
+        _authSession = authSession;
     }
+
+    public bool AllOrdersLoaded = false;
 
     public ObservableCollection<DashboardRowViewModel>
         PurchaseOrders { get; } = [];
@@ -86,8 +93,13 @@ public sealed partial class DashboardViewModel : PageViewModel
             IsLoading = true;
             _suppressSave = true;
 
+            var userId = _authSession.CurrentUser?.Id
+                ?? throw new InvalidOperationException(
+                    "No user logged in.");
+
             var orders = await _apiClient
                 .GetDashboardListAsync(
+                    userId,
                     cancellationToken);
             
             SelectedPurchaseOrder = null;
@@ -101,6 +113,55 @@ public sealed partial class DashboardViewModel : PageViewModel
                         order,
                         _apiClient));
             }
+
+            AllOrdersLoaded = false;
+        }
+        catch (OperationCanceledException)
+            when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        catch (ApiException ex)
+        {
+            ShowError(ex.Message);
+        }
+        finally
+        {
+            _suppressSave = false;
+            IsLoading = false;
+        }
+    }
+
+    [RelayCommand]
+    public async Task LoadAllOrdersAsync(
+        CancellationToken cancellationToken)
+    {
+        ClearError();
+
+        await SavePendingChangesAsync(cancellationToken);
+
+        try
+        {
+            IsLoading = true;
+            _suppressSave = true;
+
+            var orders = await _apiClient
+                .GetDashboardListAsync(
+                    null,
+                    cancellationToken);
+            
+            SelectedPurchaseOrder = null;
+
+            PurchaseOrders.Clear();
+
+            foreach (var order in orders)
+            {
+                PurchaseOrders.Add(
+                    new DashboardRowViewModel(
+                        order,
+                        _apiClient));
+            }       
+
+            AllOrdersLoaded = true;
         }
         catch (OperationCanceledException)
             when (cancellationToken.IsCancellationRequested)
@@ -126,7 +187,15 @@ public sealed partial class DashboardViewModel : PageViewModel
         try
         {
             await SavePendingChangesAsync(cancellationToken);
-            await LoadAsync(cancellationToken);
+
+            if (AllOrdersLoaded)
+            {
+                await LoadAllOrdersAsync(cancellationToken);
+            }
+            else
+            {
+                await LoadAsync(cancellationToken);
+            }
         }
         catch (OperationCanceledException)
             when (cancellationToken.IsCancellationRequested)

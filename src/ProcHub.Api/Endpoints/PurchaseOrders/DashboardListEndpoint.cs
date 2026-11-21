@@ -17,11 +17,14 @@ public static class DashboardListEndpoint
     }
 
     private static async Task<Ok<List<PurchaseOrderResponse>>> HandleAsync(
+        int? responsibleBuyerId,
         DashboardListHandler handler,
         CancellationToken cancellationToken)
     {
         var result = await handler
-            .HandleAsync(cancellationToken);
+            .HandleAsync(
+                responsibleBuyerId,
+                cancellationToken);
         
         var response = result
             .Select(po => new PurchaseOrderResponse
