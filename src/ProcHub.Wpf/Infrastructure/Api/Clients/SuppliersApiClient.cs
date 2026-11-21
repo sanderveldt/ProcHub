@@ -50,6 +50,27 @@ public sealed class SuppliersApiClient(
                 "Supplier response is empty.");                
     }
 
+    public async Task<List<SupplierListItemResponse>> ListByBuyerAsync(
+        int userId,
+        CancellationToken cancellationToken = default)
+    {
+        var client = CreateClient();
+
+        using var response = await client
+            .GetAsync(
+                $"api/suppliers/bybuyerid={userId}",
+                cancellationToken);
+        
+        var suppliers = await response
+            .Content.ReadFromJsonAsync<
+            List<SupplierListItemResponse>>(
+                cancellationToken);
+        
+        return suppliers
+            ?? [];
+    
+    }
+
     public async Task<SupplierResponse> CreateAsync(
         CreateSupplierRequest request,
         CancellationToken cancellationToken = default)

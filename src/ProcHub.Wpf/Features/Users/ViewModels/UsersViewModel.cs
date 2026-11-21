@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ProcHub.Contracts.Suppliers.Responses;
 using ProcHub.Contracts.Users.Requests;
 using ProcHub.Contracts.Users.Responses;
 using ProcHub.Wpf.Infrastructure.Api;
@@ -14,9 +15,11 @@ namespace ProcHub.Wpf.Features.Users.ViewModels;
 public sealed partial class UsersViewModel : PageViewModel
 {
     private readonly UsersApiClient _usersApiClient;
+    private readonly SuppliersApiClient _suppliersApiClient;
 
     public UsersViewModel(
-        UsersApiClient usersApiClient)
+        UsersApiClient usersApiClient,
+        SuppliersApiClient suppliersApiClient)
         : base(
             "Users",
             "Maintain users and user settings.",
@@ -24,9 +27,13 @@ public sealed partial class UsersViewModel : PageViewModel
             AppRoles.Admin)
     {
         _usersApiClient = usersApiClient;
+        _suppliersApiClient = suppliersApiClient;
     }
 
     public ObservableCollection<UserResponse> Users
+        { get; } = new();
+
+    public ObservableCollection<SupplierListItemResponse> Suppliers
         { get; } = new();
 
     public IReadOnlyList<string> Roles => AppRoles.All;
@@ -80,7 +87,9 @@ public sealed partial class UsersViewModel : PageViewModel
             return;
         }
 
-        await LoadUserAsync(value.Id);
+        await Task.WhenAll(
+            LoadUserAsync(value.Id),
+            LoadSuppliersAsync(value.Id));
 
         IsCreating = false;
         IsEditing = false;
@@ -318,6 +327,34 @@ public sealed partial class UsersViewModel : PageViewModel
             Users.Remove(selectedUser);
 
             SelectedUser = null;
+        }
+        catch (OperationCanceledException)
+            when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        catch (ApiException ex)
+        {
+            ShowError(ex.Message);
+        }
+    }
+
+    public async Task LoadSuppliersAsync(
+        int userId,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var suppliers = await _suppliersApiClient
+                .ListByBuyerAsync(
+                    userId,
+                    cancellationToken);
+            
+            Suppliers.Clear();
+
+            foreach(var supplier in suppliers)
+            {
+                Suppliers.Add(supplier);
+            }
         }
         catch (OperationCanceledException)
             when (cancellationToken.IsCancellationRequested)
