@@ -113,6 +113,12 @@ The integration test project uses Testcontainers to start a disposable PostgreSQ
 dotnet test tests/ProcHub.IntegrationTests
 ```
 
+## Continuous integration
+
+GitHub Actions runs `.github/workflows/ci.yml` for pushes and pull requests to `main`, or manually from the **Actions** tab. The Ubuntu job builds the API and runs the domain and integration tests. Testcontainers starts PostgreSQL on the runner, so no CI database or repository secrets are needed. The Windows job builds the WPF client. Both jobs use the .NET 10 SDK.
+
+To make CI required before merging, add the **API and tests** and **WPF build** checks to a branch protection rule for `main` after the workflow has run once.
+
 ## Database migrations
 
 Migrations live in `src/ProcHub.Infrastructure/Persistence/Migrations` and run automatically at API startup. To add one, install the local EF Core tool (pinned in `dotnet-tools.json`) and run:

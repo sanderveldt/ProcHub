@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    name: API and tests
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - name: Build API
+        run: dotnet build src/ProcHub.Api/ProcHub.Api.csproj --configuration Release
+      - name: Run domain tests
+        run: dotnet test tests/ProcHub.Domain.Tests/ProcHub.Domain.Tests.csproj --configuration Release
+      - name: Run integration tests
+        run: dotnet test tests/ProcHub.IntegrationTests/ProcHub.IntegrationTests.csproj --configuration Release
+
+  desktop:
+    name: WPF build
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - name: Build WPF client
+        run: dotnet build src/ProcHub.Wpf/ProcHub.Wpf.csproj --configuration Release
