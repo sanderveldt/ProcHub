@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 using ProcHub.Contracts.PurchaseOrders.Enums;
 using ProcHub.Contracts.PurchaseOrders.Requests;
 using ProcHub.Contracts.PurchaseOrders.Responses;
+using ProcHub.Contracts.Suppliers.Responses;
 using ProcHub.Wpf.Infrastructure.Api;
 using ProcHub.Wpf.Infrastructure.Api.Clients;
 using ProcHub.Wpf.Infrastructure.Authentication;
@@ -15,18 +16,21 @@ namespace ProcHub.Wpf.Features.PurchaseOrders.Dashboard.ViewModels;
 
 public sealed partial class DashboardViewModel : PageViewModel
 {
-    private readonly PurchaseOrdersApiClient _apiClient;
+    private readonly PurchaseOrdersApiClient _orderApiClient;
+    private readonly SuppliersApiClient _suppliersApiClient;
     private readonly AuthSession _authSession;
     private bool _suppressSave;
     
     public DashboardViewModel(
-        PurchaseOrdersApiClient apiClient,
+        PurchaseOrdersApiClient OrderApiClient,
+        SuppliersApiClient suppliersApiClient,
         AuthSession authSession)
         : base(
             "Open Purchase Orders",
             "Open Purchase Orders dashboard overview.")
     {
-        _apiClient = apiClient;
+        _orderApiClient = OrderApiClient;
+        _suppliersApiClient = suppliersApiClient;
         _authSession = authSession;
     }
 
@@ -97,7 +101,7 @@ public sealed partial class DashboardViewModel : PageViewModel
                 ?? throw new InvalidOperationException(
                     "No user logged in.");
 
-            var orders = await _apiClient
+            var orders = await _orderApiClient
                 .GetDashboardListAsync(
                     userId,
                     cancellationToken);
@@ -111,7 +115,7 @@ public sealed partial class DashboardViewModel : PageViewModel
                 PurchaseOrders.Add(
                     new DashboardRowViewModel(
                         order,
-                        _apiClient));
+                        _orderApiClient));
             }
 
             AllOrdersLoaded = false;
@@ -144,7 +148,7 @@ public sealed partial class DashboardViewModel : PageViewModel
             IsLoading = true;
             _suppressSave = true;
 
-            var orders = await _apiClient
+            var orders = await _orderApiClient
                 .GetDashboardListAsync(
                     null,
                     cancellationToken);
@@ -158,7 +162,7 @@ public sealed partial class DashboardViewModel : PageViewModel
                 PurchaseOrders.Add(
                     new DashboardRowViewModel(
                         order,
-                        _apiClient));
+                        _orderApiClient));
             }       
 
             AllOrdersLoaded = true;
@@ -222,5 +226,101 @@ public sealed partial class DashboardViewModel : PageViewModel
             await row.SaveChangesAsync(
                 cancellationToken);
         }
+    }
+
+    public IReadOnlyList<PurchaseOrderType> OrderTypes
+        { get; } = Enum.GetValues<PurchaseOrderType>();
+
+    public ObservableCollection<SupplierListItemResponse> Suppliers { get; } = [];
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
+    public partial bool IsCreating { get; set; }
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
+    public partial string Code { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
+    public partial PurchaseOrderType? OrderType { get; set; }
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
+    public partial SupplierListItemResponse? SelectedSupplier { get; set; }
+
+    [RelayCommand]
+    private async Task NewAsync(CancellationToken cancellationToken)
+    {
+        ClearError();
+
+        try
+        {
+            var suppliers = await _suppliersApiClient.GetAllAsync(cancellationToken);
+
+            Suppliers.Clear();
+            foreach (var supplier in suppliers)
+            {
+                Suppliers.Add(supplier);
+            }
+
+            Code = string.Empty;
+            OrderType = null;
+            SelectedSupplier = null;
+            IsCreating = true;
+        }
+        catch (OperationCanceledException)
+            when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        catch (ApiException ex)
+        {
+            ShowError(ex.Message);
+        }
+    }
+
+    private bool FieldsCheck()
+    {
+        return IsCreating
+            && !string.IsNullOrWhiteSpace(Code)
+            && OrderType is PurchaseOrderType orderType
+            && Enum.IsDefined(orderType)
+            && SelectedSupplier is { Id: > 0 };
+    }
+
+    [RelayCommand(CanExecute = nameof(FieldsCheck))]
+    private async Task SaveAsync(
+        CancellationToken cancellationToken)
+    {
+        ClearError();
+
+        try
+        {
+            await CreateAsync(cancellationToken);
+            IsCreating = false;
+            await RefreshAsync(cancellationToken);
+        }
+        catch (OperationCanceledException)
+            when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        catch (ApiException ex)
+        {
+            ShowError(ex.Message);
+        }
+    }
+
+    public async Task CreateAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var request = new CreatePurchaseOrderRequest(
+            Code.Trim(),
+            OrderType!.Value,
+            SelectedSupplier!.Id);
+
+        await _orderApiClient
+            .CreateAsync(
+                request,
+                cancellationToken);
     }
 }

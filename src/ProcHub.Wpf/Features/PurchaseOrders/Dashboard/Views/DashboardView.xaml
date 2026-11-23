@@ -459,12 +459,76 @@
             <StackPanel>
 
                 <TextBlock Text="Purchase Orders"
-                           FontSize="24"
+                           FontSize="20"
                            FontWeight="SemiBold" />
 
-                <TextBlock Margin="0,0,0,0"
-                           Text="Edit references and dates in-row; open Pay or Ship for more details"
-                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                    <Button FontSize="11"
+                            VerticalAlignment="Bottom"
+                            Width="50"
+                            Height="25">
+                        <Button.Style>
+                            <Style TargetType="Button"
+                                   BasedOn="{StaticResource {x:Type Button}}">
+                                <Setter Property="Content" Value="New" />
+                                <Setter Property="Command" Value="{Binding NewCommand}" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsCreating}" Value="True">
+                                        <Setter Property="Content" Value="Save" />
+                                        <Setter Property="Command" Value="{Binding SaveCommand}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <StackPanel Orientation="Horizontal" Margin="8,0,0,0">
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsCreating}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+
+                        <StackPanel Margin="0,0,8,0">
+                            <TextBlock Text="Order Code" FontSize="11" />
+                            <TextBox Width="100"
+                                     Text="{Binding Code, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,8,0">
+                            <TextBlock Text="Type" FontSize="11" />
+                            <ComboBox Width="125"
+                                      ItemsSource="{Binding OrderTypes}"
+                                      SelectedItem="{Binding OrderType, Mode=TwoWay}" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Supplier" FontSize="11" />
+                            <ComboBox Width="180"
+                                      ItemsSource="{Binding Suppliers}"
+                                      DisplayMemberPath="Name"
+                                      SelectedItem="{Binding SelectedSupplier, Mode=TwoWay}" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+
+                <TextBlock Text="{Binding ErrorMessage}"
+                           Margin="0,4,0,0"
+                           Foreground="{DynamicResource SystemFillColorCriticalBrush}"
+                           TextWrapping="Wrap">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ErrorMessage}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
 
             </StackPanel>
 
