@@ -1,34 +1,32 @@
 # ProcHub
 
-ProcHub is an end-to-end procurement system for tracking purchase orders and suppliers. It uses a layered .NET 10 backend (ASP.NET Core, EF Core, PostgreSQL) with a Windows desktop client built in WPF using the MVVM pattern.
+ProcHub is an end-to-end procurement system for tracking purchase orders and suppliers. It uses a layered architecture .NET 10 backend (ASP.NET Core, EF Core, PostgreSQL) with a Windows desktop client built with WPF using the MVVM.
 
-> **Status:** Work in progress. The purchase order, supplier, payment term and shipping term flows are implemented end to end across the API and the WPF client.
-**To Finish:** Integration tests, Application users overview, implement creating purchases orders menu to dashboardview, add status update endpoint for PO's, add archive for closed orders. Move API into docker container.
-**To be implemented after release:** WPF views for articles, articlegroups and country endpoints, backend finished.
+> **Status:** The purchase order, supplier, payment and shipping terms and user flows are implemented end to end across the API and the WPF client.
+**To Finish:**  implement creating purchases orders menu to dashboardview, add status update endpoint for PO's, add archive for closed orders. Move API into docker container.
 
 
 ## Features
 
 - **Purchase orders**: Create and view Regular, Express and Sample orders. Each order takes its payment and shipping terms from the supplier, based on the order type.
-- **Order Stasusses**: Track an order through 13 statuses, from `Drafted` to `OrderClosed`, including `OrderDiscrepancy` and `Cancelled`.
-- **Dates, references and payments**: Record confirmation, production, shipping, arrival and delivery dates, plus confirmation, invoice and shipment references, and deposit and balance payments.
+- **Order Stasuses**: Track purchase orders using 13 statuses, from `Drafted` to `OrderClosed`
+- **Dates, references and payments**: Record confirmation, production, shipping, arrival and delivery dates, confirmation, invoice and shipment references, and deposit and balance payments.
 - **Dashboard**: Overview of all open purchase orders in the WPF client, appropiate fields editable to track order state.
-- **Suppliers**: Manage supplier details, main, secondary and sample shipping and payment terms, lead times,country, responsible buyers, etc.
+- **Suppliers**: Manage supplier details, main, secondary and sample shipping and payment terms, lead times,country , responsible buyers, etc.
 - **Terms**: payment terms and shipping terms, seeded with defaults on first startup.
-- **Articles and article groups**: Available through the API only, might be added to frontend later.
+- **Articles and article groups**: Available through the API only, to be added to frontend later.
 - **Users and roles**: `User`, `SuperUser` and `Admin` roles. Appropriate endpoints authorized to only SuperUser, Admin or both.
 - **Authentication**: bearer token sign-in through ASP.NET Core Identity. Accounts lock for 15 minutes after 5 failed sign-in attempts.
 
 ## Architecture
 
-The solution uses domain-driven design. The domain holds the business rules, and the solution is split into layers with dependencies pointing inward toward the domain.
+The project uses domain-driven design. The domain holds the business rules, and the solution is split into layers with dependencies pointing inward toward the domain.
 
 ### Domain-driven design
 
 - **Extensive domain model**: entities such as `PurchaseOrder`, `Supplier` and `PaymentTerm` contains domain methods, not just data. Setters are private, and each change goes through a method that checks its invariants. For example, a deposit percentage must be between 0 and 1 with at most two decimal places.
 - **Aggregates and domain logic**: `Supplier` decides which terms apply to an order type through `GetTerms`, and `PurchaseOrder` takes its terms from the supplier when it is created.
 - **Domain errors**: rule violations throw a `DomainException`, which keeps business rules separate from other layer exceptions.
-
 
 | Project | Responsibility |
 | --- | --- |
@@ -49,13 +47,11 @@ The solution uses domain-driven design. The domain holds the business rules, and
 - xUnit for tests, Testcontainers for PostgreSQL integration tests
 - Docker Compose for the local database
 
-## Getting started
-
 ### Prerequisites
 
 - .NET 10 SDK
-- Docker, for PostgreSQL and the integration tests
-- Windows, to run the WPF client
+- Docker
+- Windows (WPF only runs on windows)
 
 ### 1. Start the database
 
@@ -71,16 +67,14 @@ Edit `.env` and set `POSTGRES_PASSWORD`, then start PostgreSQL:
 docker compose up -d
 ```
 
-The database listens on `127.0.0.1:5432`.
+### 2. Setup the API
 
-### 2. Configure the API
-
-The API reads its connection string from `ConnectionStrings:ProcHubDb`. It also needs the initial administrator account, which the identity seeder creates on first run. Set both with user secrets:
+The API reads its connection string from `ConnectionStrings:ProcHubDb`. Identity seeder create initial admin on first run, set both with user secrets:
 
 ```bash
-dotnet user-secrets --project src/ProcHub.Api set "ConnectionStrings:ProcHubDb" "Host=localhost;Port=5432;Database=prochub;Username=prochub;Password=<your POSTGRES_PASSWORD>"
+dotnet user-secrets --project src/ProcHub.Api set "ConnectionStrings:ProcHubDb" "Host=localhost;Port=5432;Database=prochub;Username=prochub;Password=<POSTGRES_PASSWORD>"
 dotnet user-secrets --project src/ProcHub.Api set "InitialAdmin:Email" "admin@example.com"
-dotnet user-secrets --project src/ProcHub.Api set "InitialAdmin:Password" "<a strong password>"
+dotnet user-secrets --project src/ProcHub.Api set "InitialAdmin:Password" "<password>"
 ```
 
 ### 3. Run the API
@@ -89,7 +83,7 @@ dotnet user-secrets --project src/ProcHub.Api set "InitialAdmin:Password" "<a st
 dotnet run --project src/ProcHub.Api
 ```
 
-The API listens on `http://localhost:5098`. On startup it applies EF Core migrations, seeds roles, payment terms and shipping terms, and creates the initial admin. In the `Development` environment it also loads development seed data.
+On startup it applies EF Core migrations, seeds roles, payment and shipping terms, and creates the initial admin. In the 'Development' environment it also loads development / test seed data.
 
 ### 4. Run the WPF client
 
@@ -97,17 +91,17 @@ The API listens on `http://localhost:5098`. On startup it applies EF Core migrat
 dotnet run --project src/ProcHub.Wpf
 ```
 
-The client points to `http://localhost:5098/` by default, set in `src/ProcHub.Wpf/appsettings.json`. Sign in with the initial admin account.
+The client points to `http://localhost:5098/` set in `src/ProcHub.Wpf/appsettings.json`. Sign in with the initial admin account.
 
 ## Running tests
 
-Domain unit tests need no external services:
+Domain unit tests
 
 ```bash
 dotnet test tests/ProcHub.Domain.Tests
 ```
 
-The integration test project uses Testcontainers to start a disposable PostgreSQL container, so Docker must be running:
+The integration test project uses Testcontainers to start a test PostgreSQL container, so Docker must be running:
 
 ```bash
 dotnet test tests/ProcHub.IntegrationTests
@@ -115,13 +109,11 @@ dotnet test tests/ProcHub.IntegrationTests
 
 ## Continuous integration
 
-GitHub Actions runs `.github/workflows/ci.yml` for pushes and pull requests to `main`, or manually from the **Actions** tab. The Ubuntu job builds the API and runs the domain and integration tests. Testcontainers starts PostgreSQL on the runner, so no CI database or repository secrets are needed. The Windows job builds the WPF client. Both jobs use the .NET 10 SDK.
-
-To make CI required before merging, add the **API and tests** and **WPF build** checks to a branch protection rule for `main` after the workflow has run once.
+GitHub Actions runs `.github/workflows/ci.yml` for push and pull requests to `main`, or manually from the **Actions** tab. Job builds the API and runs the domain and integration tests. Testcontainers starts PostgreSQL on the runner, so no secrets needed. Windows job builds WPF client.
 
 ## Database migrations
 
-Migrations live in `src/ProcHub.Infrastructure/Persistence/Migrations` and run automatically at API startup. To add one, install the local EF Core tool (pinned in `dotnet-tools.json`) and run:
+Migrations are in `src/ProcHub.Infrastructure/Persistence/Migrations` and run automatically on startup. To add a new migration, install the local EF Core tool (dotnet-tools.json) and run:
 
 ```bash
 dotnet tool restore
@@ -132,12 +124,12 @@ dotnet ef migrations add <MigrationName> --project src/ProcHub.Infrastructure/Pr
 
 ```
 ProcHub.slnx
-compose.yaml              # PostgreSQL for local development
+compose.yaml             
 src/
   ProcHub.Api/            # Minimal API endpoints, startup and DI
-  ProcHub.Application/    # Use cases, validators, authorization
-  ProcHub.Contracts/      # DTOs and enums shared with the client
-  ProcHub.Domain/         # Entities and domain rules
+  ProcHub.Application/    # Use cases, validators, handlers and authorization
+  ProcHub.Contracts/      # DTOs and enums shared between client and API
+  ProcHub.Domain/         # Entities and domain classes
   ProcHub.Infrastructure/ # EF Core, Identity, migrations, seeders
   ProcHub.Wpf/            # WPF desktop client (MVVM)
 tests/
