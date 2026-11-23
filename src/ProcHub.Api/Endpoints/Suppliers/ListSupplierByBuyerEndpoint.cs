@@ -28,6 +28,7 @@ public static class ListSuppliersByBuyerEndpoint
         
         var response = result
             .Select(s => new SupplierListItemResponse(
+                s.Id,
                 s.Code,
                 s.Name,
                 s.FullName,

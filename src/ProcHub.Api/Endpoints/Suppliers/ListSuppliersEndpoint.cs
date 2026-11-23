@@ -23,6 +23,7 @@ public static class ListSuppliersEndpoint
 
         var response = result
             .Select(s => new SupplierListItemResponse(
+                s.Id,
                 s.Code,
                 s.Name,
                 s.FullName,

@@ -12,6 +12,7 @@ public sealed class ListSuppliersHandler(IProcHubDbContext dbContext)
             .AsNoTracking()
             .OrderBy(s => s.Name)
             .Select(s => new SupplierListItem(
+                s.Id,
                 s.Code,
                 s.Name,
                 s.FullName,

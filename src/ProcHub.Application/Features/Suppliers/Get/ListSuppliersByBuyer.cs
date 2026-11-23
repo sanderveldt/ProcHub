@@ -21,6 +21,7 @@ public sealed class ListSuppliersByBuyerHandler(
             .AsNoTracking()
             .Where(s => s.ResponsibleBuyerId == userId)
             .Select(s => new SupplierListItem(
+                s.Id,
                 s.Code,
                 s.Name,
                 s.FullName,

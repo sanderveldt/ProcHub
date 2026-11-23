@@ -423,15 +423,8 @@ public sealed partial class SuppliersViewModel : PageViewModel
                 request,
                 cancellationToken);
         
-        var supplierListItem = new SupplierListItemResponse(
-            newSupplier.Code,
-            newSupplier.Name,
-            newSupplier.FullName,
-            newSupplier.DefaultPaymentTermDescription);
-
-        Suppliers.Add(supplierListItem);
-
-        SelectedSupplier = supplierListItem;        
+        await LoadAllSuppliersAsync(cancellationToken);
+        SelectedSupplier = Suppliers.FirstOrDefault(s => s.Code == newSupplier.Code);
     }
 
     private async Task UpdateAsync(
@@ -473,6 +466,7 @@ public sealed partial class SuppliersViewModel : PageViewModel
                 cancellationToken);
         
         var updatedSupplierListItem = new SupplierListItemResponse(
+            selectedSupplier.Id,
             updatedSupplier.Code,
             updatedSupplier.Name,
             updatedSupplier.FullName,
