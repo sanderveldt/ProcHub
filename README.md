@@ -3,7 +3,7 @@
 ProcHub is an end-to-end procurement system for tracking purchase orders and suppliers. It uses a layered architecture .NET 10 backend (ASP.NET Core, EF Core, PostgreSQL) with a Windows desktop client built with WPF using the MVVM.
 
 > **Status:** The purchase order, supplier, payment and shipping terms and user flows are implemented end to end across the API and the WPF client.
-**To Finish:**  implement creating purchases orders menu to dashboardview, add status update endpoint for PO's, add archive for closed orders. Move API into docker container.
+**To Finish:**  Add status update endpoint for PO's, add archive for closed orders. Move API into docker container.
 
 
 ## Features
