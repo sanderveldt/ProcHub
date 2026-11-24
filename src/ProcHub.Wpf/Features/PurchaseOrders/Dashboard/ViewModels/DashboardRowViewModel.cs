@@ -14,6 +14,7 @@ public sealed partial class DashboardRowViewModel : ObservableObject
     private bool _suppressChanges;
     private uint _version;
     private Task? _saveTask;
+    private long _statusRevision;
     private long _datesRevision;
     private long _referencesRevision;
     private long _paymentsRevision;
@@ -91,8 +92,8 @@ public sealed partial class DashboardRowViewModel : ObservableObject
     public DateOnly OrderDate { get; }
     public PurchaseOrderType OrderType { get; }
 
-    // Add Orderstatus update later
-    public PurchaseOrderStatus OrderStatus { get; }
+    [ObservableProperty]
+    public partial PurchaseOrderStatus OrderStatus { get; set; }
     
     public int SupplierId { get; }
     public string SupplierCode { get; }
@@ -222,6 +223,10 @@ public sealed partial class DashboardRowViewModel : ObservableObject
     // Dirty states, add other updates dirty states later
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsDirty))]
+    public partial bool IsStatusDirty { get; private set; }
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsDirty))]
     public partial bool IsDatesDirty { get; private set; }
 
     [ObservableProperty]
@@ -237,11 +242,18 @@ public sealed partial class DashboardRowViewModel : ObservableObject
     public partial bool IsBooleansDirty { get; private set; }
 
 
-    public bool IsDirty => 
+    public bool IsDirty =>
+        IsStatusDirty || 
         IsDatesDirty || 
         IsReferencesDirty || 
         IsPaymentsDirty ||
         IsBooleansDirty;
+
+    // STATUS CHANGE
+    partial void OnOrderStatusChanged(PurchaseOrderStatus value)
+    {
+        MarkStatusDirty();
+    }
 
     // DATE CHANGES
     partial void OnConfirmationDateChanged(DateOnly? value)
@@ -363,6 +375,17 @@ public sealed partial class DashboardRowViewModel : ObservableObject
     }
 
     // MARK DIRTY STATES
+    private void MarkStatusDirty()
+    {
+        if (_suppressChanges)
+        {
+            return;
+        }
+
+        _statusRevision++;
+        IsStatusDirty = true;
+        SaveError = null;
+    }
     private void MarkDatesDirty()
     {
         if (_suppressChanges) 
@@ -442,6 +465,11 @@ public sealed partial class DashboardRowViewModel : ObservableObject
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
+                if (IsStatusDirty)
+                {
+                    await SaveStatusAsync(cancellationToken);
+                }
+
                 if (IsDatesDirty)
                 {
                     await SaveDatesAsync(cancellationToken);
@@ -480,6 +508,28 @@ public sealed partial class DashboardRowViewModel : ObservableObject
     }
 
     // API CALLS
+    private async Task SaveStatusAsync(
+        CancellationToken cancellationToken)
+    {
+        var revision = _statusRevision;
+        var request =
+            new UpdatePurchaseOrderStatusRequest
+            {
+                OrderStatus = OrderStatus,
+                Version = _version
+            };
+        
+        _version = await _apiClient.UpdateStatusAsync(
+            Code,
+            request,
+            cancellationToken);
+        
+        if (_statusRevision == revision)
+        {
+            IsStatusDirty = false;
+        }
+    }
+
     private async Task SaveDatesAsync(
         CancellationToken cancellationToken)
     {

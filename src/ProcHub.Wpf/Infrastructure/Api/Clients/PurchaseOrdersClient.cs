@@ -121,6 +121,23 @@ public sealed class PurchaseOrdersApiClient(
                 "PurchaseOrder response is empty.");
     }
 
+    public async Task<uint> UpdateStatusAsync(
+        string code,
+        UpdatePurchaseOrderStatusRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var client = CreateClient();
+
+        using var response = await client
+            .PatchAsJsonAsync(
+                $"api/purchaseorders/{code}/status",
+                request,
+                cancellationToken);
+        
+        return await response.Content
+            .ReadFromJsonAsync<uint>(cancellationToken);
+    }
+
     public async Task<uint> UpdateDatesAsync(
         string code,
         UpdatePurchaseOrderDatesRequest request,
