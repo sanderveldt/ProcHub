@@ -16,6 +16,7 @@ public static class PurchaseOrderEndpoints
         group.MapListPurchaseOrdersBySupplierEndpoint();
         
         group.MapDashboardListEndpoint();
+        group.MapUpdatePurchaseOrderStatusEndpoint();
         group.MapUpdatePurchaseOrderBooleansEndpoint();
         group.MapUpdatePurchaseOrderDatesEndpoint();
         group.MapUpdatePurchaseOrderReferencesEndpoint();

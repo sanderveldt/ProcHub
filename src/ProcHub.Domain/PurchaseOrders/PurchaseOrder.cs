@@ -409,4 +409,15 @@ public class PurchaseOrder
     {
         CertificateOfOriginSaved = isSaved;
     }
+
+    public void SetOrderStatus(PurchaseOrderStatus status)
+    {
+        if (!Enum.IsDefined(status))
+        {
+            throw new DomainException(
+                $"{status} is not a valid purchase order status.");
+        }
+
+        OrderStatus = status;
+    }
 }
