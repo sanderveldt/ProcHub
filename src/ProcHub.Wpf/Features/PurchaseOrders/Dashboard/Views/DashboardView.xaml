@@ -587,11 +587,19 @@
 
                 <!-- Status -->
 
-                <DataGridTextColumn Header="Status"
-                                    Width="76"
-                                    IsReadOnly="True"
-                                    Binding="{Binding OrderStatus}"
-                                    ElementStyle="{StaticResource DashboardCellTextStyle}" />
+                <DataGridTemplateColumn Header="Status"
+                                        Width="170"
+                                        CellStyle="{StaticResource DashboardEditorCellStyle}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox Style="{StaticResource DashboardInlineComboBoxStyle}"
+                                      ItemsSource="{Binding StatusOptions}"
+                                      SelectedItem="{Binding OrderStatus,
+                                                    Mode=TwoWay,
+                                                    UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
 
 
                 <!-- Order amount -->

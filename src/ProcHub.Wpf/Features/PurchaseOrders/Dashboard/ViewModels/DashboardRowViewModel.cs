@@ -249,6 +249,9 @@ public sealed partial class DashboardRowViewModel : ObservableObject
         IsPaymentsDirty ||
         IsBooleansDirty;
 
+    public IReadOnlyList<PurchaseOrderStatus> StatusOptions
+        { get; } = Enum.GetValues<PurchaseOrderStatus>();
+
     // STATUS CHANGE
     partial void OnOrderStatusChanged(PurchaseOrderStatus value)
     {
